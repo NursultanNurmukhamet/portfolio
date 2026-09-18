@@ -18,9 +18,37 @@
     document.querySelector('.lead-privacy').textContent='После отправки описание задачи и контакт передаются Нурсултану в личный Telegram. Не добавляйте пароли и закрытые данные.';
     document.querySelector('#contact-pending').textContent='Личные контакты пока не добавлены. Обращение можно отправить через форму.';
   }
-  let challengeToken='',challengeWidget=null,challengeLoading=false;
   const challenge=document.createElement('div');challenge.className='lead-challenge';challenge.hidden=true;
+  const challengeSlot=document.createElement('div');
+  const challengeStatus=document.createElement('p');challengeStatus.className='lead-challenge-status';challengeStatus.setAttribute('role','status');
+  const challengeRetry=document.createElement('button');challengeRetry.type='button';challengeRetry.className='lead-challenge-retry';challengeRetry.textContent='Повторить проверку';challengeRetry.hidden=true;
+  challenge.append(challengeSlot,challengeStatus,challengeRetry);
   steps[2].append(challenge);
+  const verification=cloud?window.createPortfolioVerification({
+    container:challengeSlot,sitekey:config.turnstileSiteKey,
+    isVisible:()=>step===2&&!form.hidden&&!steps[2].hidden,
+    onState:({phase,code})=>{
+      challenge.dataset.state=phase;
+      if(code)challenge.dataset.errorCode=code;else delete challenge.dataset.errorCode;
+      challengeRetry.hidden=phase!=='failed';
+      challengeRetry.disabled=sending;
+      const hints={
+        load:'Не удалось загрузить проверку. Проверьте соединение и разрешите challenges.cloudflare.com в блокировщике для этого сайта.',
+        configuration:'Проверка ещё настраивается. Сообщите владельцу сайта об ошибке.',
+        initialization:'Не удалось запустить проверку. Нажмите «Повторить проверку».',
+        expired:'Срок проверки истёк. Пройдите её ещё раз перед отправкой.',
+        timeout:'Проверка не завершилась за 45 секунд. Нажмите «Повторить проверку».',
+        unsupported:'Этот браузер не поддерживает проверку. Попробуйте открыть сайт в обычном Chrome, Edge или Firefox.',
+        '110200':'Адрес сайта не разрешён в настройках защиты. Сообщите владельцу сайта.',
+        '110600':'Время проверки истекло. Повторите её; если ошибка остаётся, проверьте дату и время устройства.',
+        '110620':'Время ожидания истекло. Нажмите «Повторить проверку».',
+        '200100':'Проверьте правильность даты и времени на устройстве.',
+        '200500':'Не загрузилось окно проверки. Проверьте, не блокируется ли challenges.cloudflare.com.'
+      };
+      challengeStatus.textContent=phase==='ready'?'Проверка пройдена. Можно отправлять заявку.':phase==='loading'?'Загружаем защитную проверку…':phase==='checking'?'Выполняется защитная проверка…':phase==='failed'?`${hints[code]||'Cloudflare не смог подтвердить проверку. Попробуйте ещё раз. Если ошибка повторяется — откройте сайт в обычном браузере без режима автоматизации.'} ${/^\d+$/.test(code)?`Код: ${code}. `:''}Введённые данные остаются в форме.`:'';
+    }
+  }):null;
+  challengeRetry.addEventListener('click',()=>{if(!sending){status.textContent='';verification?.retry();}});
   if(cloud){
     consent.closest('label').querySelector('span').textContent='Согласен на сохранение описания задачи и моих контактов, включая указанный телефон, в Cloudflare и передачу Нурсултану в Telegram.';
     document.querySelector('.lead-privacy').textContent='Описание и указанные контакты, включая телефон, сохраняются в Cloudflare на 30 дней и отправляются Нурсултану в Telegram. Не добавляйте пароли и закрытые данные.';
@@ -30,16 +58,11 @@
     notice.append(title,explanation);document.querySelector('.lead-privacy').after(notice);
   }
   function prepareChallenge(){
-    if(!cloud||challengeWidget!==null||challengeLoading)return;
+    if(!cloud)return;
     challenge.hidden=false;
-    if(!config.turnstileSiteKey){status.textContent='Отправка ещё настраивается. Введённый текст останется в форме.';return;}
-    challengeLoading=true;
-    const render=()=>{challengeLoading=false;challengeWidget=window.turnstile.render(challenge,{sitekey:config.turnstileSiteKey,action:'portfolio_lead',theme:'light',size:'flexible','response-field':false,callback:token=>{challengeToken=token;delete challenge.dataset.errorCode;},'expired-callback':()=>{challengeToken='';},'error-callback':code=>{challengeToken='';challenge.dataset.errorCode=String(code);if(!form.hidden&&!sending)status.textContent='Не удалось выполнить защитную проверку. Обновите страницу или попробуйте позже.';}});};
-    if(window.turnstile){render();return;}
-    const script=document.createElement('script');script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';script.async=true;script.onload=render;
-    script.onerror=()=>{challengeLoading=false;status.textContent='Защитная проверка не загрузилась. Проверьте соединение.';};document.head.append(script);
+    verification.ensure();
   }
-  function resetChallenge(){challengeToken='';if(challengeWidget!==null)window.turnstile?.reset(challengeWidget);}
+  function resetChallenge(){verification?.invalidate();}
   const approved=[];
   // Whitelisted protocols: configuration is never interpolated into HTML.
   if(typeof config.email==='string'&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.email)) approved.push({type:'email',label:config.email,url:`mailto:${config.email}`});
@@ -80,7 +103,7 @@
     if(sending)return;
     if(!validCurrent())return;
     if(step<2){showStep(step+1,true);return;}
-    if(cloud&&!challengeToken){status.textContent='Дождитесь защитной проверки перед отправкой.';prepareChallenge();return;}
+    if(cloud&&!verification.token){status.textContent=verification.phase==='failed'?'Нажмите «Повторить проверку» над кнопкой отправки.':'Дождитесь защитной проверки перед отправкой.';prepareChallenge();return;}
     const values=new FormData(form);
     const phone=String(values.get('phone')||'').trim().replace(/\u00a0/g,' ');
     message.value=`Здравствуйте, Нурсултан! Хочу обсудить задачу.\n\nПроблема / Problem:\n${String(values.get('problem')).trim()}\n\nЖелаемый результат / Desired outcome:\n${String(values.get('outcome')).trim()}\n\nМеня зовут / Name: ${String(values.get('name')).trim()}${phone?`\nТелефон / Phone: ${phone}`:''}\nTelegram / Email: ${String(values.get('contact')).trim()}`;
@@ -91,7 +114,7 @@
       const signature=JSON.stringify(fields);
       if(!requestId||signature!==requestSignature){requestId=crypto.randomUUID();requestSignature=signature;}
       const payload={requestId,...fields,consent:consent.checked,website:String(values.get('website')||'')};
-      if(cloud)payload.turnstileToken=challengeToken;
+      if(cloud)payload.turnstileToken=verification.token;
       const controls=[...form.querySelectorAll('input,textarea,button')].map(element=>({element,disabled:element.disabled}));
       sending=true;controls.forEach(({element})=>element.disabled=true);next.setAttribute('aria-busy','true');status.textContent='Отправляем заявку…';
       let response,data;
@@ -99,11 +122,11 @@
         response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'omit',signal:AbortSignal.timeout(22000),body:JSON.stringify(payload)});
         data=await response.json();
       }catch{uncertain=true;}
-      finally{sending=false;controls.forEach(({element,disabled})=>element.disabled=disabled);next.removeAttribute('aria-busy');challengeToken='';}
+      finally{sending=false;controls.forEach(({element,disabled})=>element.disabled=disabled);next.removeAttribute('aria-busy');verification?.invalidate();}
       if(response?.ok&&data?.ok===true){lastSaved=cloud&&data.accepted===true;lastSent=cloud?data.delivery==='sent':true;}
       else if(uncertain||data?.ambiguous){uncertain=true;}
       else{
-        if(cloud)resetChallenge();
+        if(cloud){resetChallenge();prepareChallenge();}
         status.textContent=data?.error==='rate_limited'?'Слишком много обращений. Попробуйте через 10 минут.':data?.error==='verification_failed'?'Защитная проверка истекла. Пройдите её ещё раз и повторите отправку.':'Заявка не отправлена. Проверьте связь или попробуйте позже — введённый текст сохранён в форме.';
         requestId='';return;
       }
