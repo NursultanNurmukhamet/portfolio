@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "your-portfolio-leads",
+  "account_id": "YOUR_CLOUDFLARE_ACCOUNT_ID",
+  "send_metrics": false,
+  "main": "worker.mjs",
+  "compatibility_date": "2026-09-18",
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": false },
+  "vars": { "ALLOWED_ORIGINS": "https://YOUR_USERNAME.github.io" },
+  "triggers": { "crons": ["*/5 * * * *"] },
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "your-portfolio-leads",
+    "database_id": "YOUR_D1_DATABASE_ID",
+    "migrations_dir": "drizzle"
+  }]
+}

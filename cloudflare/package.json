@@ -1,0 +1,13 @@
+{
+  "name": "nursultan-portfolio-leads",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check worker.mjs",
+    "test": "node --test worker.test.mjs",
+    "build": "wrangler deploy --dry-run",
+    "deploy": "wrangler deploy",
+    "db:generate": "drizzle-kit generate"
+  },
+  "devDependencies": { "wrangler": "4.135.0", "drizzle-kit": "0.31.10", "drizzle-orm": "0.45.2" }
+}

@@ -1,0 +1,25 @@
+.env
+.env.*
+!.env.example
+.dev.vars
+node_modules/
+*.log
+.sites-runtime/
+.wrangler/
+.dev.vars.*
+
+# Local operational notes and the historical local sender are not public source.
+CONTENT_MODEL.md
+DESIGN_NOTES.md
+DIAGONAL_DEMO.md
+CLOUDFLARE_SETUP.md
+CLOUDFLARE_QA.md
+TELEGRAM_SETUP.md
+TELEGRAM_QA.md
+server/
+cloudflare/wrangler.jsonc
+.private/
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
