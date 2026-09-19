@@ -74,11 +74,14 @@ function classList() {
   return {contains: value => values.has(value), add: value => values.add(value), remove: value => values.delete(value)};
 }
 
-function harness({lab = false} = {}) {
+function harness({lab = false, projectCount = 3} = {}) {
   let time = 0, nextRaf = 1, openDialog = false;
+  const galleryHeight = (projectCount + 1) * 1000;
+  const galleryBottom = 2650 + galleryHeight;
+  const contactTop = galleryBottom + (lab ? 1700 : 0);
   const callbacks = new Map(), windowEvents = new Map(), documentEvents = new Map(), scrolls = [];
   const body = {nodeType: 1, classList: classList(), closest: () => null};
-  const root = {nodeType: 1, classList: classList(), scrollHeight: lab ? 10900 : 9200};
+  const root = {nodeType: 1, classList: classList(), scrollHeight: contactTop + 2550};
   const reduced = {matches: false, addEventListener(name, callback) { this.change = callback; }};
   function node(top = 0, height = 1000, options = {}) {
     const result = {
@@ -92,8 +95,11 @@ function harness({lab = false} = {}) {
   }
   const elements = {
     '.hero-story': node(0, 2500), '.hero-stage': node(),
-    '.diagonal-showcase': node(2650, 4000), '.gallery-stage': node(), '#contact': node(lab ? 8350 : 6650, 2000),
-    ...(lab ? {'#lab': node(6650, 1700)} : {})
+    '.diagonal-showcase': node(2650, galleryHeight, {
+      dataset: {projectCount: String(projectCount)},
+      querySelectorAll: selector => selector === '.gallery-panel' ? Array.from({length: projectCount}, () => ({})) : []
+    }), '.gallery-stage': node(), '#contact': node(contactTop, 2000),
+    ...(lab ? {'#lab': node(galleryBottom, 1700)} : {})
   };
   const window = {
     scrollY: 0, innerHeight: 1000, performance: {now: () => time}, matchMedia: () => reduced,
@@ -185,6 +191,75 @@ test('browser adapter scrolls through measured frames one per wheel gesture', ()
   h.emit('wheel', {deltaY: 5}, 1500);
   assert.equal(h.api.state().target, 'project-1');
   assert.ok(h.scrolls.every(scroll => scroll.behavior === 'instant'));
+});
+
+test('six rendered projects receive evenly spaced chapter destinations', () => {
+  const h = harness({projectCount: 6});
+  const projects = h.api.state().frames.filter(frame => frame.id.startsWith('project-'));
+  assert.equal(projects.map(frame => frame.id).join(','), 'project-1,project-2,project-3,project-4,project-5,project-6');
+  assert.equal(projects.map(frame => frame.top).join(','), '2650,3850,5050,6250,7450,8650');
+  delete h.elements['.diagonal-showcase'].dataset.projectCount;
+  assert.equal(h.api.measure().filter(frame => frame.id.startsWith('project-')).length, 6, 'DOM panels are a fallback if the count attribute is missing');
+});
+
+test('six-project gallery advances through every slide without skipping', () => {
+  const h = harness({projectCount: 6});
+  h.window.scrollY = 1425;
+  for (let index = 0; index < 6; index++) {
+    const at = index * 1000;
+    assert.equal(h.emit('wheel', {deltaY: 180}, at).prevented, true);
+    assert.equal(h.api.state().target, `project-${index + 1}`);
+    h.tick(at + 360);
+    assert.equal(h.window.scrollY, 2650 + index * 1200);
+    assert.equal(h.api.state().animating, false);
+  }
+});
+
+test('six-project gallery returns through every slide without skipping', () => {
+  const h = harness({projectCount: 6});
+  h.window.scrollY = 9650;
+  for (let index = 5; index >= 0; index--) {
+    const at = (5 - index) * 1000;
+    assert.equal(h.emit('wheel', {deltaY: -180}, at).prevented, true);
+    assert.equal(h.api.state().target, `project-${index + 1}`);
+    h.tick(at + 360);
+    assert.equal(h.window.scrollY, 2650 + index * 1200);
+    assert.equal(h.api.state().animating, false);
+  }
+});
+
+test('contact follows the sixth project and resumes native scrolling after momentum', () => {
+  const h = harness({projectCount: 6});
+  h.window.scrollY = 8650;
+  assert.equal(h.emit('wheel', {deltaY: 180}, 0).prevented, true);
+  assert.equal(h.api.state().target, 'contact');
+  h.emit('wheel', {deltaY: 15}, 340);
+  h.tick(360);
+  assert.equal(h.window.scrollY, 9650);
+  assert.equal(h.emit('wheel', {deltaY: 15}, 400).prevented, true, 'the same gesture cannot overshoot the contact introduction');
+  assert.equal(h.emit('wheel', {deltaY: 120}, 800).prevented, false);
+});
+
+test('keyboard at contact returns to the sixth project, not the old third slide', () => {
+  const h = harness({projectCount: 6});
+  h.window.scrollY = 9650;
+  assert.equal(h.emit('keydown', {key: 'ArrowDown'}).prevented, false);
+  assert.equal(h.emit('keydown', {key: 'ArrowUp'}, 500).prevented, true);
+  assert.equal(h.api.state().target, 'project-6');
+  h.tick(1580);
+  assert.equal(h.window.scrollY, 8650);
+});
+
+test('all six static projects remain ordinary readable document content', () => {
+  const h = harness({projectCount: 6});
+  h.elements['.diagonal-showcase'].classList.add('gallery-static');
+  assert.equal(h.api.measure().map(frame => frame.id).join(','), 'hero,hero-outro,project-1,contact');
+  for (const position of [3000, 3850, 5050, 6250, 7450, 8650, 9700]) {
+    h.window.scrollY = position;
+    for (const deltaY of [-120, 120]) assert.equal(h.emit('wheel', {deltaY}).prevented, false);
+    for (const key of ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown']) assert.equal(h.emit('keydown', {key}).prevented, false);
+  }
+  assert.equal(h.api.state().animating, false);
 });
 
 test('optional side-project frame is reached before contact from the last project', () => {

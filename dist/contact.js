@@ -67,17 +67,21 @@
   const approved=[];
   // Whitelisted protocols: configuration is never interpolated into HTML.
   if(typeof config.email==='string'&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.email)) approved.push({type:'email',label:config.email,url:`mailto:${config.email}`});
-  if(typeof config.telegram==='string'&&/^https:\/\/t\.me\/[a-zA-Z0-9_]+\/?$/.test(config.telegram)) approved.push({type:'telegram',label:'Telegram',url:config.telegram});
+  if(typeof config.telegram==='string'&&/^https:\/\/t\.me\/[a-zA-Z0-9_]+\/?$/.test(config.telegram)) approved.push({type:'telegram',label:`Telegram · @${config.telegram.split('/')[3]}`,url:config.telegram});
+  if(typeof config.whatsapp==='string'&&/^https:\/\/wa\.me\/[1-9][0-9]{6,14}$/.test(config.whatsapp)) approved.push({type:'whatsapp',label:`WhatsApp · +${config.whatsapp.split('/')[3]}`,url:config.whatsapp});
   const makeLink=(contact,forMessage=false)=>{
     const link=document.createElement('a');
-    link.textContent=forMessage?(contact.type==='email'?'Открыть письмо':'Открыть Telegram'):contact.label;
-    if(forMessage||contact.type==='telegram'){
+    const actionLabels={email:'Открыть письмо',telegram:'Открыть Telegram',whatsapp:'Открыть WhatsApp'};
+    link.textContent=forMessage?actionLabels[contact.type]:contact.label;
+    if(forMessage||contact.type==='telegram'||contact.type==='whatsapp'){
       const arrow=document.createElement('span');arrow.setAttribute('aria-hidden','true');
       arrow.innerHTML=window.portfolioIcon('arrow-up-right');link.append(' ',arrow);
     }
     link.href=contact.url;
     if(forMessage&&contact.type==='email')link.href+=`?subject=${encodeURIComponent('Задача для обсуждения')}&body=${encodeURIComponent(message.value)}`;
-    if(contact.type==='telegram'){link.target='_blank';link.rel='noopener noreferrer';}
+    // This opens a draft only. The visitor still chooses whether to send it.
+    if(forMessage&&contact.type==='whatsapp')link.href+=`?text=${encodeURIComponent(message.value)}`;
+    if(contact.type==='telegram'||contact.type==='whatsapp'){link.target='_blank';link.rel='noopener noreferrer';}
     return link;
   };
   approved.forEach(contact=>document.querySelector('#direct-contact-links').append(makeLink(contact)));

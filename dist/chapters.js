@@ -94,6 +94,9 @@
     const heroRange = Math.max(0, hero.offsetHeight - heroStage.offsetHeight);
     const galleryRange = Math.max(0, gallery.offsetHeight - galleryStage.offsetHeight);
     const galleryStatic = gallery.classList.contains('gallery-static') || galleryStage.offsetHeight > window.innerHeight + 4;
+    const configuredCount = Number(gallery.dataset.projectCount);
+    const projectCount = Number.isInteger(configuredCount) && configuredCount > 0 ? configuredCount :
+      Math.max(1, gallery.querySelectorAll('.gallery-panel').length);
     layout = {
       heroBottom: heroTop + hero.offsetHeight,
       heroOversized: heroStage.offsetHeight > window.innerHeight + 4,
@@ -102,8 +105,9 @@
     const candidates = [
       {id: 'hero', top: heroTop},
       {id: 'hero-outro', top: heroTop + heroRange * .95},
-      {id: 'project-1', top: galleryTop},
-      ...(!galleryStatic ? [{id: 'project-2', top: galleryTop + galleryRange * .5}, {id: 'project-3', top: galleryTop + galleryRange}] : []),
+      ...Array.from({length: galleryStatic ? 1 : projectCount}, (_, index) => ({
+        id: `project-${index + 1}`, top: galleryTop + galleryRange * index / Math.max(1, projectCount - 1)
+      })),
       ...(lab ? [{id: 'lab', top: labTop}] : []),
       {id: 'contact', top: contactTop}
     ];

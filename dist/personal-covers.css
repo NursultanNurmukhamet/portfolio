@@ -1,0 +1,237 @@
+/* Three project-specific posters. The AgentF evidence images stay unaltered. */
+.paper-cover:is(.cover-agentf,.cover-metacrypt,.cover-listen){
+  isolation:isolate;
+  box-shadow:0 0 0 1px #07291e66,inset 0 0 0 1px #ffffff0d;
+}
+.paper-cover:is(.cover-agentf,.cover-metacrypt,.cover-listen)::before,
+.paper-cover:is(.cover-agentf,.cover-metacrypt,.cover-listen)::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  z-index:-1;
+}
+:is(.cover-agentf,.cover-metacrypt,.cover-listen) .paper-topline{
+  font-size:2.7cqw;
+  letter-spacing:.055em;
+  padding-bottom:5.5%;
+  border-bottom-width:1px;
+}
+:is(.cover-agentf,.cover-metacrypt,.cover-listen) .paper-title{
+  margin-top:9%;
+  letter-spacing:-.015em;
+  text-shadow:0 .4cqw 0 #0000000d;
+}
+:is(.cover-agentf,.cover-metacrypt,.cover-listen) .paper-subtitle{
+  font-size:2.6cqw;
+  letter-spacing:.035em;
+  line-height:1.45;
+  margin-top:4%;
+}
+:is(.cover-agentf,.cover-metacrypt,.cover-listen) .paper-foot{
+  align-items:center;
+  font-size:2.5cqw;
+  font-weight:700;
+  letter-spacing:.07em;
+  bottom:5.5%;
+  padding-top:4.5%;
+}
+:is(.cover-agentf,.cover-metacrypt,.cover-listen) .paper-number{
+  font-size:11cqw;
+  font-weight:400;
+  letter-spacing:-.03em;
+}
+
+/* AgentF: a match archive, with real results as the central visual. */
+.paper-cover.cover-agentf{
+  --cover-fill:#0b3028;
+  background:linear-gradient(148deg,#164938 0%,#092c25 52%,#071d1a 100%);
+  color:#eff5dc;
+}
+.cover-agentf::before{
+  inset:34% -16% 11% 20%;
+  border:1px solid #d9ff7b21;
+  background:linear-gradient(90deg,transparent 49.75%,#d9ff7b21 49.75% 50.25%,transparent 50.25%);
+  transform:rotate(-17deg);
+}
+.cover-agentf::after{
+  inset:0 0 auto auto;
+  width:4.5%;
+  height:34%;
+  background:repeating-linear-gradient(-42deg,#d9ff7b 0 9%,#113c2f 9% 18%);
+}
+.cover-agentf .paper-topline,.cover-agentf .paper-foot{
+  color:#dcf3c9;
+  border-color:#d9ff7b4d;
+}
+.cover-agentf .paper-title{
+  font-size:18.6cqw;
+  line-height:.94;
+  color:#d9ff7b;
+}
+.cover-agentf .paper-subtitle{color:#e6eedb}
+.cover-agentf .paper-number{color:#d9ff7b}
+.cover-agentf .agentf-matches-cover{
+  inset:40% 6.5% 15%;
+  padding:2.2%;
+  gap:3%;
+  border:1px solid #d9ff7b52;
+  border-radius:1.2cqw;
+  background:#051c18;
+  box-shadow:1.6cqw 2cqw 0 #010e0a70,0 0 0 .75cqw #d9ff7b0a;
+  z-index:1;
+}
+.cover-agentf .agentf-matches-cover img{
+  object-fit:contain;
+  border:1px solid #d9ff7b29;
+  border-radius:.4cqw;
+  background:#0b0b19;
+  box-shadow:none;
+}
+.cover-agentf .agentf-matches-cover:focus-visible{
+  outline:2px solid #d9ff7b;
+  outline-offset:4px;
+}
+
+/* MetaCrypt: translucent data layers around a solid, readable lock. */
+.paper-cover.cover-metacrypt{
+  --cover-fill:#f7c1d0;
+  background:linear-gradient(135deg,#5c2245 0%,#351b36 56%,#27192e 100%);
+  color:#ffe7ed;
+}
+.cover-metacrypt::before{
+  inset:0 0 auto auto;
+  width:18%;
+  height:100%;
+  border-left:1px solid #ffc2d12b;
+  background:linear-gradient(90deg,#ffc2d10a,transparent);
+}
+.cover-metacrypt::after{
+  right:7.5%;
+  top:20%;
+  width:2%;
+  height:13%;
+  background:repeating-linear-gradient(0deg,#ffc2d1 0 5%,transparent 5% 13%);
+  opacity:.65;
+}
+.cover-metacrypt .paper-title{
+  font-size:20.5cqw;
+  line-height:.92;
+  color:#ffc2d1;
+}
+.cover-metacrypt .paper-topline,.cover-metacrypt .paper-foot{
+  color:#ffdae5;
+  border-color:#ffc2d14f;
+}
+.cover-metacrypt .paper-subtitle{color:#f4d5e1}
+.cover-metacrypt .paper-number{color:#ffc2d1}
+.cover-metacrypt .personal-cover-art{
+  inset:40% 0 15%;
+  isolation:isolate;
+  color:#ffccdc;
+}
+.cover-metacrypt .personal-cover-art::before,
+.cover-metacrypt .personal-cover-art::after{
+  content:"";
+  position:absolute;
+  border-radius:2cqw;
+  pointer-events:none;
+  z-index:-1;
+}
+.cover-metacrypt .personal-cover-art::before{
+  inset:13% 11% 10%;
+  border:1px solid #ffbfd05e;
+  background:linear-gradient(135deg,#ffccdf22,#ffccdf06 55%,#ffccdf15);
+  box-shadow:2cqw 2.5cqw 0 #120f2526,inset 0 0 0 .3cqw #ffdcdf0a;
+  transform:rotate(-11deg);
+}
+.cover-metacrypt .personal-cover-art::after{
+  inset:20% 8% 10% 16%;
+  border:1px solid #ffbfd029;
+  background:linear-gradient(140deg,#ffbfd008,#ffbfd002);
+  transform:rotate(7deg);
+}
+.cover-metacrypt .lab-vault{
+  width:106%;
+  height:106%;
+  transform:translateY(-1%);
+}
+.cover-metacrypt .lab-vault>g>path:first-child{
+  opacity:.65;
+  fill:#ffd4df0d;
+  stroke-width:1.7;
+}
+.cover-metacrypt .lab-lock{
+  color:#461c3b;
+  stroke:#ffdeea;
+}
+.cover-metacrypt .lab-lock rect{
+  fill:#f7c1d0;
+  stroke:#ffe4ed;
+  stroke-width:2;
+}
+.cover-metacrypt .lab-lock path:last-child{stroke:#461c3b}
+
+/* ULMusic: vivid audio on a precisely drawn vinyl/record sleeve. */
+.paper-cover.cover-listen{
+  --cover-fill:#2c2056;
+  background:linear-gradient(155deg,#352859 0%,#241b42 56%,#151527 100%);
+  color:#f3eafb;
+}
+.cover-listen::before{
+  top:0;
+  bottom:0;
+  right:0;
+  width:4%;
+  background:#b49bf6;
+}
+.cover-listen::after{
+  inset:38% 9% 15% 8%;
+  border-top:1px solid #b49bf636;
+  border-bottom:1px solid #b49bf636;
+}
+.cover-listen .paper-title{
+  color:#f3eafb;
+  font-size:23cqw;
+  line-height:.92;
+}
+.cover-listen .paper-topline,.cover-listen .paper-foot{
+  color:#d1c0fa;
+  border-color:#b49bf659;
+}
+.cover-listen .paper-subtitle{color:#d8c9f2}
+.cover-listen .paper-number{color:#d9ff7b}
+.cover-listen .personal-cover-art{
+  inset:39% 0 15%;
+  isolation:isolate;
+  color:#d9ff7b;
+}
+.cover-listen .personal-cover-art::before{
+  content:"";
+  position:absolute;
+  width:80%;
+  aspect-ratio:1;
+  border:1px solid #b49bf65c;
+  border-radius:50%;
+  background:repeating-radial-gradient(circle at center,#17142a 0 6%,#b49bf617 6.4% 6.7%,#17142a 7.1% 12%);
+  box-shadow:1.5cqw 2cqw 0 #0908154d;
+  z-index:-1;
+}
+.cover-listen .lab-audio{
+  width:97%;
+  height:97%;
+}
+.cover-listen .lab-wave{
+  stroke-width:7;
+  filter:drop-shadow(0 1cqw 0 #b49bf660);
+}
+.cover-listen .lab-audio>path:last-child{
+  fill:#b49bf6;
+  stroke:#e3d9ff;
+}
+.cover-listen .lab-audio>path:not(:last-child){opacity:.6}
+
+@media(forced-colors:active){
+  .paper-cover:is(.cover-agentf,.cover-metacrypt,.cover-listen){border:1px solid CanvasText}
+  .cover-agentf .agentf-matches-cover{border-color:ButtonText}
+  .cover-agentf .agentf-matches-cover:focus-visible{outline-color:Highlight}
+}

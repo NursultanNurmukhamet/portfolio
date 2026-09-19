@@ -1,7 +1,24 @@
-/* University case cover: an original, data-free diagram of the three projects. */
-.paper-cover.cover-campus{background:#dcebdc;color:#173c2d;isolation:isolate}
-.cover-campus .paper-topline,.cover-campus .paper-foot{color:#173c2d;border-color:#173c2d40}.cover-campus .paper-title{font-size:15.7cqw;line-height:.97;letter-spacing:-.015em;margin-top:10%}.cover-campus .paper-subtitle{font-size:2.65cqw;font-weight:700;letter-spacing:.035em;margin-top:5%}.cover-campus .paper-foot{font-size:2.35cqw}
-.campus-network{position:absolute;left:8%;right:8%;top:45%;bottom:16%;z-index:1}.campus-orbit{position:absolute;inset:5% 6% 4%;border:1px solid #173c2d40;border-radius:50%;transform:rotate(-28deg)}.campus-node{position:absolute;display:flex;flex-direction:column;justify-content:space-between;border:1px solid #173c2d3b;border-radius:3cqw;padding:4%;box-shadow:1.5cqw 2cqw 0 #173c2d12}.campus-node small{font-size:2.2cqw;letter-spacing:.03em;font-weight:700}.campus-node b{font-size:6.4cqw;letter-spacing:-.06em;font-weight:600}.campus-node span{font-size:2.4cqw;letter-spacing:.06em}.campus-node-track{left:0;top:0;width:60%;height:61%;background:#fffef7;transform:rotate(-5deg)}.campus-node-track i{height:5%;width:85%;background:#93b996;border-radius:1cqw}.campus-node-track i:nth-last-child(2){width:62%;background:#d2c4ed}.campus-node-track i:last-child{width:74%}.campus-node-ai{right:0;top:7%;width:40%;height:51%;background:#d1c4ec;transform:rotate(7deg)}.campus-node-ai b{font-family:Georgia,serif;font-size:12cqw;font-weight:400;line-height:1}.campus-node-asr{left:24%;bottom:0;width:63%;height:38%;background:#204936;color:#e4f0d7;transform:rotate(-4deg)}.campus-node-asr b{font-size:8cqw;line-height:1}
+/* University case cover: high-contrast editorial cover with three project cards. */
+.paper-cover.cover-campus{background:#103c31;color:#f5f8ec;isolation:isolate;box-shadow:0 0 0 1px #082b22,0 8px 28px #06281b30}
+.cover-campus .paper-topline,.cover-campus .paper-foot{color:#e2ecd9;border-color:#d9ff7b66}
+.cover-campus .paper-title{color:#d9ff7b;font-size:15.7cqw;line-height:.97;letter-spacing:-.015em;margin-top:10%}
+.cover-campus .paper-subtitle{color:#f5f8ec;font-size:2.65cqw;font-weight:700;letter-spacing:.035em;margin-top:5%}
+.cover-campus .paper-foot{font-size:2.35cqw}
+.campus-network{position:absolute;left:8%;right:8%;top:45%;bottom:16%;z-index:1}
+.campus-orbit{position:absolute;inset:5% 6% 4%;border:1px solid #d9ff7b70;border-radius:50%;transform:rotate(-28deg)}
+.campus-node{position:absolute;display:flex;flex-direction:column;justify-content:space-between;color:#103c31;border:1px solid #103c3170;border-radius:3cqw;padding:4%;box-shadow:1.5cqw 2cqw 0 #001e1952}
+.campus-node small{font-size:2.2cqw;letter-spacing:.03em;font-weight:700}
+.campus-node b{font-size:6.4cqw;letter-spacing:-.06em;font-weight:600}
+.campus-node span{font-size:2.4cqw;letter-spacing:.06em}
+.campus-node-track{left:0;top:0;width:60%;height:61%;background:#d9ff7b;transform:rotate(-5deg)}
+.campus-node-track i{height:5%;width:85%;background:#216044;border-radius:1cqw}
+.campus-node-track i:nth-last-child(2){width:62%;background:#8261c8}
+.campus-node-track i:last-child{width:74%}
+.campus-node-ai{right:0;top:7%;width:40%;height:51%;background:#b49bf6;transform:rotate(7deg)}
+.campus-node-ai b{font-family:Georgia,serif;font-size:12cqw;font-weight:400;line-height:1}
+.campus-node-asr{left:24%;bottom:0;width:63%;height:38%;background:#fff4df;transform:rotate(-4deg)}
+.campus-node-asr b{font-size:8cqw;line-height:1}
+#demo-03 .pdf-caption{background:#d9ff7b;color:#103c31;border:1px solid #103c31}
 /* Independent sports-demo cover: newly generated athlete, not a client asset. */
 .paper-cover.cover-sports{background:radial-gradient(circle at 80% 20%,#edf0d866,transparent 42%),linear-gradient(145deg,#e5f0f4,#bfdbe8 64%,#a6c9dd);color:#192f3b;isolation:isolate}
 .cover-sports .paper-topline,.cover-sports .paper-foot{color:#192f3b;border-color:#192f3b30}.cover-sports .paper-title{font-size:15.5cqw;line-height:.94;letter-spacing:-.02em;margin-top:9%;z-index:3}.cover-sports .paper-subtitle{font-size:2.75cqw;letter-spacing:.08em;font-weight:700;margin-top:4%;z-index:3}.cover-sports .paper-foot{font-size:2.65cqw;background:#e4eef2b3;backdrop-filter:blur(4px)}
@@ -16,7 +33,7 @@ html.page-on-paper{--scroll-thumb:#087c3e;--scroll-track:#eef1e7}
 .preview-dialog{scrollbar-width:thin;scrollbar-color:#087c3e #edf0e6}
 /* Diagonal showcase. Each paper is a clearly labelled HTML cover concept,
    not a fabricated PDF, client screenshot, or finished case study. */
-.diagonal-showcase{height:400svh;background:var(--paper);position:relative;scroll-margin-top:0}
+.diagonal-showcase{height:var(--gallery-height,400svh);background:var(--paper);position:relative;scroll-margin-top:0}
 .gallery-stage{position:sticky;top:0;height:100svh;min-height:650px;overflow:clip;isolation:isolate;background:#eef1e7;color:var(--deep)}
 .gallery-watermark{position:absolute;top:1%;left:23%;font:400 min(63vw,95vh)/1 Anton,Impact,sans-serif;letter-spacing:-.07em;color:#087c3e;opacity:.038;z-index:-2;pointer-events:none}
 .diagonal-path{position:absolute;width:86%;height:64%;top:20%;left:7%;z-index:-1;pointer-events:none;border-top:1px solid #087c3e13;border-bottom:1px solid #087c3e13;transform:skewY(-24deg)}
@@ -57,3 +74,42 @@ html.page-on-paper{--scroll-thumb:#087c3e;--scroll-track:#eef1e7}
 @supports selector(::-webkit-scrollbar){.preview-dialog{scrollbar-width:auto;scrollbar-color:auto}}
 @media(min-width:520px) and (max-width:759px){.gallery-stage{min-height:560px}.gallery-top{height:90px}.gallery-panels{top:90px}.gallery-panel{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,1fr);gap:25px;padding:25px 26px}.project-story h3{font-size:30px;overflow-wrap:normal}.english-title{font-size:13px;margin-bottom:20px}.bilingual-copy{grid-template-columns:1fr;gap:14px}.language-copy p{font-size:13px;line-height:1.45}.language-copy>span{padding-bottom:3px}.pdf-object{height:340px;min-height:0;max-height:100%;padding:0}.paper-stack{height:100%;min-height:0;max-height:340px;max-width:94%}.pdf-caption{font-size:8px;right:-15px;padding:7px 8px}.preview-trigger{font-size:12px;margin-top:12px}.gallery-static .gallery-panel{min-height:560px}.gallery-static .pdf-object{height:340px;min-height:0}}
 @media(max-height:719px) and (min-width:760px){.gallery-stage{min-height:560px}.gallery-top{height:94px}.gallery-panels{top:94px;bottom:64px}.gallery-panel{padding-top:24px;padding-bottom:24px}.project-story h3{font-size:42px}.english-title{margin-bottom:20px}.bilingual-copy{gap:14px}.language-copy p{font-size:14px;line-height:1.5}.story-meta{margin-bottom:15px}.preview-trigger{margin-top:15px}.pdf-object{max-height:430px}.gallery-bottom{height:64px}}
+/* Personal projects share the same paper format and alternating trajectory. */
+.paper-cover.cover-agentf{--cover-fill:#d9ff7b;background:var(--cover-fill);color:#103c31}
+.paper-cover.cover-metacrypt{--cover-fill:#ffb2c9;background:var(--cover-fill);color:#3b1638}
+.paper-cover.cover-listen{--cover-fill:#b49bf6;background:var(--cover-fill);color:#231341}
+.cover-agentf .paper-topline,.cover-agentf .paper-foot,.cover-metacrypt .paper-topline,.cover-metacrypt .paper-foot,.cover-listen .paper-topline,.cover-listen .paper-foot{color:inherit;border-color:currentColor}
+.cover-agentf .paper-title,.cover-metacrypt .paper-title{font-size:18cqw;line-height:.94}
+.cover-listen .paper-title{font-size:15.5cqw;line-height:1.02}
+.cover-agentf .paper-subtitle,.cover-metacrypt .paper-subtitle,.cover-listen .paper-subtitle{font-size:2.55cqw;font-weight:700;letter-spacing:.025em}
+.personal-cover-art{position:absolute;left:2%;right:2%;top:41%;bottom:16%;display:grid;place-items:center}
+.personal-cover-art svg{width:100%;height:100%;overflow:visible}
+.cover-metacrypt .personal-cover-art{left:0;right:0;top:39%}
+.cover-listen .personal-cover-art{left:0;right:0}
+#demo-06 .project-story h3{font-size:clamp(32px,4vw,60px);max-width:12ch;overflow-wrap:anywhere}
+.gallery-pagination button:focus-visible,.preview-trigger:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+@media(max-width:759px){
+  #demo-06 .project-story h3{font-size:30px;max-width:none}
+  .gallery-pagination{gap:3px}.gallery-pagination>span{width:8px}
+  .gallery-pagination button{width:30px;height:34px}
+}
+/* Actual match screenshots from the existing portfolio; no reconstructed scores. */
+.agentf-matches-cover{position:absolute;inset:40% 7% 14%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,2fr) minmax(0,1fr);gap:3%;padding:0;border:0;background:none;cursor:zoom-in}
+.agentf-matches-cover img{display:block;width:100%;height:100%;object-fit:contain;background:#0b0b19;border:1px solid #103c31;box-shadow:1cqw 1cqw 0 #103c312b}
+.agentf-matches-cover img:first-child{grid-column:1/-1}
+.agentf-matches-cover:focus-visible{outline:2px solid #103c31;outline-offset:5px}
+.matches-trigger{display:block;border:0;background:none;color:var(--deep);padding:8px 0;margin-top:7px;font:inherit;font-size:12px;text-align:left;cursor:zoom-in;text-decoration:underline;text-underline-offset:4px}
+.matches-trigger:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.matches-preview .preview-document{display:grid;gap:26px}
+.match-evidence{margin:0;border:1px solid #103c3133;background:#fafbf3}
+.match-evidence>a{display:block;cursor:zoom-in}.match-evidence img{display:block;width:100%;height:auto}
+.match-evidence figcaption{display:flex;align-items:center;gap:15px;justify-content:space-between;padding:15px;font-size:13px}
+.match-evidence figcaption>span:first-child{font-size:10px;letter-spacing:.07em}
+.match-evidence figcaption strong{font-size:24px;color:#087c3e}
+@media(max-width:519px){.matches-trigger{font-size:11px;padding:5px 0;margin-top:3px}.match-evidence figcaption{padding:10px;gap:10px;flex-wrap:wrap;font-size:12px}.match-evidence figcaption>span:last-child{flex-basis:100%}.matches-preview .preview-document{padding:12px;gap:18px}}
+@media(max-width:519px){
+  .gallery-bottom{height:88px;display:grid;grid-template-columns:1fr;align-content:center;justify-items:center;gap:6px;padding:8px 20px}
+  .gallery-scroll-hint{max-width:none;font-size:11px}
+  .gallery-panels{bottom:88px}
+  .gallery-static .gallery-bottom{height:auto;min-height:58px}
+}
