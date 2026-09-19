@@ -3,6 +3,9 @@
 
   const QUIET_MS = 240;
   const DURATION_MS = 1080;
+  const FAST_DURATION_MS = 360;
+  const inputDuration = strength => DURATION_MS - (DURATION_MS - FAST_DURATION_MS) *
+    Math.sqrt(Math.min(1, Math.max(0, (Math.abs(strength) - 4) / 176)));
   const POSITION_EPSILON = 8;
 
   function wheelPixels(event, viewportHeight) {
@@ -114,11 +117,26 @@
     if (resetGesture) { gate.reset(); wheelCaptured = false; }
   }
 
+  function advanceAnimation(time) {
+    animation.progress = Math.min(1, animation.progress + Math.max(0, time - animation.lastTime) / animation.duration);
+    if (animation.progress > 1 - 1e-9) animation.progress = 1;
+    animation.lastTime = Math.max(time, animation.lastTime);
+    return animation.progress;
+  }
+
+  function accelerate(delta, time) {
+    if (!animation || Math.sign(delta) !== Math.sign(animation.to - animation.from)) return;
+    // Preserve the current timeline position before changing speed: no jump.
+    advanceAnimation(time);
+    animation.strength = time - animation.started <= 120 ? animation.strength + Math.abs(delta) : Math.max(animation.strength, Math.abs(delta));
+    animation.duration = Math.min(animation.duration, inputDuration(animation.strength));
+  }
+
   function tick(time) {
     raf = 0;
     if (!animation) return;
     if (disabled()) { cancel(); return; }
-    const progress = Math.min(1, Math.max(0, (time - animation.started) / DURATION_MS));
+    const progress = advanceAnimation(time);
     const eased = progress * progress * progress * (progress * (progress * 6 - 15) + 10);
     window.scrollTo({top: animation.from + (animation.to - animation.from) * eased, behavior: 'instant'});
     if (progress < 1) raf = window.requestAnimationFrame(tick);
@@ -129,22 +147,23 @@
     }
   }
 
-  function start(frame) {
+  function start(frame, strength = 0) {
     if (!frame || disabled() || animation) return false;
     if (Math.abs(frame.top - window.scrollY) <= POSITION_EPSILON) return false;
-    animation = {id: frame.id, from: window.scrollY, to: frame.top, started: now()};
+    const started = now();
+    animation = {id: frame.id, from: window.scrollY, to: frame.top, started, lastTime: started, progress: 0, strength: Math.abs(strength), duration: inputDuration(strength)};
     document.documentElement.classList.add('chapter-transition');
     gate.setBusy(true);
     raf = window.requestAnimationFrame(tick);
     return true;
   }
 
-  function next(direction) {
+  function next(direction, strength = 0) {
     if (disabled() || animation) return false;
     measure();
     direction = Math.sign(direction);
     if (!direction || nativeRegion(layout, window.scrollY, direction)) return false;
-    return start(nextFrame(frames, window.scrollY, direction));
+    return start(nextFrame(frames, window.scrollY, direction), strength);
   }
 
   function nativeTarget(target, includeActions = false) {
@@ -172,7 +191,7 @@
     }
     // Incoming scenes move under a stationary pointer. A new button or the
     // contact form under it must not break a gesture that we already captured.
-    if (animation) { gate.sample(delta.y, timestamp); wheelCaptured = true; event.preventDefault(); return; }
+    if (animation) { gate.sample(delta.y, timestamp); accelerate(delta.y, timestamp); wheelCaptured = true; event.preventDefault(); return; }
     if (wheelCaptured) { gate.sample(delta.y, timestamp); event.preventDefault(); return; }
     if (Math.abs(delta.x) > Math.abs(delta.y) || !delta.y || nativeTarget(event.target)) {
       return;
@@ -180,7 +199,7 @@
     measure();
     if (nativeRegion(layout, window.scrollY, Math.sign(delta.y))) return;
     const direction = gate.sample(delta.y, timestamp);
-    if (direction && next(direction)) { wheelCaptured = true; event.preventDefault(); return; }
+    if (direction && next(direction, delta.y)) { wheelCaptured = true; event.preventDefault(); return; }
     // Hold consumed momentum at the scene boundary even after the animation.
     if (gate.state().consumed && nextFrame(frames, window.scrollY, Math.sign(delta.y))) event.preventDefault();
   }

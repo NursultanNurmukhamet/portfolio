@@ -125,13 +125,56 @@ function harness() {
     api: window.portfolioChapters, dialog: value => {openDialog = value;}};
 }
 
+test('wheel strength changes speed, never the destination or the one-gesture limit', () => {
+  for (const [delta, duration] of [[1, 1080], [180, 360], [-180, 360]]) {
+    const h = harness();
+    if(delta < 0)h.window.scrollY = 1425;
+    h.emit('wheel', {deltaY: delta}, 0);
+    h.tick(duration / 2);
+    assert.equal(h.window.scrollY, 712.5);
+    h.emit('wheel', {deltaY: delta}, duration - 1);
+    h.tick(duration);
+    assert.equal(h.window.scrollY, delta < 0 ? 0 : 1425);
+    assert.equal(h.api.state().animating, false);
+    h.emit('wheel', {deltaY: delta}, duration + 30);
+    assert.equal(h.api.state().animating, false, 'momentum cannot launch a second scene');
+  }
+});
+
+test('a stronger follow-up accelerates smoothly without jumping or reversing', () => {
+  const h = harness();
+  h.emit('wheel', {deltaY: 1}, 0);
+  h.tick(100);
+  const before = h.window.scrollY;
+  h.emit('wheel', {deltaY: 180}, 100);
+  h.tick(100);
+  assert.equal(h.window.scrollY, before, 'speed changes preserve the rendered position');
+  h.emit('wheel', {deltaY: -500}, 110);
+  h.tick(280);
+  assert.ok(h.window.scrollY > 712.5);
+  h.tick(460);
+  assert.equal(h.window.scrollY, 1425);
+  assert.equal(h.api.state().animating, false);
+});
+
+test('short trackpad bursts accelerate but keyboard keeps its smooth timing', () => {
+  const burst = harness(), single = harness(), keyboard = harness();
+  burst.emit('wheel', {deltaY: 5}, 0);
+  single.emit('wheel', {deltaY: 5}, 0);
+  for(const time of [20,40,60,80])burst.emit('wheel', {deltaY: 20}, time);
+  burst.tick(400);single.tick(400);
+  assert.ok(burst.window.scrollY > single.window.scrollY);
+  keyboard.emit('keydown', {key: 'ArrowDown'}, 0);keyboard.tick(540);
+  assert.equal(keyboard.window.scrollY, 712.5);
+});
+
 test('browser adapter scrolls through measured frames one per wheel gesture', () => {
   const h = harness();
   assert.equal(h.api.state().frames.map(frame => frame.id).join(','), 'hero,hero-outro,project-1,project-2,project-3,contact');
   assert.equal(h.emit('wheel', {deltaY: 20000}, 0).prevented, true);
   assert.equal(h.api.state().target, 'hero-outro');
-  h.tick(540);
-  assert.equal(h.window.scrollY, 712.5, 'normalized easing is halfway after half the fixed duration');
+  h.tick(180);
+  assert.equal(h.window.scrollY, 712.5, 'strong wheel input reaches halfway after half the fast duration');
   assert.equal(h.emit('wheel', {deltaY: 2000}, 1000).prevented, true);
   h.tick(1080);
   assert.equal(h.window.scrollY, 1425);
