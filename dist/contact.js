@@ -67,10 +67,14 @@
   const approved=[];
   // Whitelisted protocols: configuration is never interpolated into HTML.
   if(typeof config.email==='string'&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.email)) approved.push({type:'email',label:config.email,url:`mailto:${config.email}`});
-  if(typeof config.telegram==='string'&&/^https:\/\/t\.me\/[a-zA-Z0-9_]+\/?$/.test(config.telegram)) approved.push({type:'telegram',label:'Telegram ↗',url:config.telegram});
+  if(typeof config.telegram==='string'&&/^https:\/\/t\.me\/[a-zA-Z0-9_]+\/?$/.test(config.telegram)) approved.push({type:'telegram',label:'Telegram',url:config.telegram});
   const makeLink=(contact,forMessage=false)=>{
     const link=document.createElement('a');
-    link.textContent=forMessage?(contact.type==='email'?'Открыть письмо ↗':'Открыть Telegram ↗'):contact.label;
+    link.textContent=forMessage?(contact.type==='email'?'Открыть письмо':'Открыть Telegram'):contact.label;
+    if(forMessage||contact.type==='telegram'){
+      const arrow=document.createElement('span');arrow.setAttribute('aria-hidden','true');
+      arrow.innerHTML=window.portfolioIcon('arrow-up-right');link.append(' ',arrow);
+    }
     link.href=contact.url;
     if(forMessage&&contact.type==='email')link.href+=`?subject=${encodeURIComponent('Задача для обсуждения')}&body=${encodeURIComponent(message.value)}`;
     if(contact.type==='telegram'){link.target='_blank';link.rel='noopener noreferrer';}
@@ -83,7 +87,7 @@
     steps.forEach((part,i)=>part.hidden=i!==index);
     indicators.forEach((indicator,i)=>{if(i===index)indicator.setAttribute('aria-current','step');else indicator.removeAttribute('aria-current');});
     back.hidden=index===0;
-    next.innerHTML=index===2?`${live?'Отправить заявку':'Собрать сообщение'} <span aria-hidden="true">↗</span>`:'Дальше <span aria-hidden="true">↗</span>';
+    next.innerHTML=`${index===2?(live?'Отправить заявку':'Собрать сообщение'):'Дальше'} <span aria-hidden="true">${window.portfolioIcon('arrow-up-right')}</span>`;
     if(index===1)verification?.warmup();
     if(index===2)prepareChallenge();
     if(focus)steps[index].querySelector('input,textarea').focus({preventScroll:true});

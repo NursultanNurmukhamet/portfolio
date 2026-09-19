@@ -14,3 +14,47 @@ body{min-width:280px}.site-header nav a{white-space:nowrap}.case-cover>p{color:v
 @media(max-width:759px){.section-heading>p br:nth-of-type(2){display:initial}.motion-paused .hero-story{min-height:700px}}
 @media(max-width:359px){.site-header{gap:13px}.identity{gap:12px}.identity-name{font-size:7px;letter-spacing:.7px}.site-header nav{font-size:10px}.section-heading h2{font-size:12vw}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.hero-story{height:100svh;min-height:700px}.hero-stage{position:relative}.pink-panel,.hero-outro{display:none}.reveal .project-inner{opacity:1;transform:none}.project-cover{transform:none!important}}
+
+/* One geometric icon system, independent of the device's emoji fonts. */
+.ui-icon{display:inline-block;width:1em;height:1em;flex-shrink:0;vertical-align:-.12em;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:square;stroke-linejoin:miter;pointer-events:none}
+.motion-toggle{display:grid;place-items:center;padding:0}.motion-toggle .ui-icon{width:17px;height:17px}
+.title-asterisk{display:inline-flex;width:.8em;height:.8em;line-height:1;animation:none;align-items:center;justify-content:center}
+.title-asterisk .ui-icon{width:100%;height:100%;stroke-width:1.25}
+.arrow-circle .ui-icon{width:55%;height:55%}
+.marquee i{display:inline-flex;align-items:center;justify-content:center;padding:0;margin:0 34px;vertical-align:middle;line-height:1}
+.marquee i .ui-icon{width:.68em;height:.68em;stroke-width:1.4}
+.contact-spark .ui-icon{stroke-width:1.3}
+.contact-kicker .ui-icon{margin-left:10px}
+.contact-start .ui-icon,.lead-next .ui-icon,.preview-trigger .ui-icon{width:20px;height:20px}
+.lead-back .ui-icon,.back-link .ui-icon,.case-end .ui-icon{margin-right:7px}
+.empty-action .ui-icon,#copy-message .ui-icon{margin-left:7px}
+#direct-contact-links .ui-icon,#lead-send-links .ui-icon{margin-left:8px}
+#gallery-mode .ui-icon{margin-left:12px}.gallery-scroll-hint .ui-icon{width:22px;height:22px}
+.preview-trigger .ui-icon{transition:transform .2s}.preview-trigger:hover .ui-icon{transform:translate(3px,-3px)}
+.preview-close .ui-icon{width:20px;height:20px}.preview-close{display:grid;place-items:center}
+.cover-shape .ui-icon{width:1em;height:1em;stroke-width:1.2}
+/* On phones the headline and sculpture each have their own vertical zone. */
+@media(max-width:759px){
+  .hero-stage{--hero-type:min(22vw,13.2svh,120px);min-height:700px}
+  .hero-intro{padding-top:112px}
+  .hero-intro .eyebrow{margin-bottom:20px}
+  .hero-intro h1{font-size:var(--hero-type);line-height:.96;width:max-content;max-width:100%}
+  .hero-caption{top:calc(143px + var(--hero-type));right:var(--gutter);font-size:10px;max-width:100px}
+  .title-line{gap:20px}.title-asterisk{font-size:.62em}
+  .art-stage{top:calc(174px + var(--hero-type)*2.88);bottom:74px;left:4%;width:92%;height:auto}
+  .art-coordinate{bottom:0;right:0;left:0;text-align:center;font-size:6px;letter-spacing:1.2px}
+  .hero-outro{top:112px;left:var(--gutter);width:calc(100% - var(--gutter)*2)}
+  .outro-title{font-size:19vw;line-height:1.03}
+  .outro-caption{margin-top:20px}
+  .marquee i{margin:0 25px}
+  .hero-bottom{bottom:22px}
+}
+@media(max-width:759px) and (max-height:719px){
+  .hero-stage{--hero-type:min(21vw,12svh);min-height:620px}
+  .hero-intro{padding-top:100px}.hero-intro .eyebrow{margin-bottom:16px}
+  .hero-caption{top:calc(127px + var(--hero-type))}
+  .art-stage{top:calc(158px + var(--hero-type)*2.88)}
+  .hero-outro{top:100px}.motion-paused .hero-story{min-height:620px}
+}
+@media(prefers-reduced-motion:reduce){.preview-trigger .ui-icon{transition:none}}
+@media(prefers-reduced-motion:reduce) and (max-width:759px) and (max-height:719px){.hero-story{min-height:620px}}

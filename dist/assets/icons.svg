@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter">
+  <symbol id="icon-arrow-up-right" viewBox="0 0 24 24"><path d="M5 19 19 5M5 5h14v14"/></symbol>
+  <symbol id="icon-arrow-down-right" viewBox="0 0 24 24"><path d="m5 5 14 14M5 19h14V5"/></symbol>
+  <symbol id="icon-arrow-down-left" viewBox="0 0 24 24"><path d="M19 5 5 19M19 19H5V5"/></symbol>
+  <symbol id="icon-arrow-up-left" viewBox="0 0 24 24"><path d="M19 19 5 5M19 5H5v14"/></symbol>
+  <symbol id="icon-arrow-down" viewBox="0 0 24 24"><path d="M12 3v18m-7-7 7 7 7-7"/></symbol>
+  <symbol id="icon-arrow-up" viewBox="0 0 24 24"><path d="M12 21V3m-7 7 7-7 7 7"/></symbol>
+  <symbol id="icon-arrow-left" viewBox="0 0 24 24"><path d="M21 12H3m7-7-7 7 7 7"/></symbol>
+  <symbol id="icon-arrows-vertical" viewBox="0 0 24 24"><path d="M8 21V3m-4 4 4-4 4 4m4-4v18m-4-4 4 4 4-4"/></symbol>
+  <symbol id="icon-asterisk" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M5 5l14 14M5 19 19 5"/></symbol>
+  <symbol id="icon-close" viewBox="0 0 24 24"><path d="m5 5 14 14M5 19 19 5"/></symbol>
+  <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/></symbol>
+  <symbol id="icon-pause" viewBox="0 0 24 24"><path d="M8 4v16M16 4v16"/></symbol>
+  <symbol id="icon-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8Z"/></symbol>
+</svg>

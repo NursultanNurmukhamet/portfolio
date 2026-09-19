@@ -20,10 +20,10 @@
   const clamp = value => Math.max(0,Math.min(1,value));
   const smooth = value => {const x=clamp(value);return x*x*(3-2*x);};
   function cover(demo) {
-    const visual = demo.cover==='digital' ? '<img class="paper-visual" src="assets/chrome-knot.png" width="1254" height="1254" alt="">' : demo.cover==='system' ? '<div class="system-diagram" aria-hidden="true"><div><span>CONTEXT</span><b>01</b><span>THE CHALLENGE</span></div><div><span>PROCESS</span><i>↗</i></div><div><span>RESULT</span><i>+</i></div></div>' : '<div class="lab-grid" aria-hidden="true"></div><div class="lab-type" aria-hidden="true">ai</div><span class="lab-tag" lang="en">TRY. LEARN. REPEAT.</span>';
+    const visual = demo.cover==='digital' ? '<img class="paper-visual" src="assets/chrome-knot.png" width="1254" height="1254" alt="">' : demo.cover==='system' ? '<div class="system-diagram" aria-hidden="true"><div><span>CONTEXT</span><b>01</b><span>THE CHALLENGE</span></div><div><span>PROCESS</span><i><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></i></div><div><span>RESULT</span><i><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-plus"></use></svg></i></div></div>' : '<div class="lab-grid" aria-hidden="true"></div><div class="lab-type" aria-hidden="true">ai</div><span class="lab-tag" lang="en">TRY. LEARN. REPEAT.</span>';
     return `<div class="paper-cover cover-${demo.cover}"><div class="paper-topline"><span>DEMO / PORTFOLIO</span><span>${demo.number}</span></div><p class="paper-title" lang="en">${demo.coverTitle}</p><p class="paper-subtitle">${demo.subtitle}</p>${visual}<div class="paper-foot"><span>ОБРАЗЕЦ ОБЛОЖКИ · НЕ КЕЙС</span><span class="paper-number">${demo.number}</span></div></div>`;
   }
-  panelsRoot.innerHTML=demos.map((demo,index)=>`<article class="gallery-panel ${index%2?'is-reversed':''}" id="${demo.id}" aria-labelledby="${demo.id}-title" style="--rest-angle:${demo.angle}deg"><div class="project-story"><p class="story-meta">DEMO ${demo.number} <span>${demo.kind}</span></p><h3 id="${demo.id}-title">${demo.title}</h3><p class="english-title" lang="en">${demo.english}</p><div class="bilingual-copy"><div class="language-copy" lang="ru"><span>RU</span><p>${demo.ru}</p></div><div class="language-copy" lang="en"><span>EN</span><p>${demo.en}</p></div></div><button class="preview-trigger" type="button" data-preview="${index}" aria-label="Посмотреть макет обложки: ${demo.title}">Посмотреть макет <span aria-hidden="true">↗</span></button></div><div class="pdf-object" aria-label="Демонстрационная обложка будущей PDF"><div class="paper-stack" style="--paper-angle:${demo.angle}deg">${cover(demo)}<span class="pdf-caption">PDF / ОБРАЗЕЦ ОБЛОЖКИ</span></div></div></article>`).join('');
+  panelsRoot.innerHTML=demos.map((demo,index)=>`<article class="gallery-panel ${index%2?'is-reversed':''}" id="${demo.id}" aria-labelledby="${demo.id}-title" style="--rest-angle:${demo.angle}deg"><div class="project-story"><p class="story-meta">DEMO ${demo.number} <span>${demo.kind}</span></p><h3 id="${demo.id}-title">${demo.title}</h3><p class="english-title" lang="en">${demo.english}</p><div class="bilingual-copy"><div class="language-copy" lang="ru"><span>RU</span><p>${demo.ru}</p></div><div class="language-copy" lang="en"><span>EN</span><p>${demo.en}</p></div></div><button class="preview-trigger" type="button" data-preview="${index}" aria-label="Посмотреть макет обложки: ${demo.title}">Посмотреть макет <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></button></div><div class="pdf-object" aria-label="Демонстрационная обложка будущей PDF"><div class="paper-stack" style="--paper-angle:${demo.angle}deg">${cover(demo)}<span class="pdf-caption">PDF / ОБРАЗЕЦ ОБЛОЖКИ</span></div></div></article>`).join('');
   const panels=[...panelsRoot.querySelectorAll('.gallery-panel')];
   function render() {
     frame=0;
@@ -62,7 +62,7 @@
     pagination.forEach((button,index)=>button.setAttribute('aria-current',String(index===selected)));
     watermark.textContent=demos[selected].number;
     watermark.style.transform=`translate3d(${-travel*28}px,${travel*18}px,0)`;
-    if(!isStatic)showcase.querySelector('.gallery-scroll-hint').innerHTML=selected===2?'Дальше — обо мне <span aria-hidden="true">↓</span>':`Листай зигзагом <span aria-hidden="true">${travel<1?'↘':'↙'}</span>`;
+    if(!isStatic)showcase.querySelector('.gallery-scroll-hint').innerHTML=selected===2?'Дальше — обо мне <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-down"></use></svg>':`Листай зигзагом ${window.portfolioIcon(travel<1?'arrow-down-right':'arrow-down-left')}`;
     progressBar.style.transform=`scaleX(${progress})`;
   }
   function schedule(){if(!frame)frame=requestAnimationFrame(render);}
@@ -75,9 +75,9 @@
     showcase.classList.toggle('gallery-static',isStatic);
     modeButton.setAttribute('aria-pressed',String(isStatic));
     modeButton.disabled=reduceMotion.matches||shortScreen.matches||document.body.classList.contains('motion-paused');
-    modeButton.innerHTML=isStatic?'Диагональный вид <span aria-hidden="true">↘</span>':'Без движения <span aria-hidden="true">↕</span>';
+    modeButton.innerHTML=isStatic?'Диагональный вид <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-down-right"></use></svg>':'Без движения <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrows-vertical"></use></svg>';
     if(modeButton.disabled)modeButton.textContent=reduceMotion.matches?'Движение отключено':'Режим чтения';
-    showcase.querySelector('.gallery-scroll-hint').innerHTML=isStatic?'Три демонстрационных макета':'Листай по диагонали <span aria-hidden="true">↘</span>';
+    showcase.querySelector('.gallery-scroll-hint').innerHTML=isStatic?'Три демонстрационных макета':'Листай по диагонали <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-down-right"></use></svg>';
     render();
     if(keepPosition && wasInside && previous!==isStatic){
       const sectionTop=scrollY+showcase.getBoundingClientRect().top;

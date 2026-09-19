@@ -47,7 +47,7 @@
     toggle.disabled = reduceMotion.matches;
     const label = reduceMotion.matches ? 'Анимация выключена в настройках устройства' : paused ? 'Включить анимацию' : 'Приостановить анимацию';
     toggle.setAttribute('aria-label', label); toggle.title = label;
-    toggle.firstElementChild.textContent = paused ? '▷' : 'Ⅱ';
+    toggle.innerHTML = window.portfolioIcon(paused ? 'play' : 'pause');
     window.dispatchEvent(new CustomEvent('portfolio:motion', {detail:{paused}}));
     scheduleFrame();
   }
