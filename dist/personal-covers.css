@@ -92,6 +92,11 @@
   outline-offset:4px;
 }
 
+/* Keep the match gallery centered on compact iPhone cards. */
+@media(max-width:519px){
+  .cover-agentf .agentf-matches-cover{inset:34% 6.5% 16%}
+}
+
 /* MetaCrypt: translucent data layers around a solid, readable lock. */
 .paper-cover.cover-metacrypt{
   --cover-fill:#f7c1d0;
