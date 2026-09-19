@@ -11,7 +11,7 @@ function fixture(options={}){
   const DB={prepare(sql){const args=[];return {bind(...values){args.push(...values);return this;},async first(){return sqlite.prepare(sql).get(...args)||null;},async run(){const result=sqlite.prepare(sql).run(...args);return {meta:{changes:Number(result.changes)}};}};},async batch(statements){sqlite.exec('BEGIN');try{const results=[];for(const statement of statements)results.push(await statement.run());sqlite.exec('COMMIT');return results;}catch(e){sqlite.exec('ROLLBACK');throw e;}}};
   const env={DB,ALLOWED_ORIGINS:'https://example.github.io',TELEGRAM_BOT_TOKEN:'0'.repeat(10)+':'+ 'x'.repeat(35),TELEGRAM_CHAT_ID:'12345',TURNSTILE_SECRET_KEY:'dummy',RATE_SALT:'x'.repeat(32)};
   const tasks=[],calls=[],ctx={waitUntil(task){tasks.push(task);}};
-  const fetcher=async(url,init)=>{const payload=JSON.parse(init.body);calls.push({kind:url.includes('siteverify')?'verify':'telegram',payload});if(url.includes('siteverify'))return Response.json({success:true,hostname:'example.github.io',action:'portfolio_lead'});return options.telegram?options.telegram():Response.json({ok:true,result:{message_id:7,chat:{id:12345}}});};
+  const fetcher=async(url,init)=>{assert.equal(init.redirect,'manual','workerd-compatible no-follow mode');const payload=JSON.parse(init.body);calls.push({kind:url.includes('siteverify')?'verify':'telegram',payload});if(url.includes('siteverify'))return Response.json({success:true,hostname:'example.github.io',action:'portfolio_lead'});return options.telegram?options.telegram():Response.json({ok:true,result:{message_id:7,chat:{id:12345}}});};
   return {env,ctx,sqlite,calls,tasks,fetcher};
 }
 const data=()=>({requestId:randomUUID(),problem:'Проверка сохранения реальной заявки.',outcome:'Не терять заявки при отключении компьютера.',name:'Тест',contact:'demo@example.com',consent:true,website:'',turnstileToken:'dummy'});
@@ -88,4 +88,29 @@ test('per-IP quotas; retention removes payload and keeps deduplication marker',a
   assert.equal((await handle(request(data()),f.env,f.ctx,f)).status,429);
   await scheduled(f.env,{fetcher:f.fetcher,now:()=>Date.now()+31*86400000});assert.equal(f.sqlite.prepare('SELECT COUNT(*) AS n FROM leads WHERE payload IS NOT NULL').get().n,0);assert.equal(f.sqlite.prepare('SELECT COUNT(*) AS n FROM leads').get().n,5);
   await scheduled(f.env,{fetcher:f.fetcher,now:()=>Date.now()+91*86400000});assert.equal(f.sqlite.prepare('SELECT COUNT(*) AS n FROM leads').get().n,0);
+});
+test('verification distinguishes expired tokens from provider/configuration failure',async()=>{
+  for(const [providerResponse,status,error] of [
+    [()=>Response.json({success:false,'error-codes':['timeout-or-duplicate']}),400,'verification_expired'],
+    [()=>Response.json({success:false,'error-codes':['invalid-input-secret']}),503,'verification_configuration'],
+    [()=>Response.json({success:false,'error-codes':['invalid-input-response']}),400,'verification_failed'],
+    [()=>Response.json({success:false,'error-codes':['internal-error']}),503,'verification_unavailable'],
+    [()=>new Response('unavailable',{status:503}),503,'verification_unavailable'],
+    [()=>new Response('not JSON',{status:200}),503,'verification_unavailable'],
+    [()=>{throw Error('sensitive details must not leak');},503,'verification_unavailable']
+  ]){
+    const f=fixture(),response=await handle(request(data()),f.env,f.ctx,{fetcher:providerResponse});
+    assert.equal(response.status,status);assert.deepEqual(await response.json(),{ok:false,error});
+    assert.equal(f.sqlite.prepare('SELECT COUNT(*) AS n FROM leads').get().n,0);assert.equal(f.tasks.length,0);
+  }
+});
+test('Siteverify and Telegram redirects are rejected without following or parsing them',async()=>{
+  const redirect=()=>({status:307,ok:false,json(){throw Error('redirect response must not be parsed');}});
+  const f=fixture();let calls=0;
+  const response=await handle(request(data()),f.env,f.ctx,{fetcher:async(_url,init)=>{assert.equal(init.redirect,'manual');calls++;return redirect();}});
+  assert.equal(response.status,503);assert.equal((await response.json()).error,'verification_unavailable');assert.equal(calls,1);
+  assert.equal(f.sqlite.prepare('SELECT COUNT(*) AS n FROM leads').get().n,0);
+  const g=fixture({telegram:redirect});await handle(request(data()),g.env,g.ctx,g);await finish(g);
+  assert.equal(g.sqlite.prepare('SELECT status FROM leads').get().status,'uncertain');await scheduled(g.env,g);
+  assert.equal(g.calls.filter(x=>x.kind==='telegram').length,1);
 });

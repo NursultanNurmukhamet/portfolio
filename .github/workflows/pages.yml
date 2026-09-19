@@ -26,6 +26,15 @@ jobs:
         run: |
           for file in dist/*.js cloudflare/*.mjs; do node --check "$file"; done
           node --test cloudflare/worker.test.mjs tests/*.test.mjs
+      - name: Install pinned Worker tooling
+        working-directory: cloudflare
+        run: |
+          npm install --global pnpm@11.19.0
+          pnpm install --frozen-lockfile
+        env:
+          WRANGLER_SEND_METRICS: 'false'
+      - name: Test the actual Cloudflare runtime
+        run: node --test cloudflare/runtime.test.mjs
       - name: Configure Pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - name: Upload only the public website

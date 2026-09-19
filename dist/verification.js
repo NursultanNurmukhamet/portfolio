@@ -13,10 +13,8 @@ window.createPortfolioVerification=({container,sitekey,isVisible,onState})=>{
     'timeout-callback':()=>{if(!pendingReset)fail('110620');},
     'unsupported-callback':()=>{if(!pendingReset)fail('unsupported');}
   };
-  function ensure(){
-    if(!isVisible()||loading||(!pendingReset&&(phase==='ready'||phase==='checking')))return;
-    if(!sitekey){fail('configuration');return;}
-    if(!window.turnstile?.render){
+  function warmup(){
+    if(window.turnstile?.render||loading||!sitekey)return;
       loading=true;state('loading');
       const attempt=++loadAttempt;
       script=document.createElement('script');
@@ -29,8 +27,12 @@ window.createPortfolioVerification=({container,sitekey,isVisible,onState})=>{
         if(!window.turnstile?.render){fail('initialization');return;}
         ensure(); // The visitor may have gone back while the script loaded.
       };
-      loadTimer=setTimeout(failed,25000);document.head.append(script);return;
-    }
+      loadTimer=setTimeout(failed,25000);document.head.append(script);
+  }
+  function ensure(){
+    if(!isVisible()||loading||phase==='failed'||(!pendingReset&&(phase==='ready'||phase==='checking')))return;
+    if(!sitekey){fail('configuration');return;}
+    if(!window.turnstile?.render){warmup();return;}
     if(widget!==null&&!pendingReset)return;
     pendingReset=false;checking();
     try{
@@ -48,8 +50,10 @@ window.createPortfolioVerification=({container,sitekey,isVisible,onState})=>{
   return {
     get token(){return token;},
     get phase(){return phase;},
+    warmup,
     ensure,
     invalidate,
+    requireRetry(){invalidate();state('failed','retry');},
     retry(){invalidate();ensure();}
   };
 };

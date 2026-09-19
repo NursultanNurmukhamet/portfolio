@@ -37,6 +37,7 @@
         configuration:'Проверка ещё настраивается. Сообщите владельцу сайта об ошибке.',
         initialization:'Не удалось запустить проверку. Нажмите «Повторить проверку».',
         expired:'Срок проверки истёк. Пройдите её ещё раз перед отправкой.',
+        retry:'Для следующей попытки понадобится новая проверка. Она запустится только по кнопке «Повторить проверку».',
         timeout:'Проверка не завершилась за 45 секунд. Нажмите «Повторить проверку».',
         unsupported:'Этот браузер не поддерживает проверку. Попробуйте открыть сайт в обычном Chrome, Edge или Firefox.',
         '110200':'Адрес сайта не разрешён в настройках защиты. Сообщите владельцу сайта.',
@@ -83,6 +84,7 @@
     indicators.forEach((indicator,i)=>{if(i===index)indicator.setAttribute('aria-current','step');else indicator.removeAttribute('aria-current');});
     back.hidden=index===0;
     next.innerHTML=index===2?`${live?'Отправить заявку':'Собрать сообщение'} <span aria-hidden="true">↗</span>`:'Дальше <span aria-hidden="true">↗</span>';
+    if(index===1)verification?.warmup();
     if(index===2)prepareChallenge();
     if(focus)steps[index].querySelector('input,textarea').focus({preventScroll:true});
   }
@@ -126,8 +128,15 @@
       if(response?.ok&&data?.ok===true){lastSaved=cloud&&data.accepted===true;lastSent=cloud?data.delivery==='sent':true;}
       else if(uncertain||data?.ambiguous){uncertain=true;}
       else{
-        if(cloud){resetChallenge();prepareChallenge();}
-        status.textContent=data?.error==='rate_limited'?'Слишком много обращений. Попробуйте через 10 минут.':data?.error==='verification_failed'?'Защитная проверка истекла. Пройдите её ещё раз и повторите отправку.':'Заявка не отправлена. Проверьте связь или попробуйте позже — введённый текст сохранён в форме.';
+        if(cloud)verification.requireRetry();
+        const errors={
+          rate_limited:'Слишком много обращений. Подождите 10 минут — новую проверку пока проходить не нужно.',
+          verification_expired:'Подтверждение истекло или уже использовано. Нажмите «Повторить проверку», затем отправьте заявку.',
+          verification_failed:'Сервер отклонил подтверждение защиты. Нажмите «Повторить проверку». Если ошибка повторится, сообщите владельцу сайта.',
+          verification_unavailable:'Сервис проверки временно недоступен. Заявка не сохранена. Попробуйте позже — повторять проверку прямо сейчас не нужно.',
+          verification_configuration:'Ошибка настройки защиты на сервере. Заявка не сохранена. Сообщите владельцу сайта — повторная проверка не поможет.'
+        };
+        status.textContent=errors[data?.error]||'Заявка не отправлена. Проверьте связь или попробуйте позже — введённый текст сохранён в форме.';
         requestId='';return;
       }
     }

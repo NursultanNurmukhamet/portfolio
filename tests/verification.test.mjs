@@ -67,3 +67,15 @@ test('late callbacks cannot restore an invalidated token before the next visible
   f.setVisible(true);f.controller.ensure();assert.deepEqual(f.calls,['render','reset']);
   f.options.callback('fresh-provider-token');assert.equal(f.controller.token,'fresh-provider-token');
 });
+test('server rejection does not automatically restart the challenge on another submit',()=>{
+  const f=fixture();f.controller.ensure();f.options.callback('provider-token');
+  f.controller.requireRetry();f.controller.ensure();f.controller.ensure();
+  assert.equal(f.controller.token,'');assert.equal(f.controller.phase,'failed');assert.deepEqual(f.calls,['render']);
+  f.controller.retry();assert.deepEqual(f.calls,['render','reset']);
+});
+test('script can load during the previous step without running a hidden challenge',()=>{
+  const f=fixture({loaded:false});f.setVisible(false);f.controller.warmup();f.controller.warmup();
+  assert.equal(f.scripts.length,1);assert.deepEqual(f.calls,[]);
+  f.window.turnstile=f.api;f.scripts[0].onload();assert.deepEqual(f.calls,[]);
+  f.setVisible(true);f.controller.ensure();assert.deepEqual(f.calls,['render']);
+});

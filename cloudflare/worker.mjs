@@ -55,12 +55,18 @@ async function quota(env,scope,bucket,expires,limit){
 async function checkTurnstile(env,data,origin,ip,fetcher){
   try{
     const response=await fetcher('https://challenges.cloudflare.com/turnstile/v0/siteverify',{
-      method:'POST',headers:{'Content-Type':'application/json'},redirect:'error',signal:AbortSignal.timeout(10000),
+      method:'POST',headers:{'Content-Type':'application/json'},redirect:'manual',signal:AbortSignal.timeout(10000),
       body:JSON.stringify({secret:env.TURNSTILE_SECRET_KEY,response:data.turnstileToken,remoteip:ip,idempotency_key:data.requestId})
     });
+    // workerd does not support redirect:'error'. Never follow a redirect with secrets.
+    if(response.status>=300&&response.status<400||!response.ok)return 'verification_unavailable';
     const result=await response.json();
-    return response.ok&&result.success===true&&result.hostname===new URL(origin).hostname&&result.action==='portfolio_lead';
-  }catch{return false;}
+    const codes=Array.isArray(result?.['error-codes'])?result['error-codes']:[];
+    if(codes.some(code=>['missing-input-secret','invalid-input-secret'].includes(code)))return 'verification_configuration';
+    if(codes.includes('internal-error'))return 'verification_unavailable';
+    if(codes.includes('timeout-or-duplicate'))return 'verification_expired';
+    return result?.success===true&&result.hostname===new URL(origin).hostname&&result.action==='portfolio_lead'?null:'verification_failed';
+  }catch{return 'verification_unavailable';}
 }
 
 export async function deliver(id,env,{fetcher=fetch,now=Date.now}={}){
@@ -72,9 +78,10 @@ export async function deliver(id,env,{fetcher=fetch,now=Date.now}={}){
     const f=JSON.parse(row.payload);
     const text=`Новая заявка с портфолио\n№ ${id}\n\nПроблема:\n${f.problem}\n\nЖелаемый результат:\n${f.outcome}\n\nИмя: ${f.name}${f.phone?`\nТелефон: ${f.phone}`:''}\nКонтакт: ${f.contact}`;
     const response=await fetcher(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`,{
-      method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(15000),redirect:'error',
+      method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(15000),redirect:'manual',
       body:JSON.stringify({chat_id:recipient,text,link_preview_options:{is_disabled:true}})
     });
+    if(response.status>=300&&response.status<400)throw Error('redirect_rejected');
     const body=await response.json();
     if(response.ok&&body.ok===true&&String(body.result?.chat?.id)===recipient&&Number.isInteger(body.result?.message_id)){
       status='sent';error=null;messageId=body.result.message_id;
@@ -114,7 +121,8 @@ export async function handle(request,env,ctx,{fetcher=fetch,now=Date.now}={}){
     const ipKey=await sha(`${env.RATE_SALT}:${Math.floor(timestamp/DAY)}:${ip}`);
     const ipQuota=await quota(env,`ip:${ipKey}`,Math.floor(timestamp/600000),timestamp+DAY,5);
     if(!ipQuota)return reply(429,{ok:false,error:'rate_limited'},{'Retry-After':'600'});
-    if(!await checkTurnstile(env,data,origin,ip,fetcher))return reply(400,{ok:false,error:'verification_failed'});
+    const verificationError=await checkTurnstile(env,data,origin,ip,fetcher);
+    if(verificationError)return reply(['verification_unavailable','verification_configuration'].includes(verificationError)?503:400,{ok:false,error:verificationError});
     const dailyQuota=await quota(env,'accepted',Math.floor(timestamp/DAY),timestamp+2*DAY,1000);
     if(!dailyQuota)return reply(429,{ok:false,error:'daily_limit'},{'Retry-After':'3600'});
     await env.DB.prepare("INSERT INTO leads(id,fingerprint,payload,created_at,expires_at,status,attempts,next_attempt) VALUES(?,?,?,?,?,'pending',0,?) ON CONFLICT(id) DO NOTHING").bind(data.requestId,fingerprint,JSON.stringify(fields),timestamp,timestamp+30*DAY,timestamp).run();
