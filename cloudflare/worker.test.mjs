@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
 import {randomUUID} from 'node:crypto';
-import {handle,deliver,scheduled} from './worker.mjs';
+import {handle,deliver,scheduled,splitTelegramText} from './worker.mjs';
 
 function fixture(options={}){
   const sqlite=new DatabaseSync(':memory:');
@@ -33,7 +33,7 @@ test('strict validation rejects recipient injection, origin, consent, malformed 
   const f=fixture();
   for(const bad of [{...data(),chat_id:'999'},{...data(),name:[]},{...data(),requestId:[randomUUID()]},{...data(),consent:false},{...data(),website:'spam'},null,[]])assert.equal((await handle(request(bad),f.env,f.ctx,f)).status,400);
   assert.equal((await handle(request(data(),{Origin:'https://evil.invalid'}),f.env,f.ctx,f)).status,403);
-  assert.equal((await handle(request({...data(),problem:'x'.repeat(13000)}),f.env,f.ctx,f)).status,413);
+  assert.equal((await handle(request({...data(),problem:'x'.repeat(33000)}),f.env,f.ctx,f)).status,413);
   assert.equal(f.calls.length,0);
 });
 
@@ -113,4 +113,44 @@ test('Siteverify and Telegram redirects are rejected without following or parsin
   const g=fixture({telegram:redirect});await handle(request(data()),g.env,g.ctx,g);await finish(g);
   assert.equal(g.sqlite.prepare('SELECT status FROM leads').get().status,'uncertain');await scheduled(g.env,g);
   assert.equal(g.calls.filter(x=>x.kind==='telegram').length,1);
+});
+
+test('long applications are split into ordered Telegram messages without breaking words',async()=>{
+  const f=fixture();
+  const problem=Array.from({length:320},(_,index)=>'Задача'+index+' '.repeat(index%5+1)).join('')+'\n\n'+Array.from({length:140},(_,index)=>'Результат'+index).join(' ');
+  const body={...data(),problem,outcome:'Нужен понятный результат и план действий.'};
+  assert.ok(problem.length>3900);assert.ok(problem.length<6000);
+  assert.equal((await handle(request(body),f.env,f.ctx,f)).status,202);await finish(f);
+  const sends=f.calls.filter(call=>call.kind==='telegram').map(call=>call.payload.text);
+  assert.ok(sends.length>=2);
+  assert.ok(sends.every(text=>text.length<=4096));
+  assert.ok(sends.every((text,index)=>text.includes('Заявка № '+body.requestId.toLowerCase()+' · '+(index+1)+'/'+sends.length)));
+  const joined=sends.map(text=>text.replace(/^Заявка № [^\n]+\n\n/,'')).join(' ');
+  for(const word of ['Задача0','Задача319','Результат139'])assert.ok(joined.includes(word));
+  assert.equal(f.sqlite.prepare('SELECT status FROM leads').get().status,'sent');
+});
+
+test('a rate limit after an earlier Telegram part is never retried',async()=>{
+  let telegramCalls=0;
+  const f=fixture({telegram:async()=>{
+    telegramCalls++;
+    return telegramCalls===1
+      ?Response.json({ok:true,result:{message_id:7,chat:{id:12345}}})
+      :Response.json({ok:false,error_code:429,parameters:{retry_after:60}},{status:429});
+  }});
+  const body={...data(),problem:Array.from({length:560},(_,index)=>`задача${index}`).join(' ')};
+  assert.equal((await handle(request(body),f.env,f.ctx,f)).status,202);await finish(f);
+  assert.equal(f.sqlite.prepare('SELECT status,last_error FROM leads').get().status,'uncertain');
+  assert.equal(f.sqlite.prepare('SELECT status,last_error FROM leads').get().last_error,'partial_delivery');
+  assert.equal(f.calls.filter(call=>call.kind==='telegram').length,2);
+  await scheduled(f.env,f);
+  assert.equal(f.calls.filter(call=>call.kind==='telegram').length,2);
+});
+
+test('telegram splitter preserves words, paragraphs and a safe message size',()=>{
+  const source='Первый абзац с важными словами.\n\n'+Array.from({length:1500},(_,index)=>'слово'+index).join(' ');
+  const parts=splitTelegramText(source);
+  assert.ok(parts.length>1);assert.ok(parts.every(part=>part.length<=3900));
+  assert.equal(parts.join(' ').replace(/\s+/g,' ').trim(),source.replace(/\s+/g,' ').trim());
+  assert.throws(()=>splitTelegramText('x'.repeat(3910)),/word_too_long/);
 });

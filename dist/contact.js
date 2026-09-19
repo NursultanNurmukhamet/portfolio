@@ -96,18 +96,49 @@
     if(index===2)prepareChallenge();
     if(focus)steps[index].querySelector('input,textarea').focus({preventScroll:true});
   }
+  const leadValidation=Object.freeze({
+    normalize:value=>String(value||'').trim().replace(/\s+/g,' '),
+    phone(value){
+      const phone=this.normalize(value).replace(/\u00a0/g,' '),digits=phone.replace(/[^0-9]/g,'');
+      return !phone||(/^\+?[0-9 ()-]+$/.test(phone)&&digits.length>=7&&digits.length<=15) ? '' :
+        'Укажите номер: от 7 до 15 цифр. Можно использовать +, пробелы, скобки и дефисы.';
+    },
+    name(value){
+      const name=this.normalize(value);
+      return /^[\p{L}][\p{L}\p{M}'’ -]{1,79}$/u.test(name) ? '' :
+        'Укажите имя: минимум 2 буквы. Допустимы буквы, пробел, дефис и апостроф.';
+    },
+    contact(value){
+      const contact=this.normalize(value);
+      return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(contact)||/^@[A-Za-z][A-Za-z0-9_]{4,31}$/.test(contact)||/^https:\/\/t\.me\/[A-Za-z][A-Za-z0-9_]{4,31}\/?$/.test(contact) ? '' :
+        'Укажите корректный email или Telegram: @username либо t.me/username.';
+    }
+  });
+  window.portfolioLeadValidation=leadValidation;
+  function validationMessage(field){
+    if(field.name==='phone')return leadValidation.phone(field.value);
+    if(field.name==='name')return leadValidation.name(field.value);
+    if(field.name==='contact')return leadValidation.contact(field.value);
+    if(field.required&&leadValidation.normalize(field.value).length<(field.minLength>0?field.minLength:1))return 'Добавьте, пожалуйста, чуть больше информации.';
+    return '';
+  }
   function validCurrent(){
     for(const field of steps[step].querySelectorAll('input:not([type=hidden]),textarea')){
       if(field.disabled)continue;
-      const value=field.value.trim();
-      if(field.name==='phone'){
-        const phone=value.replace(/\u00a0/g,' '),digits=phone.replace(/[^0-9]/g,'');
-        field.setCustomValidity(phone&&(!/^\+?[0-9 ()-]+$/.test(phone)||phone.length>32||digits.length<7||digits.length>15)?'Укажите номер: от 7 до 15 цифр. Можно использовать +, пробелы, скобки и дефисы.':'');
-      }else field.setCustomValidity((field.required||value)&&value.length<(field.minLength>0?field.minLength:1)?'Добавьте, пожалуйста, чуть больше информации.':'');
-      if(!field.reportValidity())return false;
-    }return true;
+      const error=validationMessage(field);
+      field.setCustomValidity(error);
+      field.toggleAttribute('aria-invalid',Boolean(error));
+      if(error){status.textContent=error;field.reportValidity();return false;}
+    }
+    status.textContent='';
+    return true;
   }
-  form.addEventListener('input',event=>{if(event.target.matches('input,textarea'))event.target.setCustomValidity('');});
+  form.addEventListener('input',event=>{
+    if(!event.target.matches('input,textarea'))return;
+    const error=validationMessage(event.target);
+    event.target.setCustomValidity(error);event.target.toggleAttribute('aria-invalid',Boolean(error));
+    if(error)status.textContent=error;else if(status.textContent!=='Отправляем заявку…')status.textContent='';
+  });
   form.addEventListener('submit',async event=>{
     event.preventDefault();
     if(sending)return;

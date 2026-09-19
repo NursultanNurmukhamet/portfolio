@@ -1,5 +1,5 @@
-const DAY=86400000,MAX_BYTES=12*1024;
-const FIELDS={problem:[15,1500],outcome:[10,1000],name:[1,80],contact:[3,160]};
+const DAY=86400000,MAX_BYTES=32*1024,TELEGRAM_TEXT_LIMIT=3900;
+const FIELDS={problem:[15,6000],outcome:[10,4000],name:[1,80],contact:[3,160]};
 const KEYS=new Set([...Object.keys(FIELDS),'phone','requestId','consent','website','turnstileToken']);
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const encoder=new TextEncoder();
@@ -30,7 +30,7 @@ function normalize(data){
   for(const [key,[min,max]]of Object.entries(FIELDS)){
     if(typeof data[key]!=='string')throw Error('invalid_fields');
     const value=data[key].trim();
-    if(value.length<min||value.length>max||/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(value))throw Error('invalid_fields');
+    if(value.length<min||value.length>max||/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(value)||/\S{513,}/.test(value))throw Error('invalid_fields');
     fields[key]=value;
   }
   // Optional for compatibility with existing open forms and deduplication hashes.
@@ -46,6 +46,30 @@ function normalize(data){
   return fields;
 }
 
+// Telegram accepts up to 4096 characters. Leave room for the part marker and split
+// only at paragraph/whitespace boundaries. Inputs reject individual 513+ character
+// tokens, so a word is never broken to make delivery fit.
+export function splitTelegramText(text,limit=TELEGRAM_TEXT_LIMIT){
+  const source=String(text||'').trim();
+  if(!source)return [];
+  const chunks=[];let current='';
+  const push=()=>{if(current){chunks.push(current);current='';}};
+  for(const paragraph of source.split(/\n{2,}/)){
+    const units=paragraph.match(/\S+(?:\s+|$)/g)||[];
+    if(!units.length)continue;
+    for(const unit of units){
+      const word=unit.trimEnd(),space=unit.slice(word.length);
+      if(word.length>limit)throw Error('word_too_long');
+      if(!current){current=word;continue;}
+      const separator=current.endsWith('\n\n')?'':' ';
+      if(current.length+separator.length+word.length<=limit)current+=separator+word;
+      else{push();current=word;}
+    }
+    if(current&&!current.endsWith('\n\n'))current+='\n\n';
+  }
+  push();
+  return chunks.map(chunk=>chunk.trim());
+}
 function receipt(row){return {ok:true,accepted:true,requestId:row.id,delivery:row.status==='sent'?'sent':'saved'};}
 async function getLead(env,id){return env.DB.prepare('SELECT id,fingerprint,status,payload IS NOT NULL AS has_payload FROM leads WHERE id=?').bind(id).first();}
 async function quota(env,scope,bucket,expires,limit){
@@ -73,23 +97,34 @@ export async function deliver(id,env,{fetcher=fetch,now=Date.now}={}){
   const {recipient}=configuration(env),timestamp=now(),attemptId=crypto.randomUUID();
   const row=await env.DB.prepare("UPDATE leads SET status='sending',attempts=attempts+1,attempt_id=?,lease_until=? WHERE id=? AND status='pending' AND next_attempt<=? AND created_at>? AND payload IS NOT NULL RETURNING *").bind(attemptId,timestamp+60000,id,timestamp,timestamp-DAY).first();
   if(!row)return;
-  let status='uncertain',error='delivery_unknown',messageId=null,nextAttempt=timestamp;
+  let status='uncertain',error=null,messageId=null,nextAttempt=timestamp;
   try{
     const f=JSON.parse(row.payload);
     const text=`Новая заявка с портфолио\n№ ${id}\n\nПроблема:\n${f.problem}\n\nЖелаемый результат:\n${f.outcome}\n\nИмя: ${f.name}${f.phone?`\nТелефон: ${f.phone}`:''}\nКонтакт: ${f.contact}`;
-    const response=await fetcher(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`,{
-      method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(15000),redirect:'manual',
-      body:JSON.stringify({chat_id:recipient,text,link_preview_options:{is_disabled:true}})
-    });
-    if(response.status>=300&&response.status<400)throw Error('redirect_rejected');
-    const body=await response.json();
-    if(response.ok&&body.ok===true&&String(body.result?.chat?.id)===recipient&&Number.isInteger(body.result?.message_id)){
-      status='sent';error=null;messageId=body.result.message_id;
-    }else if(response.status<500&&body.ok===false&&Number.isInteger(body.error_code)&&body.error_code>=400&&body.error_code<500){
-      if(body.error_code===429&&row.attempts<3){status='pending';error='telegram_rate_limit';nextAttempt=timestamp+Math.max(60,Math.min(86400,Number(body.parameters?.retry_after)||60))*1000;}
-      else{status='failed';error='telegram_rejected';}
+    const parts=splitTelegramText(text);let deliveredParts=0;
+    for(let index=0;index<parts.length;index++){
+      const part=parts.length===1?parts[index]:`Заявка № ${id} · ${index+1}/${parts.length}\n\n${parts[index]}`;
+      if(part.length>4096)throw Error('telegram_part_too_long');
+      const response=await fetcher(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`,{
+        method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(15000),redirect:'manual',
+        body:JSON.stringify({chat_id:recipient,text:part,link_preview_options:{is_disabled:true}})
+      });
+      if(response.status>=300&&response.status<400)throw Error('redirect_rejected');
+      const body=await response.json();
+      if(response.ok&&body.ok===true&&String(body.result?.chat?.id)===recipient&&Number.isInteger(body.result?.message_id)){
+        messageId=body.result.message_id;
+        deliveredParts++;
+        continue;
+      }
+      if(response.status<500&&body.ok===false&&Number.isInteger(body.error_code)&&body.error_code>=400&&body.error_code<500){
+        if(body.error_code===429&&row.attempts<3&&deliveredParts===0){status='pending';error='telegram_rate_limit';nextAttempt=timestamp+Math.max(60,Math.min(86400,Number(body.parameters?.retry_after)||60))*1000;}
+        else if(deliveredParts>0){status='uncertain';error='partial_delivery';}
+        else{status='failed';error='telegram_rejected';}
+      }else error='delivery_unknown';
+      break;
     }
-  }catch{/* A timeout may follow delivery. Never automatically resend. */}
+    if(!error){status='sent';}
+  }catch{error='delivery_unknown';/* A timeout may follow delivery. Never automatically resend. */}
   // If this commit fails, the expired sending lease becomes uncertain, not pending.
   await env.DB.prepare("UPDATE leads SET status=?,last_error=?,telegram_message_id=?,next_attempt=?,lease_until=NULL WHERE id=? AND status='sending' AND attempt_id=?").bind(status,error,messageId,nextAttempt,id,attemptId).run();
 }
