@@ -58,3 +58,5 @@ node --test cloudflare/worker.test.mjs
 ## Сторонние компоненты
 
 Three.js используется по MIT; шрифты Anton и Manrope — по OFL. Тексты лицензий сохранены в `dist/vendor/` и `dist/assets/`.
+
+Пиксельные проценты используют Portfolio Loader Pixel — сокращённую до `0123456789%` производную Press Start 2P (The Press Start 2P Project Authors). Производная переименована в соответствии с Reserved Font Name; лицензия OFL сохранена в `dist/assets/PRESS-START-2P-LICENSE.txt`.
