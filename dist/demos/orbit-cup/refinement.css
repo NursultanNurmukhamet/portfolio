@@ -60,6 +60,8 @@ h2 { letter-spacing: -.045em; line-height: 1.06; }
   left: 37%; top: 9%; height: 93%;
   filter: saturate(1.2) contrast(1.085) brightness(1.015) drop-shadow(7px 12px 9px #19344124);
 }
+.hero-art{position:absolute;z-index:2;top:12%;right:3%;width:58%;height:74%;pointer-events:none;opacity:0;transition:opacity .35s ease}.hero-art canvas{width:100%;height:100%;display:block}.scene-ready .hero-art{opacity:1}.scene-ready .athlete{opacity:.24;filter:saturate(.85) contrast(1.05) brightness(1.12)}
+@media(max-width:760px){.hero-art{top:19%;right:-6%;width:86%;height:62%}.scene-ready .athlete{opacity:.12}}
 .event-widget {
   right: 5%; top: 52%; width: 292px; padding: 22px 24px;
   border-radius: 20px; background: #192f3beb;
