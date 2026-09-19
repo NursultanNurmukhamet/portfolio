@@ -1,0 +1,330 @@
+/* OPENCOURT / quieter colour system and editorial spacing. */
+:root {
+  --sky: #bfdbe8;
+  --yellow: #d6e9a5;
+  --navy: #192f3b;
+  --blue: #396880;
+  --ice: #f3f6f5;
+  --orange: #c9cfdf;
+  --muted: #506572;
+  --line: #dbe3e7;
+  --pad: clamp(24px, 5vw, 80px);
+}
+
+:focus-visible { outline: 2px solid var(--navy); outline-offset: 4px; box-shadow: 0 0 0 7px #f7fbf5; }
+h2 { letter-spacing: -.045em; line-height: 1.06; }
+.section { padding-block: clamp(80px, 8vw, 124px); }
+.eyebrow { letter-spacing: 1.5px; }
+.button { font-size: 13px; min-height: 50px; padding: 16px 26px; letter-spacing: 0; }
+.button:hover { filter: brightness(1.035); transform: translateY(-1px); }
+
+/* The athlete remains the focal point; court lines and light are quieter. */
+.panel-sky {
+  background: radial-gradient(ellipse at 85% 12%, #f3f7ce70, transparent 37%),
+    radial-gradient(ellipse at 64% 56%, #7ebbdc66, transparent 54%),
+    linear-gradient(135deg, #e5f4fa, #afd6eb 62%, #8bbddb);
+}
+.panel-sky:after { opacity: .025; }
+.sun-glow { background: #eff3d94d; filter: blur(85px); }
+.court { opacity: .55; }
+.panel-yellow { background: linear-gradient(140deg, #e6efc9, #cee2a2); }
+.panel-dark { background: linear-gradient(150deg, #233e4b, var(--navy) 75%); }
+.panel-yellow>p { font-size: clamp(110px, 14.5vw, 220px); }
+.panel-dark>p { font-size: clamp(65px, 7.8vw, 122px); letter-spacing: -.045em; }
+.net-lines { opacity: .6; }
+.glass-nav {
+  top: 24px; left: 24px; right: 24px; height: 70px;
+  padding: 10px 14px 10px 24px;
+  background: #f7fbf2de; border-color: #ffffffa6; box-shadow: none;
+}
+.brand b { font-size: 18px; letter-spacing: -.6px; }
+.brand small { font-size: 7px; letter-spacing: 1px; margin-top: 5px; }
+.brand .brand-ball {
+  width: 36px; height: 36px; flex-shrink: 0; border-radius: 9px;
+  background: url('mark.svg?v=4') center / contain no-repeat;
+}
+.brand .brand-ball:before, .brand .brand-ball:after { content: none; display: none; }
+.glass-nav nav { font-size: 11px; letter-spacing: .7px; gap: 28px; }
+.glass-nav nav a { padding-block: 14px; border-bottom: 1px solid transparent; }
+.glass-nav nav a:hover { border-color: currentColor; }
+.glass-nav .button { font-size: 11px; min-height: 46px; }
+.glass-nav .button-label { font: inherit; white-space: nowrap; }
+.glass-nav .button-short { display: none; }
+#motion-toggle { width: 44px; height: 44px; border-color: #192f3b25; }
+.opening-copy { bottom: 12%; }
+.opening-copy>p { font-size: 10px; letter-spacing: 1.4px; margin-bottom: 24px; }
+.opening-copy h1 { font-size: clamp(100px, 11.25vw, 176px); line-height: .91; letter-spacing: -.02em; }
+.opening-copy h1>span { gap: 24px; }
+.opening-copy h1 i { font-family: Arial, sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 1px; padding: 10px 14px; margin-bottom: 10px; }
+.athlete {
+  left: 37%; top: 9%; height: 93%;
+  filter: saturate(1.2) contrast(1.085) brightness(1.015) drop-shadow(7px 12px 9px #19344124);
+}
+.event-widget {
+  right: 5%; top: 52%; width: 292px; padding: 22px 24px;
+  border-radius: 20px; background: #192f3beb;
+  border: 1px solid #ffffff16; box-shadow: 0 14px 36px #1934410d;
+}
+.widget-top { font-size: 8px; letter-spacing: 1.1px; }
+.event-widget dl { margin-top: 16px; }
+.event-widget dd { font-size: 32px; font-weight: 600; }
+.event-widget dt { font-size: 8px; letter-spacing: .4px; }
+.return-card { box-shadow: none; border-radius: 24px; background: #f4f9f0e6; }
+.return-card p { letter-spacing: -.045em; }
+.return-card>span { font-size: 10px; }
+.return-card>small { font-size: 9px; letter-spacing: .7px; }
+.scroll-cue { font-size: 10px; letter-spacing: 1px; min-height: 44px; bottom: 26px; }
+.scroll-cue span { width: 40px; height: 40px; }
+.flying-ball {
+  width: clamp(96px, 10.8vw, 160px);
+  background: none; border-radius: 0; overflow: visible; box-shadow: none;
+  filter: drop-shadow(6px 9px 6px #182a3733);
+}
+.flying-ball:before, .flying-ball:after { content: none; display: none; }
+.flying-ball>img { display: block; width: 100%; height: 100%; max-width: none; }
+.story-progress { height: 2px; }
+
+/* Clearer reading rhythm, fewer competing frames. */
+.welcome-layout { grid-template-columns: 1fr 2.8fr; gap: 5vw; }
+.welcome-copy { gap: 40px; margin-top: 34px; }
+.welcome-copy p { font-size: 15px; line-height: 1.85; }
+.stat-strip { margin-top: 56px; border-radius: 20px; padding-block: 24px; background: #ffffff03; }
+.stat-strip strong { font-size: 56px; font-weight: 500; letter-spacing: -2px; }
+.stat-strip span { font-size: 14px; }
+.stat-strip small { font-size: 12px; }
+.disclosure { font-size: 11px; max-width: 1370px; line-height: 1.8; }
+.section-heading { margin-bottom: 44px; gap: 36px; }
+.section-heading>p { font-size: 14px; line-height: 1.8; }
+.section-heading>p small { font-size: 11px; }
+.program-grid { gap: 24px; align-items: stretch; }
+.day-card { border-radius: 22px; box-shadow: none; border-color: var(--line); }
+.day-head { padding: 28px; }
+.day-head>p { font-size: 9px; letter-spacing: 1px; }
+.day-heading>strong { font-size: 84px; letter-spacing: -2px; }
+.day-heading>span { font-size: 11px; }
+.day-head h3 { font-size: 20px; letter-spacing: -.5px; line-height: 1.3; min-height: 2.6em; }
+.day-items { padding: 4px 24px; }
+.day-items li { grid-template-columns: 28px 1fr; gap: 12px; padding-block: 24px; }
+.event-icon { width: 28px; height: 28px; font-size: 14px; background: #edf2f3; color: var(--muted); }
+.event-time { font-size: 11px; letter-spacing: .3px; margin-bottom: 8px; }
+.day-items h4 { font-size: 17px; line-height: 1.35; margin-bottom: 8px; }
+.day-items p:last-child { font-size: 13px; line-height: 1.75; }
+.day-items li.is-optional { background: #edf2f5; border-radius: 12px; }
+.optional-label { font-size: 9px; letter-spacing: .6px; }
+.program-cta { padding: 28px 32px; border-radius: 20px; margin-top: 28px; }
+.program-cta p { font-size: 13px; }
+
+.stay { background: #e4edf1; }
+.stay-grid { gap: 24px; }
+.hotel-photo, .stay-info { border-radius: 24px; }
+.hotel-photo { min-height: 570px; }
+.hotel-photo img { filter: saturate(1.24) contrast(1.075) brightness(1.025); }
+/* Keep the architecture clear; shading is concentrated behind the white caption. */
+.hotel-photo:after {
+  background: linear-gradient(0deg, #081e31e6 0%, #081e31a6 22%, #081e3126 45%, transparent 62%);
+}
+.hotel-photo>div { text-shadow: 0 2px 14px #081e3166; }
+.stay-info { padding: 36px; }
+.stay-info h3 { font-size: 30px; letter-spacing: -.035em; line-height: 1.2; }
+.stay-info .eyebrow { font-size: 10px; }
+.stay-info>p:not(.eyebrow) { font-size: 14px; line-height: 1.8; }
+.info-tiles>div { background: #edf3f5; border-radius: 14px; padding: 18px; }
+.info-tiles>div+div { background: #eef2e3; }
+.info-tiles span { font-size: 9px; letter-spacing: .7px; }
+.info-tiles b { font-size: 15px; line-height: 1.35; }
+.info-tiles small { font-size: 11px; }
+.amenities li { border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 17px 0; margin-top: 0; font-size: 13px; }
+.amenities span { font-size: 11px; }
+.amenities b { display: none; }
+.stay-info .fine-print { font-size: 11px!important; }
+.image-label { font-size: 9px; letter-spacing: .5px; background: #192f3bd9; }
+.hotel-photo>div>span { font-size: 12px; }
+
+/* One outer card, restrained field groups, legible controls. */
+.registration-intro>p:not(.eyebrow) { font-size: 15px; line-height: 1.8; }
+.registration-intro li b { font-size: 14px; }
+.registration-intro li p { font-size: 12px; }
+.privacy-note p { font-size: 12px; }
+.registration-shell { padding: 6px; border-radius: 28px; background: #f5f8f225; border: 1px solid #f5f8f235; }
+.registration-shell:before { display: none; }
+.registration-card { border-radius: 22px; padding: 36px; }
+.form-topline { font-size: 10px; letter-spacing: .8px; }
+.form-topline>span+span { font-size: 9px; background: #eef2e3; padding: 8px 10px; }
+.registration-card>h3 { font-size: 32px; letter-spacing: -.04em; margin-top: 26px; }
+.form-description { font-size: 14px; line-height: 1.75; }
+.form-block { padding: 24px; border-radius: 16px; background: #f2f5f5; margin-bottom: 24px; }
+.form-block>legend { font-size: 15px; margin-bottom: 22px; }
+.form-block>legend>span { background: #e2e9ed; color: var(--navy); font-size: 10px; }
+.input-grid label, .select-label { font-size: 12px; }
+input[readonly], select { min-height: 48px; font-size: 16px; border-color: #cbd8df; border-radius: 9px; }
+.field-hint { font-size: 12px; line-height: 1.7; }
+.participation-block { background: white; border: 1px solid var(--line); }
+.radio-grid { grid-template-columns: 1fr; }
+.radio-grid label { padding: 18px 16px; gap: 12px; border-radius: 12px; }
+.radio-grid label:has(input:checked) { background: #edf3de; border-color: #8b9f66; }
+.radio-grid b { font-size: 14px; }
+.radio-grid small { font-size: 12px; }
+.radio-grid i { display: none; }
+.radio-grid input, .check-label input { width: 18px; height: 18px; accent-color: var(--navy); }
+.journey-block { background: #edf2f5; }
+.journey-card { padding: 20px; border-radius: 14px; }
+.journey-card>span { font-size: 10px; letter-spacing: .4px; line-height: 1.6; }
+.journey-card h4 { font-size: 20px; line-height: 1.2; min-height: 2.4em; }
+.journey-card label { font-size: 12px; }
+.journey-card select { font-size: 16px; min-height: 48px; }
+.route { font-size: 10px; letter-spacing: .4px; }
+.extras-block { background: #f2f5ed; }
+.check-label { font-size: 13px; min-height: 36px; }
+.local-only { font-size: 12px; background: transparent; padding: 0 2px; color: var(--muted); line-height: 1.8; }
+.form-submit { min-height: 56px; font-size: 14px; border-radius: 12px; }
+.confirmation>p { font-size: 14px; }
+.confirmation dt, .confirmation dd { font-size: 13px; }
+.confirmation .confirmation-note { font-size: 12px; background: #eef2e3; }
+.questions { background: #dce8bd; }
+.questions p:last-child { font-size: 14px; }
+footer { background: #122632; padding-block: 42px; }
+footer p, footer>a:last-child { font-size: 11px; }
+::-webkit-scrollbar-thumb { background: #69899b; }
+
+@media (min-width: 761px) and (max-height: 720px) {
+  .opening-copy h1 { font-size: min(11.25vw, 20vh); }
+  .event-widget { top: 47%; width: 280px; }
+  .glass-nav { top: 16px; height: 66px; }
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  .glass-nav nav { gap: 16px; font-size: 10px; }
+  .glass-nav { padding-left: 18px; gap: 15px; }
+  .brand b { font-size: 16px; }
+  .brand small { font-size: 6px; }
+  .event-widget { width: 256px; padding: 20px; }
+  .widget-top { font-size: 7px; }
+  .event-widget dt { font-size: 7px; }
+  .program-grid { gap: 16px; }
+  .day-head { padding: 24px 20px; }
+  .day-items { padding-inline: 16px; }
+  .day-items li { grid-template-columns: 1fr; }
+  .event-icon { display: none; }
+  .stat-strip>div { padding-inline: 20px; gap: 16px; }
+  .stat-strip span { font-size: 12px; }
+  .stat-strip strong { font-size: 46px; }
+  .stat-strip small { font-size: 11px; }
+  .stay-info { padding: 28px; }
+  .info-tiles { grid-template-columns: 1fr; }
+  .registration-card { padding: 28px; }
+  .form-block { padding: 20px; }
+  .input-grid, .journey-grid { grid-template-columns: 1fr; }
+  .journey-card h4 { min-height: 0; }
+}
+@media (max-width: 760px) {
+  :root { --pad: 24px; }
+  .section { padding-block: 72px; }
+  h2 { font-size: clamp(36px, 10.5vw, 68px); }
+  .glass-nav { top: 12px; left: 12px; right: 12px; padding: 8px 10px 8px 14px; height: 64px; gap: 8px; }
+  .brand { gap: 7px; }
+  .brand .brand-ball { width: 32px; height: 32px; border-radius: 8px; }
+  .brand b { font-size: 13px; }
+  .brand small { font-size: 5px; letter-spacing: .6px; }
+  .header-actions { gap: 5px; }
+  .glass-nav .button { min-height: 44px; padding: 10px 14px; font-size: 10px; gap: 8px; }
+  .glass-nav .button>span { font-size: 16px; }
+  .glass-nav .button-label { display: none; }
+  .glass-nav .button .button-short { display: inline; font: inherit; }
+  #motion-toggle { width: 44px; height: 44px; font-size: 12px; flex-shrink: 0; }
+  .event-widget { left: 24px; top: 102px; width: 232px; padding: 16px 18px; border-radius: 16px; }
+  .widget-top { font-size: 7px; letter-spacing: .7px; }
+  .event-widget dl { margin-top: 12px; }
+  .event-widget dd { font-size: 28px; }
+  .event-widget dt { font-size: 7px; letter-spacing: .1px; }
+  .athlete { left: 13%; top: 24%; height: 67%; }
+  .opening-copy { left: 24px; right: 18px; bottom: 12%; }
+  .opening-copy>p { font-size: 8px; letter-spacing: .65px; max-width: 265px; line-height: 1.7; margin-bottom: 16px; }
+  .opening-copy h1 { font-size: 18.3vw; line-height: .95; }
+  .opening-copy h1>span { gap: 18px; }
+  .opening-copy h1 i { font-size: 9px; padding: 7px 10px; margin-bottom: 4px; }
+  .scroll-cue { bottom: 20px; right: 24px; font-size: 8px; }
+  .panel-yellow>p { top: 31%; font-size: 26vw; }
+  .panel-dark>p { top: 30%; font-size: 12.5vw; }
+  .flying-ball { width: 88px; }
+  .panel-yellow>span, .panel-dark>span { font-size: 9px; letter-spacing: 1px; }
+  .return-card { top: 42%; padding: 25px; }
+  .return-card p { font-size: 9.5vw; }
+  .return-card>span, .return-card>small { font-size: 8px; letter-spacing: .5px; }
+  .welcome-layout { grid-template-columns: 1fr; gap: 16px; }
+  .welcome-copy { gap: 22px; }
+  .welcome-copy p { font-size: 14px; }
+  .stat-strip { margin-top: 36px; padding: 0 24px; }
+  .stat-strip>div { gap: 22px; padding-block: 26px; }
+  .stat-strip small { font-size: 12px; }
+  .disclosure { font-size: 11px; }
+  .section-heading { margin-bottom: 32px; }
+  .section-heading>p { font-size: 14px; }
+  .program-grid { gap: 24px; }
+  .day-head { padding: 26px; }
+  .day-heading>strong { font-size: 86px; }
+  .day-head h3 { font-size: 22px; min-height: 0; }
+  .day-items { padding-inline: 22px; }
+  .day-items li { grid-template-columns: 28px 1fr; gap: 12px; }
+  .day-items h4 { font-size: 17px; }
+  .day-items p:last-child { font-size: 13px; }
+  .program-cta { padding: 26px; }
+  .program-cta .button { font-size: 12px; }
+  .stay-grid { gap: 20px; }
+  .hotel-photo { min-height: 420px; }
+  .stay-info { padding: 28px 24px; }
+  .stay-info h3 { font-size: 28px; }
+  .info-tiles { grid-template-columns: 1fr 1fr; }
+  .info-tiles>div { padding: 16px 14px; }
+  .info-tiles b { font-size: 14px; }
+  .image-label { font-size: 8px; }
+  .registration-layout { gap: 32px; }
+  .registration-intro h2 { font-size: 12vw; }
+  .registration-intro>p:not(.eyebrow) { font-size: 14px; }
+  .registration-shell { margin-inline: -8px; padding: 5px; border-radius: 24px; }
+  .registration-card { padding: 28px 20px; border-radius: 19px; }
+  .form-topline { font-size: 8px; letter-spacing: .5px; }
+  .form-topline>span+span { font-size: 8px; padding: 7px 9px; }
+  .registration-card>h3 { font-size: 29px; }
+  .form-description { font-size: 13px; }
+  .form-block { padding: 20px 16px; }
+  .form-block>legend { font-size: 14px; gap: 9px; }
+  .field-hint { font-size: 12px; }
+  .input-grid label { font-size: 12px; }
+  .journey-card { padding: 20px; }
+  .journey-card h4 { font-size: 21px; min-height: 0; }
+  .journey-card select { font-size: 16px; }
+  .check-label { font-size: 12px; }
+  .confirmation dt, .confirmation dd { font-size: 12px; }
+  .confirmation .button { font-size: 12px; }
+  .questions h2 { font-size: 10.5vw; }
+  .questions .eyebrow { font-size: 9px; }
+  .questions p:last-child { font-size: 14px; max-width: 360px; }
+  .questions .button { font-size: 13px; }
+  footer { padding-inline: 24px; }
+  footer p, footer>a:last-child { font-size: 11px; }
+}
+@media (min-width: 461px) and (max-width: 760px) {
+  .athlete { left: 35%; top: 19%; height: 76%; }
+  .opening-copy h1 { font-size: 15.4vw; }
+  .event-widget { width: 226px; }
+}
+@media (max-width: 359px) {
+  .glass-nav { padding-inline: 10px; left: 8px; right: 8px; }
+  .glass-nav .brand b { font-size: 12px; }
+  .glass-nav .brand small { font-size: 4px; }
+  .glass-nav .brand-ball { display: block; }
+  .brand .brand-ball { width: 28px; height: 28px; border-radius: 7px; }
+  .glass-nav .button { font-size: 9px; padding-inline: 10px; min-width: 48px; }
+  .glass-nav .button>span { display: none; }
+  .glass-nav .button .button-short { display: inline; }
+  .header-actions { gap: 2px; }
+  .event-widget { width: 219px; }
+  .athlete { left: 9%; }
+  .opening-copy>p { max-width: 220px; }
+  .registration-card { padding-inline: 15px; }
+  .registration-card>h3 { font-size: 26px; }
+  .form-topline { letter-spacing: .1px; font-size: 7px; }
+  .form-topline>span+span { font-size: 7px; }
+  .form-block { padding: 18px 13px; }
+  .info-tiles { grid-template-columns: 1fr; }
+  .journey-card { padding: 17px 14px; }
+}

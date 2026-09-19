@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+  <defs>
+    <radialGradient id="surface" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1" gradientTransform="translate(81 63) rotate(48) scale(211)">
+      <stop stop-color="#eeff83"/>
+      <stop offset=".34" stop-color="#cee938"/>
+      <stop offset=".69" stop-color="#a4c221"/>
+      <stop offset=".91" stop-color="#68870f"/>
+      <stop offset="1" stop-color="#425d0c"/>
+    </radialGradient>
+    <radialGradient id="light" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1" gradientTransform="translate(75 55) rotate(55) scale(125 109)">
+      <stop stop-color="#ffffd4" stop-opacity=".36"/>
+      <stop offset="1" stop-color="#ffffd4" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="seam" gradientUnits="userSpaceOnUse" x1="45" y1="28" x2="191" y2="228">
+      <stop stop-color="#ffffee"/>
+      <stop offset=".58" stop-color="#f2f5d4"/>
+      <stop offset="1" stop-color="#bcc99a"/>
+    </linearGradient>
+    <clipPath id="edge"><circle cx="128" cy="128" r="124"/></clipPath>
+    <filter id="felt" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency=".78" numOctaves="3" seed="12" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <pattern id="fibres" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="m3 4 1.2 1.7m8-4 .6 2m11 3-1.4 1.7M6 19l1.8-.6M18 15l-.7 2m9 7 1.5 1M12 29l1.7-.9" stroke="#f7ffba" stroke-width=".65" stroke-linecap="round"/>
+    </pattern>
+    <path id="left-seam" d="M41 17C129 55 132 179 43 239"/>
+    <path id="right-seam" d="M210 16C135 61 136 178 214 238"/>
+  </defs>
+  <g clip-path="url(#edge)">
+    <circle cx="128" cy="128" r="124" fill="url(#surface)"/>
+    <path d="M0 0h256v256H0z" filter="url(#felt)" opacity=".2" style="mix-blend-mode:soft-light"/>
+    <path d="M0 0h256v256H0z" fill="url(#fibres)" opacity=".46"/>
+    <circle cx="128" cy="128" r="124" fill="url(#light)"/>
+    <g stroke-linecap="round">
+      <g stroke="#425712" stroke-opacity=".44" stroke-width="8.5">
+        <use href="#left-seam"/><use href="#right-seam"/>
+      </g>
+      <g stroke="url(#seam)" stroke-width="5.8">
+        <use href="#left-seam"/><use href="#right-seam"/>
+      </g>
+      <g stroke="#ffffec" stroke-opacity=".55" stroke-width="1.15" transform="translate(-1 -1)">
+        <use href="#left-seam"/><use href="#right-seam"/>
+      </g>
+    </g>
+    <circle cx="128" cy="128" r="123.4" stroke="#6a8b1b" stroke-opacity=".34" stroke-width="1.2"/>
+  </g>
+</svg>
