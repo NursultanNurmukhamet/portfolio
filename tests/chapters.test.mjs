@@ -74,11 +74,11 @@ function classList() {
   return {contains: value => values.has(value), add: value => values.add(value), remove: value => values.delete(value)};
 }
 
-function harness() {
+function harness({lab = false} = {}) {
   let time = 0, nextRaf = 1, openDialog = false;
   const callbacks = new Map(), windowEvents = new Map(), documentEvents = new Map(), scrolls = [];
   const body = {nodeType: 1, classList: classList(), closest: () => null};
-  const root = {nodeType: 1, classList: classList(), scrollHeight: 9200};
+  const root = {nodeType: 1, classList: classList(), scrollHeight: lab ? 10900 : 9200};
   const reduced = {matches: false, addEventListener(name, callback) { this.change = callback; }};
   function node(top = 0, height = 1000, options = {}) {
     const result = {
@@ -92,7 +92,8 @@ function harness() {
   }
   const elements = {
     '.hero-story': node(0, 2500), '.hero-stage': node(),
-    '.diagonal-showcase': node(2650, 4000), '.gallery-stage': node(), '#contact': node(6650, 2000)
+    '.diagonal-showcase': node(2650, 4000), '.gallery-stage': node(), '#contact': node(lab ? 8350 : 6650, 2000),
+    ...(lab ? {'#lab': node(6650, 1700)} : {})
   };
   const window = {
     scrollY: 0, innerHeight: 1000, performance: {now: () => time}, matchMedia: () => reduced,
@@ -184,6 +185,41 @@ test('browser adapter scrolls through measured frames one per wheel gesture', ()
   h.emit('wheel', {deltaY: 5}, 1500);
   assert.equal(h.api.state().target, 'project-1');
   assert.ok(h.scrolls.every(scroll => scroll.behavior === 'instant'));
+});
+
+test('optional side-project frame is reached before contact from the last project', () => {
+  const h = harness({lab: true});
+  assert.equal(h.api.state().frames.map(frame => frame.id).join(','), 'hero,hero-outro,project-1,project-2,project-3,lab,contact');
+  h.window.scrollY = 5650;
+  assert.equal(h.emit('wheel', {deltaY: 120}, 0).prevented, true);
+  assert.equal(h.api.state().target, 'lab');
+  h.emit('wheel', {deltaY: 30}, 1000);
+  h.tick(1080);
+  assert.equal(h.window.scrollY, 6650);
+  assert.equal(h.emit('wheel', {deltaY: 15}, 1150).prevented, true, 'incoming momentum cannot skip the cards');
+  assert.equal(h.emit('wheel', {deltaY: 120}, 1500).prevented, false, 'a fresh gesture reads the cards natively');
+});
+
+test('side-project cards and following contact retain native wheel and keyboard scrolling', () => {
+  const h = harness({lab: true});
+  for (const position of [6700, 7500, 8350, 8450]) {
+    h.window.scrollY = position;
+    for (const deltaY of [-120, 120]) assert.equal(h.emit('wheel', {deltaY}).prevented, false);
+    for (const key of ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ']) {
+      assert.equal(h.emit('keydown', {key}).prevented, false);
+    }
+  }
+  assert.equal(h.api.state().animating, false);
+});
+
+test('ArrowUp at the side-project start returns to the last gallery scene', () => {
+  const h = harness({lab: true});
+  h.window.scrollY = 6650;
+  assert.equal(h.emit('keydown', {key: 'ArrowDown'}).prevented, false);
+  assert.equal(h.emit('keydown', {key: 'ArrowUp'}, 500).prevented, true);
+  assert.equal(h.api.state().target, 'project-3');
+  h.tick(1580);
+  assert.equal(h.window.scrollY, 5650);
 });
 
 test('a single fractional wheel tick starts a full chapter in either direction', () => {

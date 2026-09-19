@@ -42,10 +42,12 @@
   }
 
   function nativeRegion(layout, position, direction) {
-    // Contact copy and the complete form are ordinary document content. Only an
-    // upward gesture right at its beginning returns to the preceding scene.
-    if (position >= layout.contactTop - POSITION_EPSILON) {
-      return direction > 0 || position > layout.contactTop + POSITION_EPSILON;
+    // Side-project cards, contact copy and the complete form are ordinary
+    // document content. Only an upward gesture at this region's beginning
+    // returns to the preceding scene. Older pages start this region at contact.
+    const readingTop = layout.labTop ?? layout.contactTop;
+    if (position >= readingTop - POSITION_EPSILON) {
+      return direction > 0 || position > readingTop + POSITION_EPSILON;
     }
     if (layout.heroOversized && position < layout.heroBottom - POSITION_EPSILON) return true;
     if (layout.galleryStatic && position >= layout.galleryTop - POSITION_EPSILON && position < layout.galleryBottom) {
@@ -67,6 +69,7 @@
   const heroStage = document.querySelector('.hero-stage');
   const gallery = document.querySelector('.diagonal-showcase');
   const galleryStage = document.querySelector('.gallery-stage');
+  const lab = document.querySelector('#lab');
   const contact = document.querySelector('#contact');
   if (!hero || !heroStage || !gallery || !galleryStage || !contact) return;
 
@@ -87,19 +90,21 @@
 
   function measure() {
     const heroTop = topOf(hero), galleryTop = topOf(gallery), contactTop = topOf(contact);
+    const labTop = lab ? topOf(lab) : null;
     const heroRange = Math.max(0, hero.offsetHeight - heroStage.offsetHeight);
     const galleryRange = Math.max(0, gallery.offsetHeight - galleryStage.offsetHeight);
     const galleryStatic = gallery.classList.contains('gallery-static') || galleryStage.offsetHeight > window.innerHeight + 4;
     layout = {
       heroBottom: heroTop + hero.offsetHeight,
       heroOversized: heroStage.offsetHeight > window.innerHeight + 4,
-      galleryTop, galleryBottom: galleryTop + gallery.offsetHeight, galleryStatic, contactTop
+      galleryTop, galleryBottom: galleryTop + gallery.offsetHeight, galleryStatic, labTop, contactTop
     };
     const candidates = [
       {id: 'hero', top: heroTop},
       {id: 'hero-outro', top: heroTop + heroRange * .95},
       {id: 'project-1', top: galleryTop},
       ...(!galleryStatic ? [{id: 'project-2', top: galleryTop + galleryRange * .5}, {id: 'project-3', top: galleryTop + galleryRange}] : []),
+      ...(lab ? [{id: 'lab', top: labTop}] : []),
       {id: 'contact', top: contactTop}
     ];
     const maximum = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
