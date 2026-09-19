@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="MyLab — персональная инфраструктурная лаборатория Нурсултана: железо, Proxmox, сеть, Kubernetes, наблюдаемость и восстановление.">
+  <meta name="theme-color" content="#11162a">
+  <title>MyLab — Infrastructure case</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/anton.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="assets/manrope.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="mylab-base.css?v=mylab-4">
+  <link rel="stylesheet" href="mylab.css?v=mylab-4">
+  <script src="mylab.js?v=mylab-4" defer></script>
+</head>
+<body class="mylab-route" data-lang="ru">
+  <a class="skip-link ml-skip" href="#ml-content" data-i18n="skip">К содержанию кейса</a>
+
+  <header class="site-header ml-site-header">
+    <a class="identity" href="index.html" aria-label="Нурсултан — портфолио / Nursultan — portfolio">
+      <span class="monogram">nn<span>.</span></span>
+      <span class="identity-name">NURSULTAN<br>NURMUKHAMET</span>
+    </a>
+    <nav aria-label="Навигация по кейсу / Case navigation">
+      <a href="#hardware" data-i18n="navHardware">Железо</a>
+      <a href="#network" data-i18n="navNetwork">Сеть</a>
+      <a href="#recovery" data-i18n="navRecovery">Восстановление</a>
+      <a href="index.html#projects" data-i18n="back">Все проекты </a>
+    </nav>
+    <div class="ml-controls">
+      <div class="ml-language" role="group" aria-label="Language">
+        <button type="button" data-language="ru" aria-pressed="true">RU</button>
+        <button type="button" data-language="en" aria-pressed="false">EN</button>
+      </div>
+      <button class="ml-motion-toggle" type="button" aria-label="Приостановить движение" aria-pressed="false" title="Приостановить движение"><span aria-hidden="true"><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 5v14M16 5v14"></path></svg></span></button>
+    </div>
+  </header>
+
+  <main id="ml-content">
+    <section class="ml-hero" id="top" aria-labelledby="ml-title">
+      <div class="ml-hero-grid" aria-hidden="true"></div>
+      <div class="ml-hero-copy">
+        <p class="ml-kicker"><span>CASE 01</span><span data-i18n="heroKicker">ПЕРСОНАЛЬНАЯ ИНФРАСТРУКТУРА</span></p>
+        <h1 id="ml-title">MY<span>LAB</span><b>.</b></h1>
+        <p class="ml-hero-lead" data-i18n="heroLead">Моя инфраструктура. От кабеля до кластера.</p>
+        <p class="ml-hero-note" data-i18n="heroNote">От двух GPU и Proxmox до собственной проводной сети, Kubernetes, Grafana и проверяемого архива.</p>
+        <a class="ml-primary-link" href="#case-map"><span data-i18n="heroCta">Открыть карту кейса</span><b aria-hidden="true"><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14m-6-6 6 6 6-6"></path></svg></b></a>
+      </div>
+
+      <div class="ml-system-map">
+        <div class="ml-map-topline"><span>MYLAB / SYSTEM ATLAS</span><span data-i18n="mapKind">КАРТА СЛОЁВ</span></div>
+        <div class="ml-map-canvas">
+          <div class="ml-map-orbit" aria-hidden="true"></div>
+          <svg class="ml-map-links" viewBox="0 0 600 490" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M300 78 L110 180 L300 280 L490 180 Z M300 78 V280 M110 180 V395 L300 280 L490 395 V180 M110 395 H490"/>
+            <path class="ml-flow" d="M300 78 L110 180 L300 280 L490 180 Z M300 78 V280 M110 180 V395 L300 280 L490 395 V180 M110 395 H490"/>
+          </svg>
+          <a class="ml-map-node map-virtual" href="#virtualization"><span>02 / VIRTUALIZATION</span><strong>Proxmox VE</strong><small>QEMU · GPU passthrough</small></a>
+          <a class="ml-map-node map-network" href="#network"><span>03 / NETWORK</span><strong>LAN + Wi-Fi</strong><small>Switch · VPN · VPS</small></a>
+          <a class="ml-map-node map-hardware" href="#hardware"><span>01 / COMPUTE</span><strong>CPU + GPU</strong><small data-i18n="mapCompute">Физическая основа</small></a>
+          <a class="ml-map-node map-platform" href="#platform"><span>04 / PLATFORM</span><strong>Kubernetes</strong><small>GitOps · AI · Services</small></a>
+          <a class="ml-map-node map-recovery" href="#recovery"><span>06 / RECOVERY</span><strong data-i18n="mapData">Данные</strong><small>Backup · Verify · Restore</small></a>
+          <a class="ml-map-node map-observe" href="#observability"><span>05 / OBSERVABILITY</span><strong>Grafana</strong><small>Metrics · Logs · Alerts</small></a>
+        </div>
+        <p class="ml-map-hint"><span aria-hidden="true"><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 18 18 6M6 6h12v12"></path></svg></span><span data-i18n="mapHint">Выберите слой — откроется его история. Это карта кейса, не live-мониторинг.</span></p>
+      </div>
+
+      <dl class="ml-hero-metrics" aria-label="Historical infrastructure snapshot">
+        <div><dt>04</dt><dd data-i18n="metricNodes">инфраструктурных узла</dd></div>
+        <div><dt>03</dt><dd>GPU</dd></div>
+        <div><dt>53</dt><dd data-i18n="metricThreads">аппаратных потока</dd></div>
+        <div><dt>36.6</dt><dd>GiB VRAM</dd></div>
+      </dl>
+      <p class="ml-snapshot"><i></i><span data-i18n="snapshot">ПРОВЕРЕННЫЙ ИСТОРИЧЕСКИЙ СРЕЗ · 2026</span></p>
+      <div class="ml-progress" aria-hidden="true"></div>
+    </section>
+
+    <nav class="ml-case-map" id="case-map" aria-label="Главы MyLab / MyLab chapters">
+      <a href="#hardware" data-case-link="hardware"><span>01</span><b data-i18n="mapHardware">Железо</b></a>
+      <a href="#virtualization" data-case-link="virtualization"><span>02</span><b>Proxmox</b></a>
+      <a href="#network" data-case-link="network"><span>03</span><b data-i18n="mapNetwork">Сеть</b></a>
+      <a href="#platform" data-case-link="platform"><span>04</span><b data-i18n="mapPlatform">Платформа</b></a>
+      <a href="#observability" data-case-link="observability"><span>05</span><b data-i18n="mapObserve">Контроль</b></a>
+      <a href="#recovery" data-case-link="recovery"><span>06</span><b data-i18n="mapRecovery">Восстановление</b></a>
+      <i aria-hidden="true"></i>
+    </nav>
+
+    <section class="ml-brief" aria-labelledby="brief-title">
+      <p class="ml-section-code">00 / THE BRIEF</p>
+      <h2 id="brief-title" data-i18n="briefTitle">Собрать из разного железа одну понятную платформу.</h2>
+      <div class="ml-brief-grid">
+        <article><span data-i18n="briefProblemLabel">ЗАДАЧА</span><p data-i18n="briefProblem">Разные устройства, часть узлов включается по необходимости, GPU passthrough, локальные данные и отсутствие белого IP — всё это нужно было превратить в управляемую систему.</p></article>
+        <article><span data-i18n="briefRuleLabel">ПРИНЦИП</span><p data-i18n="briefRule">У каждого узла своя роль; пользовательский трафик отделён от администрирования; каждое важное изменение оставляет проверяемое доказательство.</p></article>
+        <article><span data-i18n="briefResultLabel">РЕЗУЛЬТАТ</span><p data-i18n="briefResult">Домашний контур для разработки, AI, хранения и эксплуатации, который можно наблюдать, разбирать по слоям и переносить без слепой веры в бэкапы.</p></article>
+      </div>
+    </section>
+
+    <section class="ml-chapter chapter-hardware" id="hardware" data-chapter="hardware" aria-labelledby="hardware-title">
+      <div class="ml-chapter-shell">
+        <aside class="ml-chapter-meta">
+          <p>01 / HARDWARE</p>
+          <h2 id="hardware-title" data-i18n="hardwareTitle">Физическая основа.</h2>
+          <p data-i18n="hardwareIntro">Не рендер и не облачный аккаунт: физические машины, которые я собирал, переустанавливал и соединял в один контур.</p>
+          <ul><li>COMPUTE</li><li>GPU</li><li>STORAGE</li><li>EDGE</li></ul>
+        </aside>
+        <div class="ml-chapter-body">
+          <div class="ml-proof-heading"><span>REAL HARDWARE / VERIFIED SPECS</span><p data-i18n="historicalNote">Характеристики взяты из инвентаризации; статус показан на момент аудита, а не как live SLA.</p></div>
+          <div class="ml-hardware-gallery">
+            <figure class="ml-proof-card proof-rig" data-reveal>
+              <button class="ml-media" type="button" data-lightbox="assets/mylab-rig-photo.png" data-caption-key="rigCaption" aria-label="Открыть фотографию основного хоста"><img src="assets/mylab-rig-photo.png" width="1093" height="1086" loading="lazy" alt="Открытый корпус основного MyLab-хоста с двумя видеокартами"></button>
+              <figcaption><span>CORE / BUILT BY HAND</span><b data-i18n="rigCaption">Ryzen 9 9950X · 64 GB DDR5 · 2 TB NVMe · 2 x RTX 5060 Ti 16 GB</b></figcaption>
+            </figure>
+            <article class="ml-spec-card" data-reveal>
+              <p>COMPUTE CORE</p><h3>32 GB<br><em>VRAM</em></h3>
+              <dl><div><dt>CPU</dt><dd>AMD Ryzen 9 9950X</dd></div><div><dt>BOARD</dt><dd>MSI MAG B650 Tomahawk WiFi</dd></div><div><dt>GPU</dt><dd>2 x Palit RTX 5060 Ti 16 GB</dd></div><div><dt>POWER</dt><dd>1000 W</dd></div><div><dt>COOLING</dt><dd>360 mm AIO</dd></div></dl>
+              <p data-i18n="coreRole">Роль: Proxmox, QEMU VM, GPU passthrough, control plane и тяжёлые вычислительные среды.</p>
+            </article>
+            <figure class="ml-proof-card proof-workstation" data-reveal>
+              <button class="ml-media" type="button" data-lightbox="assets/mylab-workstation-public.png" data-caption-key="workstationCaption" aria-label="Открыть фотографию рабочей станции"><img src="assets/mylab-workstation-public.png" width="1526" height="1030" loading="lazy" alt="Рабочий ноутбук MyLab; QR-коды удалены для публичной версии"></button>
+              <figcaption><span>MANAGEMENT / MOBILE</span><b data-i18n="workstationCaption">Рабочая и управляющая станция. QR-коды удалены из публичной копии.</b></figcaption>
+            </figure>
+          </div>
+          <div class="ml-inventory" aria-label="MyLab node inventory">
+            <article data-reveal><span>01 / CORE</span><h3>Proxmox host</h3><p>Ryzen 9 9950X · 64 GB · 2 x RTX 5060 Ti</p><b data-i18n="connectCore">Проводная LAN · виртуализация и GPU</b></article>
+            <article data-reveal><span>02 / GPU WORKER</span><h3>Lenovo LOQ</h3><p>Ryzen 7 7435HS · 24 GB · RTX 4050 · Ubuntu Server</p><b data-i18n="connectWorker">LAN / Wi‑Fi · Kubernetes worker</b></article>
+            <article data-reveal><span>03 / ARCHIVE</span><h3>Debian laptop</h3><p>Intel i3 · ~4 GB · 1 TB HDD · Debian 13</p><b data-i18n="connectArchive">Проводная LAN · архив и лёгкие сервисы</b></article>
+            <article data-reveal><span>04 / EDGE</span><h3>External VPS</h3><p>1 vCPU · ~1 GB · 20 GB</p><b data-i18n="connectEdge">Интернет · WireGuard / SSH / gateway</b></article>
+            <article data-reveal><span>05 / ADMIN</span><h3>Management station</h3><p>Core Ultra 7 · 16 GB · 1 TB · dual boot</p><b data-i18n="connectAdmin">Администрирование · SSH / VPN · не серверный узел</b></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ml-chapter chapter-virtualization" id="virtualization" data-chapter="virtualization" aria-labelledby="virtualization-title">
+      <div class="ml-chapter-shell">
+        <aside class="ml-chapter-meta"><p>02 / VIRTUALIZATION</p><h2 id="virtualization-title" data-i18n="virtualizationTitle">Один хост. Разные роли.</h2><p data-i18n="virtualizationIntro">Proxmox стал физической основой, а QEMU-машины развели control plane, AI, рабочие среды, игровые сервисы и отдельный Windows-шлюз.</p><ul><li>PROXMOX VE</li><li>QEMU</li><li>PCIe</li><li>THIN LVM</li></ul></aside>
+        <div class="ml-chapter-body">
+          <div class="ml-audit-card" data-reveal>
+            <header><div><i></i><span>READ-ONLY AUDIT / HISTORICAL</span></div><b>PROXMOX VE</b></header>
+            <div class="ml-audit-metrics"><div><strong>01</strong><span data-i18n="pveNodes">физический PVE-узел</span></div><div><strong>05</strong><span>QEMU VM</span></div><div><strong>00</strong><span>LXC</span></div><div><strong>1.84</strong><span>TB THIN STORAGE</span></div></div>
+            <div class="ml-capacity-compare"><div><p><b>PHYSICAL</b><span>32 threads / 60.4 GiB RAM</span></p><i style="--fill:64%"></i></div><div><p><b>ALLOCATED</b><span>46 vCPU / 94 GiB RAM</span></p><i style="--fill:94%"></i></div></div>
+            <p data-i18n="pveAuditNote">Осознанный overcommit и thin provisioning дали гибкость, но потребовали наблюдать memory pressure и не считать выделенный объём физически свободным.</p>
+            <small data-i18n="pvePrivacy">Raw UI не публикуется: в нём были внутренние имена и адреса. Здесь — проверенная обезличенная выжимка аудита.</small>
+          </div>
+          <div class="ml-build-log">
+            <header><p>BUILD LOG</p><h3 data-i18n="buildTitle">От bare metal до управляемой платформы.</h3></header>
+            <ol>
+              <li data-reveal><span>01</span><div><h4 data-i18n="build1Title">Собрал основу</h4><p data-i18n="build1Body">Проверил питание, охлаждение, NVMe, память и обе GPU до установки сервисов.</p></div><b>HARDWARE</b></li>
+              <li data-reveal><span>02</span><div><h4 data-i18n="build2Title">Установил гипервизор</h4><p data-i18n="build2Body">Развернул Proxmox VE и разделил роли по QEMU-виртуальным машинам.</p></div><b>PROXMOX</b></li>
+              <li data-reveal><span>03</span><div><h4 data-i18n="build3Title">Настроил GPU passthrough</h4><p data-i18n="build3Body">Передавал две физические RTX в выбранные вычислительные VM и проверял их по UUID.</p></div><b>PCIe / NVIDIA</b></li>
+              <li data-reveal><span>04</span><div><h4 data-i18n="build4Title">Подключил Linux-узлы</h4><p data-i18n="build4Body">Подготовил Ubuntu Server и Debian, containerd, Docker и автозапуск системных служб.</p></div><b>LINUX</b></li>
+              <li data-reveal><span>05</span><div><h4 data-i18n="build5Title">Собрал Kubernetes</h4><p data-i18n="build5Body">Настроил kubeadm, Calico, MetalLB, kube-proxy и NVIDIA Container Toolkit.</p></div><b>K8S</b></li>
+              <li data-reveal><span>06</span><div><h4 data-i18n="build6Title">Перенёс stateful-нагрузки</h4><p data-i18n="build6Body">Закрепил постоянные данные за стабильным control-plane узлом, сохранив исходные копии.</p></div><b>DATA</b></li>
+            </ol>
+          </div>
+          <article class="ml-incident-strip" data-reveal><p>INCIDENT / GPU PASSTHROUGH</p><h3 data-i18n="gpuIncidentTitle">Guest reboot оказался не физическим reset.</h3><div><span data-i18n="gpuIncidentProblem">Обе карты были видны на PCI, но драйвер поднимал только одну; function reset и ROM-Bar не помогли.</span><b><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></b><span data-i18n="gpuIncidentSolution">Стабильные параметры passthrough + полный cold power cycle физического хоста вернули обе GPU; результат проверен через nvidia-smi, device nodes и DCGM.</span></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="ml-chapter chapter-network" id="network" data-chapter="network" aria-labelledby="network-title">
+      <div class="ml-chapter-shell">
+        <aside class="ml-chapter-meta"><p>03 / NETWORK</p><h2 id="network-title" data-i18n="networkTitle">Сеть и доступ.</h2><p data-i18n="networkIntro">Я не ограничился настройками в браузере: выбрал роли роутеров, добавил коммутатор, обжал кабели нужной длины и разнёс локальный, публичный и административный трафик.</p><ul><li>CAT6A</li><li>RJ45</li><li>WI‑FI</li><li>VPN</li></ul></aside>
+        <div class="ml-chapter-body">
+          <div class="ml-network-gallery">
+            <figure class="network-kit" data-reveal><button class="ml-media" type="button" data-lightbox="assets/mylab-network-kit.png" data-caption-key="networkKitCaption" aria-label="Открыть фотографию сетевого комплекта"><img src="assets/mylab-network-kit.png" width="1200" height="887" loading="lazy" alt="Кабель CAT6A, коннекторы, инструменты для обжимки и восьмипортовый коммутатор"></button><figcaption><b data-i18n="networkKitCaption">CAT6A, RJ45, инструменты и 8‑портовый switch — физический слой до монтажа.</b><span>PHYSICAL LAYER / 01</span></figcaption></figure>
+            <figure class="network-switch" data-reveal><button class="ml-media" type="button" data-lightbox="assets/mylab-network-switch.png" data-caption-key="networkSwitchCaption" aria-label="Открыть фотографию установленного коммутатора"><img src="assets/mylab-network-switch.png" width="849" height="1280" loading="lazy" alt="Подключённый восьмипортовый сетевой коммутатор"></button><figcaption><b data-i18n="networkSwitchCaption">Установленный switch с рабочими линиями.</b><span>SWITCH / 02</span></figcaption></figure>
+            <figure class="network-node" data-reveal><button class="ml-media" type="button" data-lightbox="assets/mylab-network-node.png" data-caption-key="networkNodeCaption" aria-label="Открыть фотографию сетевого узла"><img src="assets/mylab-network-node.png" width="1046" height="942" loading="lazy" alt="Домашний сетевой узел со старым ноутбуком, коммутатором и кабелями"></button><figcaption><b data-i18n="networkNodeCaption">Сервисный ноутбук, switch и проводной контур после установки.</b><span>INSTALLED / 03</span></figcaption></figure>
+          </div>
+          <div class="ml-network-plan" data-reveal>
+            <div class="ml-network-topology" aria-label="Sanitized home network topology"><span class="net-internet">INTERNET</span><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><span class="net-router">HUAWEI HG8245Q2<br><small>ROUTER + ONLY DHCP</small></span><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><span class="net-switch">8-PORT<br><small>SWITCH</small></span><div class="net-branches"><span>PROXMOX</span><span>GPU NODE</span><span>DEBIAN</span></div><div class="net-wifi"><span>MERCUSYS AC12<br><small>AP + SWITCH / LAN‑TO‑LAN</small></span><span>TP‑LINK<br><small>WIRED SWITCH</small></span></div></div>
+            <div class="ml-router-roles"><article><span>01</span><h3>Huawei HG8245Q2</h3><p data-i18n="wifiHuawei">Главный роутер и единственный DHCP: одна точка выдачи адресов вместо конкурирующих настроек.</p></article><article><span>02</span><h3>Mercusys AC12</h3><p data-i18n="wifiMercusys">DHCP и NAT отключены, WAN не используется; подключён LAN‑to‑LAN как точка доступа и коммутатор.</p></article><article><span>03</span><h3>TP‑Link TD‑W8951ND</h3><p data-i18n="wifiTplink">После сброса Wi‑Fi и DHCP отключены, DSL/WAN не используются; устройство повторно работает как проводной switch.</p></article><article class="wifi-summary"><span>WI‑FI</span><h3>2.4 + 5 GHz</h3><p data-i18n="wifiSummary">Общий SSID, WPA2‑AES, WPS выключен, а каналы точек разнесены. Секреты и адреса на странице намеренно не показаны.</p></article></div>
+            <div class="ml-wifi-outcome" data-reveal><article><span>POST-CHECK</span><p data-i18n="wifiResult">Подтверждены один DHCP‑домен, отсутствие double NAT, четыре BSSID под одним SSID и доступность серверного контура.</p></article><article><span>HONEST LIMITS</span><p data-i18n="wifiLimits">Это не mesh и не WPA3; старый сегмент ограничен примерно 100 Мбит/с, а гостевая VLAN и captive portal пока не реализованы.</p></article><article><span>FALLBACK</span><p data-i18n="wifiPrinter">Ethernet принтера не удалось стабилизировать после проверки кабеля и портов, поэтому рабочим резервным вариантом оставлен USB.</p></article></div>
+          </div>
+          <div class="ml-cable-process" data-reveal><p>HAND-TERMINATED LINKS</p><ol><li><span>01</span><b data-i18n="cable1">Замерить трассу и длину</b></li><li><span>02</span><b data-i18n="cable2">Отрезать и зачистить CAT6A</b></li><li><span>03</span><b data-i18n="cable3">Уложить пары и обжать RJ45</b></li><li><span>04</span><b data-i18n="cable4">Протестировать линии и подписать порты</b></li></ol></div>
+          <div class="ml-access-block">
+            <header><p>SECURE ACCESS</p><h3 data-i18n="accessTitle">Для каждого типа доступа — свой маршрут.</h3><span data-i18n="accessIntro">Веб-публикация, администрирование и чувствительный к задержке трафик не должны идти одной дорогой.</span></header>
+            <div class="ml-route-list"><article data-reveal><span>01 / WEB</span><div class="ml-route"><b>USER</b><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><b>CLOUDFLARE TUNNEL</b><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><b>INGRESS</b><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><b>SERVICE</b></div><p data-i18n="routeWeb">Только выбранные сервисы; outbound‑only tunnel, без открытой административной панели.</p></article><article data-reveal><span>02 / ADMIN</span><div class="ml-route"><b>WORKSTATION</b><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><b>WIREGUARD</b><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><b>VPS</b><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><b>HOME LAB</b></div><p data-i18n="routeAdmin">Отдельный защищённый контур для SSH и администрирования.</p></article><article data-reveal><span>03 / LOW LATENCY</span><div class="ml-route"><b>CLIENT</b><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><b>RADMIN</b><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><b>WINDOWS GATEWAY</b><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><b>SERVICE</b></div><p data-i18n="routeGame">Связка VPS + WireGuard работала, но добавляла задержку; отдельный Windows‑шлюз стал основным, VPS — резервным.</p></article></div>
+            <figure class="ml-wireguard-proof" data-reveal><button class="ml-media" type="button" data-lightbox="assets/mylab-wireguard-public.png" data-caption-key="wireguardCaption" aria-label="Открыть обезличенный экран WireGuard"><img src="assets/mylab-wireguard-public.png" width="1418" height="1109" loading="lazy" alt="Обезличенная реконструкция интерфейса WireGuard с тестовыми адресами и скрытыми ключами"></button><figcaption><b data-i18n="wireguardCaption">Обезличенная реконструкция WireGuard UI: ключи скрыты, адреса и endpoint заменены тестовыми.</b><span>PUBLIC-SAFE RECONSTRUCTION</span></figcaption></figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ml-chapter chapter-platform" id="platform" data-chapter="platform" aria-labelledby="platform-title">
+      <div class="ml-chapter-shell">
+        <aside class="ml-chapter-meta"><p>04 / PLATFORM</p><h2 id="platform-title" data-i18n="platformTitle">Сервисы в системе.</h2><p data-i18n="platformIntro">Kubernetes, GitOps и локальные сервисы превратили отдельные машины в среду, где размещение, доставка изменений и данные описаны явно.</p><ul><li>KUBERNETES</li><li>GITOPS</li><li>DATA</li><li>AI</li></ul></aside>
+        <div class="ml-chapter-body">
+          <figure class="ml-map-proof" data-reveal><button class="ml-media" type="button" data-lightbox="assets/mylab-hosts-map.png" data-caption-key="hostsMapCaption" aria-label="Открыть карту ролей MyLab"><img src="assets/mylab-hosts-map.png" width="2573" height="1819" loading="lazy" alt="Обезличенная карта физических хостов и ролей MyLab"></button><figcaption><b data-i18n="hostsMapCaption">Историческая карта хостов и ролей без IP, доменов и секретов.</b><span>ARCHITECTURE SNAPSHOT</span></figcaption></figure>
+          <div class="ml-platform-grid"><article data-reveal><span>01 / CONTROL</span><h3>Control plane</h3><p data-i18n="controlPlane">Оркестрация и стабильные stateful-нагрузки; Prometheus закреплён здесь, чтобы мониторинг не зависел от выключаемой AI‑VM.</p></article><article data-reveal><span>02 / COMPUTE</span><h3>AI / GPU</h3><p data-i18n="aiCompute">Физические GPU переключались между вычислительными VM; DCGM и аппаратные UUID позволяли объединять метрики без двойного подсчёта.</p></article><article data-reveal><span>03 / WORKERS</span><h3>Linux nodes</h3><p data-i18n="linuxNodes">Ubuntu Server и Debian входили в kubeadm‑кластер; выключенный worker становился NotReady, не ломая control plane.</p></article><article data-reveal><span>04 / DELIVERY</span><h3>GitOps path</h3><p data-i18n="gitopsPath">GitLab / registry / review / Argo CD / Kubernetes. Sync отделён от пользовательского трафика и требует проверки stateful‑параметров.</p></article></div>
+          <section class="ml-toolchain" aria-labelledby="toolchain-title">
+            <header><p>TOOLCHAIN</p><h3 id="toolchain-title" data-i18n="toolchainTitle">У каждого инструмента — конкретная роль.</h3><span data-i18n="toolchainIntro">Это карта подтверждённого стека, а не список технологий «для красоты».</span></header>
+            <div class="ml-logo-wall">
+              <div class="brand-proxmox"><i aria-hidden="true"><img src="assets/logos/proxmox.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Proxmox VE</b><span>hypervisor</span></div><div class="brand-qemu"><i aria-hidden="true"><img src="assets/logos/qemu.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>QEMU</b><span>virtual machines</span></div><div class="brand-ubuntu"><i aria-hidden="true"><img src="assets/logos/ubuntu-linux.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Ubuntu</b><span>server nodes</span></div><div class="brand-debian"><i aria-hidden="true"><img src="assets/logos/debian-linux.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Debian</b><span>archive / services</span></div><div class="brand-docker"><i aria-hidden="true"><img src="assets/logos/docker.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Docker</b><span>containers</span></div><div class="brand-containerd"><i aria-hidden="true"><img src="assets/logos/containerd.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>containerd</b><span>K8s runtime</span></div><div class="brand-k8s"><i aria-hidden="true"><img src="assets/logos/kubernetes.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Kubernetes</b><span>orchestration</span></div><div class="brand-calico"><i aria-hidden="true"><img src="assets/logos/calico.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Calico</b><span>cluster network</span></div><div class="brand-metallb"><i aria-hidden="true"><img src="assets/logos/metallb.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>MetalLB</b><span>service IPs</span></div><div class="brand-nginx"><i aria-hidden="true"><img src="assets/logos/nginx.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>NGINX Ingress</b><span>routing</span></div><div class="brand-gitlab"><i aria-hidden="true"><img src="assets/logos/gitlab.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>GitLab</b><span>git / registry / runner</span></div><div class="brand-argo"><i aria-hidden="true"><img src="assets/logos/argo-cd.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Argo CD</b><span>GitOps</span></div><div class="brand-postgres"><i aria-hidden="true"><img src="assets/logos/postgresql.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>PostgreSQL</b><span>databases</span></div><div class="brand-valkey"><i aria-hidden="true"><img src="assets/logos/redis.svg" width="48" height="48" loading="lazy" decoding="async" alt=""><img src="assets/logos/valkey.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Redis / Valkey</b><span>cache / queue</span></div><div class="brand-etcd"><i aria-hidden="true"><img src="assets/logos/etcd.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>etcd</b><span>cluster state</span></div><div class="brand-sealed"><i aria-hidden="true"><img src="assets/logos/sealed.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Sealed Secrets</b><span>protected config</span></div><div class="brand-prom"><i aria-hidden="true"><img src="assets/logos/prometheus.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Prometheus</b><span>metrics</span></div><div class="brand-grafana"><i aria-hidden="true"><img src="assets/logos/grafana.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Grafana</b><span>dashboards</span></div><div class="brand-loki"><i aria-hidden="true"><img src="assets/logos/loki.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Loki</b><span>logs</span></div><div class="brand-alloy"><i aria-hidden="true"><img src="assets/logos/alloy.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Alloy</b><span>telemetry</span></div><div class="brand-nvidia"><i aria-hidden="true"><img src="assets/logos/nvidia.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>NVIDIA DCGM</b><span>GPU metrics</span></div><div class="brand-cloudflare"><i aria-hidden="true"><img src="assets/logos/cloudflare.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>Cloudflare Tunnel</b><span>web access</span></div><div class="brand-wireguard"><i aria-hidden="true"><img src="assets/logos/wireguard.svg" width="48" height="48" loading="lazy" decoding="async" alt=""></i><b>WireGuard</b><span>admin VPN</span></div>
+            </div>
+            <p class="ml-trademark" data-i18n="trademark">Названия и товарные знаки принадлежат их владельцам.</p>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="ml-chapter chapter-observability" id="observability" data-chapter="observability" aria-labelledby="observability-title">
+      <div class="ml-chapter-shell">
+        <aside class="ml-chapter-meta"><p>05 / OBSERVABILITY</p><h2 id="observability-title" data-i18n="observeTitle">Метрики и сигналы.</h2><p data-i18n="observeIntro">Prometheus, Grafana, Loki, node_exporter и DCGM связали физические ресурсы, Linux, Kubernetes и GPU в одну операционную картину.</p><ul><li>METRICS</li><li>LOGS</li><li>ALERTS</li><li>GPU UUID</li></ul></aside>
+        <div class="ml-chapter-body">
+          <figure class="ml-grafana-proof" data-reveal><button class="ml-media" type="button" data-lightbox="assets/mylab-grafana-public.png" data-caption-key="grafanaCaption" aria-label="Открыть публичный фрагмент Grafana"><img src="assets/mylab-grafana-public.png" width="2172" height="724" loading="lazy" alt="Публичная реконструкция фрагмента Grafana: доступные и недоступные источники, потоки CPU, RAM, VRAM и активные GPU"></button><figcaption><b data-i18n="grafanaCaption">Публичная реконструкция Grafana: 7 targets UP, 1 DOWN, 53 threads, 87.6 GiB RAM, 36.6 GiB VRAM и 3 active GPU — исторический снимок.</b><span>PUBLIC-SAFE RECONSTRUCTION</span></figcaption></figure>
+          <div class="ml-observe-grid"><article class="ml-observe-path" data-reveal><span>METRIC PATH</span><div><b>EXPORTERS</b><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><b>PROMETHEUS</b><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><b>GRAFANA</b><i><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></i><b>DECISION</b></div><p data-i18n="metricPath">Targets — это экспортёры и источники, а не физические узлы. Выключенный источник честно становится DOWN, а не исчезает с dashboard.</p></article><article class="ml-dedup-card" data-reveal><span>GPU CAPACITY</span><h3>5 sources<br><em>/ 3 GPU</em></h3><p data-i18n="dedupBody">Две RTX могли появляться из разных VM. Запросы группируют метрики по аппаратному UUID, поэтому GPU и VRAM не считаются дважды.</p></article><article class="ml-alert-card" data-reveal><span>ALERTS / SIGNALS</span><ul><li>exporter down</li><li>high CPU / RAM</li><li>low disk</li><li>recent reboot</li><li>GPU temp / VRAM</li><li>K8s readiness</li></ul></article></div>
+          <article class="ml-incident-card" data-reveal><span>INCIDENT / GRAFANA 502</span><h3 data-i18n="grafanaIncidentTitle">Одинаковая роль не означает одинаковый bootstrap.</h3><ol><li><b data-i18n="incidentSymptom">Симптом</b><p data-i18n="grafanaIncidentSymptom">Grafana вернула 502, новый pod не мог создать sandbox на Debian worker.</p></li><li><b data-i18n="incidentDiagnosis">Диагностика</b><p data-i18n="grafanaIncidentDiagnosis">Kubelet ожидал путь systemd-resolved, которого на Debian не было.</p></li><li><b data-i18n="incidentResolution">Решение</b><p data-i18n="grafanaIncidentResolution">Резервная копия конфигурации, корректный resolv.conf, перезапуск kubelet и контрольная проверка вернули мониторинг.</p></li></ol></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="ml-chapter chapter-recovery" id="recovery" data-chapter="recovery" aria-labelledby="recovery-title">
+      <div class="ml-chapter-shell">
+        <aside class="ml-chapter-meta"><p>06 / RECOVERY</p><h2 id="recovery-title" data-i18n="recoveryTitle">Резервные копии.</h2><p data-i18n="recoveryIntro">Данные собирались в контролируемой последовательности и проверялись несколькими независимыми способами.</p><ul><li>INVENTORY</li><li>EXPORT</li><li>CHECKSUM</li><li>RESTORE DRILL</li></ul></aside>
+        <div class="ml-chapter-body">
+          <div class="ml-recovery-metrics" data-reveal><div><strong>1 888</strong><span data-i18n="verifiedFiles">файлов проверено по SHA‑256</span></div><div><strong>15</strong><span data-i18n="backupSets">daily backup sets</span></div><div><strong>52.9 GB</strong><span data-i18n="archiveSize">curated archive</span></div></div>
+          <ol class="ml-recovery-pipeline"><li data-reveal><span>01</span><div><h3 data-i18n="recovery1Title">Инвентаризация</h3><p data-i18n="recovery1Body">Сверить реальные df/du, сервисы, тома, базы и зависимости — не полагаться только на квоты.</p></div><b>MAP</b></li><li data-reveal><span>02</span><div><h3 data-i18n="recovery2Title">Остановка сервисов записи</h3><p data-i18n="recovery2Body">Корректно остановить приложения, GitLab, registry, monitoring и игровые данные в понятном порядке.</p></div><b>FREEZE</b></li><li data-reveal><span>03</span><div><h3 data-i18n="recovery3Title">Нативные экспорты</h3><p data-i18n="recovery3Body">Снять PostgreSQL dumps, etcd snapshot, GitLab backup и offline‑копию Grafana SQLite.</p></div><b>EXPORT</b></li><li data-reveal><span>04</span><div><h3 data-i18n="recovery4Title">Curated copy</h3><p data-i18n="recovery4Body">Собрать registry, media, конфигурации и данные приложений без перезаписи исходных backup sets.</p></div><b>COPY</b></li><li data-reveal><span>05</span><div><h3 data-i18n="recovery5Title">Целостность</h3><p data-i18n="recovery5Body">Сформировать manifest и SHA‑256; проверить gzip, каталоги pg_restore, SQLite и распаковку.</p></div><b>VERIFY</b></li><li data-reveal><span>06</span><div><h3 data-i18n="recovery6Title">Restore drills</h3><p data-i18n="recovery6Body">Восстановить выбранные PostgreSQL базы, проверить Git‑bundle и refs, мир, media и состояние control plane.</p></div><b>PROVE</b></li></ol>
+          <div class="ml-validation-grid"><article data-reveal><span>POSTGRESQL</span><strong>16 + 26</strong><p data-i18n="validationDb">таблиц в двух тестовых восстановлениях</p></article><article data-reveal><span>GRAFANA</span><strong>quick_check = ok</strong><p>SQLite</p></article><article data-reveal><span>MINECRAFT</span><strong>282 399</strong><p data-i18n="validationWorld">chunks · 0 corrupt records</p></article><article data-reveal><span>ETCD</span><strong>1 481</strong><p data-i18n="validationEtcd">keys в финальном snapshot</p></article><article data-reveal><span>GITLAB</span><strong>8 / 16</strong><p data-i18n="validationGitlab">repo bundles / refs проверено</p></article><article data-reveal><span>IMMICH</span><strong>2 462</strong><p data-i18n="validationImmich">объекта · missing = 0</p></article></div>
+          <aside class="ml-honesty" data-reveal><p>HONEST LIMITS</p><h3 data-i18n="honestyTitle">Что ещё предстоит усилить.</h3><ul><li data-i18n="honesty1">GitLab backup и bundles проверены, но полный end‑to‑end restore GitLab не подтверждён.</li><li data-i18n="honesty2">Daily copies и curated archive оставались на одном физическом HDD — это ещё не полноценная схема 3‑2‑1.</li><li data-i18n="honesty3">Метрики и статусы на странице — исторические snapshots, а не обещание текущего uptime.</li></ul></aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="ml-conclusion" aria-labelledby="conclusion-title"><p>MYLAB / THE RESULT</p><h2 id="conclusion-title" data-i18n="conclusionTitle">Собрать. Разобраться. Восстановить.</h2><p class="ml-conclusion-note" data-i18n="conclusionNote">MyLab — моя практика полного цикла: от обжимки кабеля и установки гипервизора до диагностики сбоев и проверки данных. Не только запускать, но и понимать, как всё работает.</p><div><a href="index.html#projects" data-i18n="nextProjects"> Все проекты</a><a href="index.html#contact" data-i18n="nextContact">Обсудить задачу </a></div></section>
+  </main>
+
+  <footer class="site-footer ml-footer"><a class="monogram" href="#top" aria-label="Наверх / Back to top">nn<span>.</span></a><p>MYLAB · HARDWARE / PROXMOX / NETWORK / PLATFORM / OBSERVABILITY / RECOVERY</p><span data-i18n="footerSnapshot">VERIFIED HISTORICAL SNAPSHOT · 2026</span><a href="#top" class="footer-up" aria-label="Наверх / Back to top"><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 19V5m-6 6 6-6 6 6"></path></svg></a></footer>
+
+  <dialog class="ml-lightbox" id="ml-lightbox" aria-labelledby="ml-lightbox-caption"><button type="button" class="ml-lightbox-close" aria-label="Закрыть / Close"><svg class="ml-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 6 12 12M6 18 18-12"></path></svg></button><img alt=""><p id="ml-lightbox-caption"></p></dialog>
+</body>
+</html>

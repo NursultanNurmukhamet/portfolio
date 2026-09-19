@@ -1,0 +1,15 @@
+/* MyLab's gallery cover shares the case page's editorial identity. */
+.paper-cover.ml-editorial-cover{background:#11162a;color:#fffdf9;isolation:isolate;overflow:hidden}
+.ml-editorial-cover:after{content:"";position:absolute;top:-35%;right:-58%;width:108%;aspect-ratio:1;border-radius:50%;border:1px solid #ffffff18;box-shadow:0 0 0 10cqw #ffffff04,0 0 0 22cqw #ffffff03;padding:0;transform:none;background:transparent;z-index:-1}
+.ml-cover-grid{position:absolute;inset:0;background-image:linear-gradient(#ffffff09 1px,transparent 1px),linear-gradient(90deg,#ffffff09 1px,transparent 1px);background-size:15% 11%;z-index:-1}
+.ml-editorial-cover .paper-topline{position:relative;z-index:1;color:#fffdf9;border-color:#ffffff26;gap:3cqw;font-size:2.5cqw;letter-spacing:.025em;align-items:center}
+.ml-editorial-cover .paper-topline>span:first-child{border:1px solid #ffffff50;border-radius:99px;padding:2cqw 3cqw;color:#cbff55;white-space:nowrap}
+.ml-cover-wordmark{margin:14% 0 0;font:400 27cqw/.88 Anton,Impact,sans-serif;letter-spacing:-.035em;white-space:nowrap}
+.ml-cover-wordmark>span{color:transparent;-webkit-text-stroke:.28cqw #fffdf9}
+.ml-cover-wordmark>b{font-weight:400;color:#ff7048}
+.ml-cover-lead{font:400 6.1cqw/1.3 Manrope,Arial,sans-serif;letter-spacing:-.045em;margin:8% 0 0;max-width:100%}
+.ml-cover-note{font:400 3.35cqw/1.75 Manrope,Arial,sans-serif;color:#cbd2e3;margin:7% 0 0;max-width:96%}
+.ml-cover-stack{font:700 2.25cqw/1.8 Manrope,Arial,sans-serif;letter-spacing:.09em;margin-top:8%;color:#94a4c2}
+.ml-editorial-cover .paper-foot{color:#fffdf9;border-color:#ffffff26;font-size:2.5cqw;align-items:center}
+.ml-cover-arrow{display:grid;place-items:center;border:1px solid #ffffff60;border-radius:50%;width:9cqw;height:9cqw;font-size:4cqw}
+.ml-svg-icon{width:1em;height:1em;display:inline-block;vertical-align:middle;flex:none}
