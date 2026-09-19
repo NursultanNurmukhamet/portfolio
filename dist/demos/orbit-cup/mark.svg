@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">OpenCourt — OC</title>
+  <rect width="64" height="64" rx="12" fill="#192f3b"/>
+  <g fill="#d6e9a5">
+    <path fill-rule="evenodd" d="M10 24 16 18H25L31 24V40L25 46H16L10 40Zm6 2v12l2 2h5l2-2V26l-2-2h-5Z"/>
+    <path d="M41 18H55V24H43L41 26V38L43 40H55V46H41L35 40V24Z"/>
+  </g>
+</svg>

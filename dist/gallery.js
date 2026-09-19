@@ -2,7 +2,7 @@
   // These three examples are presentation fixtures only. The eight real project
   // slots in projects.js are preserved and have not been populated.
   const demos = [
-    {id:'demo-01',number:'01',kind:'WEB EXPERIENCE',title:'Интерактивный сайт',english:'Interactive website',ru:'Пример подачи веб-проекта: идея, визуальный язык и взаимодействие с пользователем.',en:'A sample web project presentation: the idea, visual language and user interaction.',cover:'digital',coverTitle:'DIGITAL<br>EXPERIENCE',subtitle:'Идея становится опытом',angle:-5},
+    {id:'demo-01',number:'01',kind:'EVENT WEBSITE / DEMO',title:'OPENCOURT CUP',english:'A fictional tennis weekend',ru:'Демо спортивного события: подача, пролёт мяча через три сцены, программа и карточка участника. Все данные вымышлены.',en:'A sports event demo: a serve, a ball travelling through three scenes, a schedule and a guest pass. All data is fictional.',cover:'sports',coverTitle:'OPENCOURT<br>CUP',subtitle:'THREE DAYS / ONE COURT / DEMO',angle:-5,href:'demos/orbit-cup/'},
     {id:'demo-02',number:'02',kind:'PRODUCT & SYSTEMS',title:'Рабочая платформа',english:'Business platform',ru:'Пример закрытого кейса: задача, мой вклад и подход — без клиента и внутренних данных.',en:'A sample private case study: the challenge, my contribution and approach — without client or internal data.',cover:'system',coverTitle:'BEHIND<br>THE SYSTEM',subtitle:'Сложное становится понятным',angle:5},
     {id:'demo-03',number:'03',kind:'AI & EXPERIMENTS',title:'AI-эксперимент',english:'AI experiment',ru:'Пример исследовательского проекта: гипотеза, прототип и выводы в одной истории.',en:'A sample research project: the hypothesis, prototype and findings, all in one story.',cover:'lab',coverTitle:'WHAT<br>IF?',subtitle:'Вопрос становится экспериментом',angle:-5}
   ];
@@ -20,11 +20,25 @@
   const clamp = value => Math.max(0,Math.min(1,value));
   const smooth = value => {const x=clamp(value);return x*x*(3-2*x);};
   function cover(demo) {
-    const visual = demo.cover==='digital' ? '<img class="paper-visual" src="assets/chrome-knot.webp" width="1254" height="1254" alt="">' : demo.cover==='system' ? '<div class="system-diagram" aria-hidden="true"><div><span>CONTEXT</span><b>01</b><span>THE CHALLENGE</span></div><div><span>PROCESS</span><i><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></i></div><div><span>RESULT</span><i><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-plus"></use></svg></i></div></div>' : '<div class="lab-grid" aria-hidden="true"></div><div class="lab-type" aria-hidden="true">ai</div><span class="lab-tag" lang="en">TRY. LEARN. REPEAT.</span>';
+    const visual = demo.cover==='sports' ? '<div class="sports-cover-court" aria-hidden="true"></div><img class="sports-cover-art" src="demos/orbit-cup/assets/tennis-player-v2.png" width="1024" height="1536" loading="lazy" decoding="async" alt=""><span class="sports-cover-ball" aria-hidden="true"></span>' : demo.cover==='digital' ? '<img class="paper-visual" src="assets/chrome-knot.webp" width="1254" height="1254" alt="">' : demo.cover==='system' ? '<div class="system-diagram" aria-hidden="true"><div><span>CONTEXT</span><b>01</b><span>THE CHALLENGE</span></div><div><span>PROCESS</span><i><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></i></div><div><span>RESULT</span><i><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-plus"></use></svg></i></div></div>' : '<div class="lab-grid" aria-hidden="true"></div><div class="lab-type" aria-hidden="true">ai</div><span class="lab-tag" lang="en">TRY. LEARN. REPEAT.</span>';
     return `<div class="paper-cover cover-${demo.cover}"><div class="paper-topline"><span>DEMO / PORTFOLIO</span><span>${demo.number}</span></div><p class="paper-title" lang="en">${demo.coverTitle}</p><p class="paper-subtitle">${demo.subtitle}</p>${visual}<div class="paper-foot"><span>ОБРАЗЕЦ ОБЛОЖКИ · НЕ КЕЙС</span><span class="paper-number">${demo.number}</span></div></div>`;
   }
   panelsRoot.innerHTML=demos.map((demo,index)=>`<article class="gallery-panel ${index%2?'is-reversed':''}" id="${demo.id}" aria-labelledby="${demo.id}-title" style="--rest-angle:${demo.angle}deg"><div class="project-story"><p class="story-meta">DEMO ${demo.number} <span>${demo.kind}</span></p><h3 id="${demo.id}-title">${demo.title}</h3><p class="english-title" lang="en">${demo.english}</p><div class="bilingual-copy"><div class="language-copy" lang="ru"><span>RU</span><p>${demo.ru}</p></div><div class="language-copy" lang="en"><span>EN</span><p>${demo.en}</p></div></div><button class="preview-trigger" type="button" data-preview="${index}" aria-label="Посмотреть макет обложки: ${demo.title}">Посмотреть макет <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></button></div><div class="pdf-object" aria-label="Демонстрационная обложка будущей PDF"><div class="paper-stack" style="--paper-angle:${demo.angle}deg">${cover(demo)}<span class="pdf-caption">PDF / ОБРАЗЕЦ ОБЛОЖКИ</span></div></div></article>`).join('');
   const panels=[...panelsRoot.querySelectorAll('.gallery-panel')];
+  // The first fixture now links to a separate original, local-only event demo.
+  // Actual project slots and all other cover previews remain untouched.
+  demos.forEach((demo,index)=>{
+    if(!demo.href)return;
+    const panel=panels[index];
+    const link=document.createElement('a');
+    link.className='preview-trigger';link.href=demo.href;
+    link.textContent='Открыть демосайт ';
+    const arrow=document.createElement('span');arrow.innerHTML=window.portfolioIcon('arrow-up-right');arrow.setAttribute('aria-hidden','true');link.append(arrow);
+    panel.querySelector('.preview-trigger').replaceWith(link);
+    panel.querySelector('.pdf-caption').textContent='WEB / INTERACTIVE DEMO';
+    panel.querySelector('.pdf-object').setAttribute('aria-label',`Обложка самостоятельного демосайта ${demo.title}`);
+    panel.querySelector('.paper-foot>span').textContent='ВЫМЫШЛЕННОЕ СОБЫТИЕ · ДЕМО';
+  });
   function render() {
     frame=0;
     const range=Math.max(1,showcase.offsetHeight-stage.offsetHeight);
