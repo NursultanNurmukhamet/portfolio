@@ -14,13 +14,22 @@
   const bottom = document.querySelector('.hero-bottom');
   const counter = document.querySelector('#scene-number');
   const progressBar = document.querySelector('.scroll-progress');
+  const coordinate = art.querySelector('.art-coordinate');
+  let lastState = '', lastPaper = null, lastProgress = null, lastPhase = null;
 
   function updateStory() {
     frame = 0;
     const mobile = innerWidth < 760;
     const range = Math.max(1, story.offsetHeight - stage.offsetHeight);
-    const progress = reduceMotion.matches ? 0 : clamp(-story.getBoundingClientRect().top / range);
-    document.documentElement.classList.toggle('page-on-paper', story.getBoundingClientRect().bottom < innerHeight*.6);
+    // Read the hero rectangle once before writes. After its progress clamps at
+    // either edge, ordinary scrolling through other sections needs no repaint.
+    const rectangle = story.getBoundingClientRect();
+    const progress = reduceMotion.matches ? 0 : clamp(-rectangle.top / range);
+    const onPaper = rectangle.bottom < innerHeight*.6;
+    if(onPaper!==lastPaper){document.documentElement.classList.toggle('page-on-paper',onPaper);lastPaper=onPaper;}
+    const state = `${progress}/${motionPaused}/${mobile}/${motionPaused?0:pointerX}/${motionPaused?0:pointerY}`;
+    if(state===lastState)return;
+    lastState=state;
     const phase = motionPaused ? 0 : smooth((progress-.16)/.67);
     const introFade = motionPaused ? 1 : 1-smooth((progress-.07)/.34);
     const outroFade = motionPaused ? 0 : smooth((progress-.53)/.26);
@@ -33,10 +42,13 @@
     outro.style.visibility = outroFade < .01 ? 'hidden' : 'visible';
     art.style.transform = `translate3d(calc(${-phase*(mobile ? 5 : 43)}vw + ${motionPaused?0:pointerX}px),${(mobile ? phase*60 : 0)+(motionPaused?0:pointerY)}px,0) rotate(${-phase*26}deg) scale(${1-phase*(mobile?.28:.2)})`;
     bottom.style.color = phase > .6 ? 'var(--deep)' : 'var(--paper)';
-    art.querySelector('.art-coordinate').style.color = phase > .6 ? 'var(--deep)' : 'var(--paper)';
+    coordinate.style.color = phase > .6 ? 'var(--deep)' : 'var(--paper)';
     counter.textContent = phase > .5 ? '02' : '01';
     progressBar.style.transform = `scaleX(${progress})`;
-    window.dispatchEvent(new CustomEvent('portfolio:progress', {detail:{progress,phase}}));
+    if(progress!==lastProgress || phase!==lastPhase){
+      lastProgress=progress;lastPhase=phase;
+      window.dispatchEvent(new CustomEvent('portfolio:progress', {detail:{progress,phase}}));
+    }
   }
   function scheduleFrame() { if (!frame) frame = requestAnimationFrame(updateStory); }
   function setMotion(paused) {

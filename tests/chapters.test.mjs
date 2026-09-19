@@ -31,15 +31,21 @@ test('gesture gate waits for animation AND a quiet momentum tail', () => {
   assert.equal(gate.sample(-100, 1600), -1, 'only a fresh gesture can move again');
 });
 
-test('tiny wheel noise accumulates only within one directional gesture', () => {
+test('every nonzero wheel tick starts a gesture, including fractional pixels', () => {
+  for (const delta of [.01, .25, 1, 3, -.01, -.25, -1, -3]) {
+    const gate = createGestureGate();
+    assert.equal(gate.sample(delta, 0), Math.sign(delta));
+    assert.equal(gate.sample(delta, 20), 0, 'same light gesture cannot queue a second scene');
+    assert.equal(gate.sample(delta, 300), Math.sign(delta), 'another light gesture works after the quiet gap');
+  }
+});
+
+test('zero and invalid wheel packets cannot consume a fresh gesture', () => {
   const gate = createGestureGate();
-  assert.equal(gate.sample(1, 0), 0);
-  assert.equal(gate.sample(1, 20), 0);
-  assert.equal(gate.sample(-2, 40), 0);
-  assert.equal(gate.sample(-2, 60), -1);
-  gate.reset();
-  assert.equal(gate.sample(3, 500), 0);
-  assert.equal(gate.sample(1, 800), 0, 'old noise is not accumulated across the quiet gap');
+  for (const delta of [0, NaN, Infinity, -Infinity]) assert.equal(gate.sample(delta, 0), 0);
+  assert.equal(gate.sample(.01, 10), 1);
+  assert.equal(gate.sample(0, 240), 0);
+  assert.equal(gate.sample(-.01, 260), -1, 'zero packets do not extend momentum lock');
 });
 
 test('static gallery, oversized hero, and contact body keep native reading scroll', () => {
@@ -58,7 +64,9 @@ test('swipe detection ignores taps and horizontal gestures', () => {
   assert.equal(swipeDirection(origin, {x: 103, y: 160}), 1);
   assert.equal(swipeDirection(origin, {x: 103, y: 240}), -1);
   assert.equal(swipeDirection(origin, {x: 150, y: 160}), 0);
-  assert.equal(swipeDirection(origin, {x: 100, y: 180}), 0);
+  assert.equal(swipeDirection(origin, {x: 100, y: 192}), 1, 'short deliberate swipe works');
+  assert.equal(swipeDirection(origin, {x: 100, y: 208}), -1);
+  assert.equal(swipeDirection(origin, {x: 100, y: 197}), 0, 'tap jitter is not navigation');
 });
 
 function classList() {
@@ -135,6 +143,40 @@ test('browser adapter scrolls through measured frames one per wheel gesture', ()
   assert.ok(h.scrolls.every(scroll => scroll.behavior === 'instant'));
 });
 
+test('a single fractional wheel tick starts a full chapter in either direction', () => {
+  for (const deltaY of [.01, .25, 1, -.01, -.25, -1]) {
+    const h = harness();
+    if(deltaY < 0)h.window.scrollY=1425;
+    assert.equal(h.emit('wheel', {deltaY}, 0).prevented, true);
+    assert.equal(h.api.state().target, deltaY > 0 ? 'hero-outro' : 'hero');
+    assert.equal(h.emit('wheel', {deltaY}, 1000).prevented, true);
+    h.tick(1080);
+    assert.equal(h.window.scrollY, deltaY > 0 ? 1425 : 0);
+    assert.equal(h.emit('wheel', {deltaY}, 1100).prevented, true);
+    assert.equal(h.api.state().animating, false);
+  }
+});
+
+test('ignored wheel packets do not swallow the following small vertical gesture', () => {
+  for (const packet of [{deltaY:0}, {deltaX:12,deltaY:0}, {deltaX:12,deltaY:.1}, {deltaY:Infinity}]) {
+    const h=harness();
+    assert.equal(h.emit('wheel', packet, 0).prevented, false);
+    assert.equal(h.emit('wheel', {deltaY:.1}, 10).prevented, true);
+    assert.equal(h.api.state().target, 'hero-outro');
+  }
+});
+
+test('links and buttons allow light wheel scrolling but keep native keyboard actions', () => {
+  for(const tagName of ['A','BUTTON']){
+    const h=harness();
+    const control=h.node(0,100,{closest:selector=>selector.includes('a[href],button')?{tagName}:null});
+    assert.equal(h.emit('keydown',{key:' ',target:control},0).prevented,false);
+    assert.equal(h.emit('keydown',{key:'ArrowDown',target:control},10).prevented,false);
+    assert.equal(h.emit('wheel',{deltaY:.1,target:control},20).prevented,true);
+    assert.equal(h.api.state().target,'hero-outro');
+  }
+});
+
 test('momentum cannot overshoot into contact; a fresh gesture resumes native scrolling', () => {
   const h = harness();
   h.window.scrollY = 5650;
@@ -209,7 +251,9 @@ test('one touch sequence reserves early movement and triggers only one frame', (
   h.emit('touchstart', {touches: point(300)});
   assert.equal(h.emit('touchmove', {touches: point(297)}, 10).prevented, true);
   assert.equal(h.api.state().animating, false, 'a small touch does not skip a scene');
-  assert.equal(h.emit('touchmove', {touches: point(260)}, 30).prevented, true);
+  assert.equal(h.emit('touchmove', {touches: point(293)}, 20).prevented, true);
+  assert.equal(h.api.state().animating, false, '7px tap jitter remains below the swipe threshold');
+  assert.equal(h.emit('touchmove', {touches: point(292)}, 30).prevented, true);
   assert.equal(h.api.state().target, 'hero-outro');
   h.tick(1110);
   assert.equal(h.emit('touchmove', {touches: point(100)}, 1200).prevented, true);

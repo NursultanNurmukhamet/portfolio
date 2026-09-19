@@ -23,3 +23,7 @@ cloudflare/wrangler.jsonc
 *.sqlite-*
 *.db
 *.db-*
+
+# Compatibility copies for untracked local demos; production uses the bundle.
+dist/vendor/three.core.js
+dist/vendor/three.module.js

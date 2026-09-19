@@ -10,7 +10,7 @@
       try {
         const directLink=location.hash && location.hash!=='#top';
         const returning=performance.getEntriesByType('navigation')[0]?.type==='back_forward';
-        if(directLink||returning||matchMedia('(prefers-reduced-motion: reduce)').matches||sessionStorage.getItem('portfolio:intro-seen'))return;
+        if(directLink||returning||matchMedia('(prefers-reduced-motion: reduce)').matches||sessionStorage.getItem('portfolio:loader-seen-v2'))return;
         document.documentElement.classList.add('intro-pending');
         window.portfolioIntroWatchdog=setTimeout(()=>{
           document.documentElement.classList.remove('intro-pending','intro-running');
@@ -21,7 +21,7 @@
   </script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/anton.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="preload" href="assets/chrome-knot.png" as="image">
+  <link rel="preload" href="assets/chrome-knot.webp" as="image">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="gallery.css">
   <link rel="stylesheet" href="contact.css">
@@ -32,19 +32,10 @@
   <script src="contact-config.js" defer></script><script src="verification.js" defer></script><script src="contact.js" defer></script>
 </head>
 <body>
-  <dialog id="cinematic-intro" class="cinematic-intro" aria-labelledby="intro-title" aria-describedby="intro-description">
-    <div class="intro-grain" aria-hidden="true"></div>
-    <div class="intro-frame" aria-hidden="true"></div>
-    <div class="intro-top"><span>INDEPENDENT PORTFOLIO</span><button type="button" class="intro-skip">Пропустить <span aria-hidden="true">/ ESC</span></button></div>
-    <div class="intro-composition">
-      <span class="intro-monogram" aria-hidden="true">nn<span>.</span></span>
-      <p class="intro-credit">A PERSONAL PERSPECTIVE</p>
-      <h2 id="intro-title"><span>NURSULTAN</span><span>NURMUKHAMET<span class="intro-dot">.</span></span></h2>
-      <div class="intro-rule" aria-hidden="true"></div>
-      <p class="intro-presents">ПРЕДСТАВЛЯЕТ <span>/ PRESENTS</span></p>
-      <p id="intro-description">Идеи. Технологии. Реальные решения.</p>
-    </div>
-    <div class="intro-bottom"><span>DESIGN / CODE / SOLUTIONS</span><span>CHAPTER 00 <i aria-hidden="true"></i> A NEW PERSPECTIVE</span></div>
+  <dialog id="cinematic-intro" class="cinematic-intro" aria-label="Загрузка сайта" tabindex="-1">
+    <div class="loader-fill" aria-hidden="true"></div>
+    <div class="loader-progress" role="progressbar" aria-label="Готовность основных ресурсов сайта" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-progress="0%"><span class="loader-value" aria-hidden="true">0%</span></div>
+    <button type="button" class="intro-skip">Пропустить загрузку</button>
   </dialog>
   <a class="skip-link" href="#projects">Перейти к проектам</a>
   <header class="site-header">
@@ -63,7 +54,7 @@
         </div>
         <div class="art-stage" aria-hidden="true">
           <div class="art-shadow"></div>
-          <div class="sculpture-float"><img class="hero-sculpture" src="assets/chrome-knot.png" width="1254" height="1254" alt="" fetchpriority="high"></div>
+          <div class="sculpture-float"><img class="hero-sculpture" src="assets/chrome-knot.webp" width="1254" height="1254" alt="" fetchpriority="high"></div>
           <canvas id="orbit-canvas"></canvas>
           <span class="art-coordinate">FIG. 01 — EXPLORING DIMENSIONS</span>
         </div>

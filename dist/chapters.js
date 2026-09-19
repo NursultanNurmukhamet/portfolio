@@ -12,23 +12,23 @@
 
   // A gesture stays consumed through its momentum tail. Finishing the animation
   // is not enough to unlock it: a quiet gap must also precede the next gesture.
-  function createGestureGate(quiet = QUIET_MS, threshold = 4) {
-    let lastAt = -Infinity, amount = 0, consumed = false, busy = false;
+  function createGestureGate(quiet = QUIET_MS) {
+    let lastAt = -Infinity, consumed = false, busy = false;
     return {
       sample(delta, now) {
-        if (now - lastAt > quiet && !busy) { amount = 0; consumed = false; }
+        // Direction is enough. Even a subpixel trackpad tick starts a chapter;
+        // zero/invalid packets must not consume a gesture or extend its tail.
+        if (!Number.isFinite(delta) || delta === 0) return 0;
+        if (now - lastAt > quiet && !busy) consumed = false;
         lastAt = now;
         if (busy || consumed) return 0;
-        if (amount && Math.sign(amount) !== Math.sign(delta)) amount = 0;
-        amount += delta;
-        if (Math.abs(amount) < threshold) return 0;
         consumed = true;
-        return Math.sign(amount);
+        return Math.sign(delta);
       },
-      consume() { consumed = true; amount = 0; },
+      consume() { consumed = true; },
       setBusy(value) { busy = value; if (value) consumed = true; },
-      reset() { lastAt = -Infinity; amount = 0; consumed = false; busy = false; },
-      state() { return {lastAt, amount, consumed, busy}; }
+      reset() { lastAt = -Infinity; consumed = false; busy = false; },
+      state() { return {lastAt, consumed, busy}; }
     };
   }
 
@@ -51,7 +51,7 @@
     return false;
   }
 
-  function swipeDirection(start, end, minimum = 28) {
+  function swipeDirection(start, end, minimum = 8) {
     const x = end.x - start.x, y = start.y - end.y;
     return Math.abs(y) >= minimum && Math.abs(y) > Math.abs(x) * 1.2 ? Math.sign(y) : 0;
   }
@@ -69,7 +69,8 @@
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const gate = createGestureGate();
-  const interactiveSelector = 'a[href],button,input,textarea,select,option,form,[contenteditable]:not([contenteditable="false"]),[role="textbox"],[role="slider"],[role="spinbutton"],[role="listbox"],audio,video,iframe,[data-native-scroll]';
+  const nativeScrollSelector = 'input,textarea,select,option,form,[contenteditable]:not([contenteditable="false"]),[role="textbox"],[role="slider"],[role="spinbutton"],[role="listbox"],audio,video,iframe,[data-native-scroll]';
+  const interactiveSelector = `a[href],button,${nativeScrollSelector}`;
   let frames = [], layout = {}, animation = null, raf = 0, touch = null, wheelCaptured = false;
   const now = () => window.performance.now();
   const topOf = node => window.scrollY + node.getBoundingClientRect().top;
@@ -146,10 +147,12 @@
     return start(nextFrame(frames, window.scrollY, direction));
   }
 
-  function nativeTarget(target) {
+  function nativeTarget(target, includeActions = false) {
     let node = target && (target.nodeType === 1 ? target : target.parentElement);
     if (!node) return false;
-    if (node.closest(interactiveSelector)) return true;
+    // A link/button has a native click or keyboard action, but no wheel action.
+    // Hovering one must not create a dead zone for light scrolling.
+    if (node.closest(includeActions ? interactiveSelector : nativeScrollSelector)) return true;
     while (node && node !== document.body && node !== document.documentElement) {
       const style = window.getComputedStyle(node);
       if (/(auto|scroll|overlay)/.test(style.overflowY) && node.scrollHeight > node.clientHeight + 2) return true;
@@ -160,28 +163,25 @@
 
   function wheel(event) {
     const delta = wheelPixels(event, window.innerHeight);
+    if (!Number.isFinite(delta.x) || !Number.isFinite(delta.y) || (!delta.x && !delta.y)) return;
     const timestamp = now();
     if (timestamp - gate.state().lastAt > QUIET_MS && !animation) wheelCaptured = false;
-    const direction = gate.sample(delta.y, timestamp);
     if (event.ctrlKey || event.metaKey || event.shiftKey || !event.cancelable || disabled()) {
-      gate.consume();
-      wheelCaptured = false;
-      if (animation) cancel();
+      cancel(true);
       return;
     }
     // Incoming scenes move under a stationary pointer. A new button or the
     // contact form under it must not break a gesture that we already captured.
-    if (animation) { wheelCaptured = true; event.preventDefault(); return; }
-    if (wheelCaptured) { event.preventDefault(); return; }
+    if (animation) { gate.sample(delta.y, timestamp); wheelCaptured = true; event.preventDefault(); return; }
+    if (wheelCaptured) { gate.sample(delta.y, timestamp); event.preventDefault(); return; }
     if (Math.abs(delta.x) > Math.abs(delta.y) || !delta.y || nativeTarget(event.target)) {
-      gate.consume();
       return;
     }
     measure();
-    if (nativeRegion(layout, window.scrollY, Math.sign(delta.y))) { gate.consume(); return; }
+    if (nativeRegion(layout, window.scrollY, Math.sign(delta.y))) return;
+    const direction = gate.sample(delta.y, timestamp);
     if (direction && next(direction)) { wheelCaptured = true; event.preventDefault(); return; }
-    // Hold consumed momentum at the scene boundary even after the animation
-    // ends. Sub-threshold wheel noise remains native rather than feeling stuck.
+    // Hold consumed momentum at the scene boundary even after the animation.
     if (gate.state().consumed && nextFrame(frames, window.scrollY, Math.sign(delta.y))) event.preventDefault();
   }
 
@@ -227,7 +227,7 @@
   function keydown(event) {
     if (event.key === 'Escape') { cancel(); return; }
     if (event.key === 'Tab' || event.key === 'Home' || event.key === 'End') { cancel(); return; }
-    if (event.ctrlKey || event.metaKey || event.altKey || disabled() || nativeTarget(event.target)) return;
+    if (event.ctrlKey || event.metaKey || event.altKey || disabled() || nativeTarget(event.target, true)) return;
     const direction = event.key === 'ArrowDown' || event.key === 'PageDown' || (event.key === ' ' && !event.shiftKey) ? 1 :
       event.key === 'ArrowUp' || event.key === 'PageUp' || (event.key === ' ' && event.shiftKey) ? -1 : 0;
     if (!direction) return;
@@ -242,7 +242,7 @@
   document.addEventListener('click', event => {
     if (event.target.closest?.('a[href],button')) reset();
   }, true);
-  document.addEventListener('pointerdown', event => { if (nativeTarget(event.target)) cancel(); });
+  document.addEventListener('pointerdown', event => { if (nativeTarget(event.target, true)) cancel(); });
   document.addEventListener('focusin', event => {
     // gallery.js moves focus from an outgoing preview action to pagination.
     // That focus repair is part of the scene change, not a request to stop it.

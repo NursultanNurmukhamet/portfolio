@@ -33,6 +33,8 @@ jobs:
           pnpm install --frozen-lockfile
         env:
           WRANGLER_SEND_METRICS: 'false'
+      - name: Verify optimized browser assets match their readable source
+        run: node scripts/build-assets.mjs --check
       - name: Test the actual Cloudflare runtime
         run: node --test cloudflare/runtime.test.mjs
       - name: Configure Pages
