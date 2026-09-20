@@ -41,7 +41,7 @@
   letter-spacing:-.03em;
 }
 
-/* AgentF: a match archive, with real results as the central visual. */
+/* AgentF: a football tactic board built from vector geometry, not screenshots. */
 .paper-cover.cover-agentf{
   --cover-fill:#0b3028;
   background:linear-gradient(148deg,#164938 0%,#092c25 52%,#071d1a 100%);
@@ -70,35 +70,21 @@
 }
 .cover-agentf .paper-subtitle{color:#e6eedb}
 .cover-agentf .paper-number{color:#d9ff7b}
-.cover-agentf .agentf-matches-cover{
-  inset:40% 6.5% 15%;
-  padding:2.2%;
-  gap:3%;
-  border:1px solid #d9ff7b52;
-  border-radius:1.2cqw;
-  background:#051c18;
-  box-shadow:1.6cqw 2cqw 0 #010e0a70,0 0 0 .75cqw #d9ff7b0a;
-  z-index:1;
-}
-.cover-agentf .agentf-matches-cover img{
-  object-fit:contain;
-  border:1px solid #d9ff7b29;
-  border-radius:.4cqw;
-  background:#0b0b19;
-  box-shadow:none;
-}
-.cover-agentf .agentf-matches-cover:focus-visible{
-  outline:2px solid #d9ff7b;
-  outline-offset:4px;
-}
-
-/* The cover stays typographic; match captures are available in the case view. */
-.cover-agentf .agentf-matches-cover{display:none}
+.agentf-tactics-cover{position:absolute;inset:42% 7% 15%;z-index:1;transform:rotate(-6deg);filter:drop-shadow(1.2cqw 1.6cqw .8cqw #010e0a4d)}
+.agentf-tactics-cover svg{width:100%;height:100%;overflow:visible;color:#d9ff7b}
+.tactics-field{fill:#06241e;stroke:currentColor;stroke-opacity:.56;stroke-width:1.5}
+.tactics-line{stroke:currentColor;stroke-opacity:.35;stroke-width:1.2}
+.tactics-route{stroke:currentColor;stroke-width:2.5;stroke-dasharray:7 6;stroke-linecap:round;stroke-linejoin:round}
+.tactics-route-alt{stroke-opacity:.45;stroke-width:1.8}
+.tactics-agent circle{fill:#d9ff7b;stroke:#06241e;stroke-width:4}
+.tactics-ball{fill:#ffb2c9;stroke:#f7f4e8;stroke-width:1.5}
+.agentf-tactics-cover text{fill:#dcf3c9;font:700 10px/1 Arial,sans-serif;letter-spacing:1.25px;opacity:.8}
 
 @media(max-width:519px){
   .cover-agentf .paper-topline{padding-bottom:3.5%}
   .cover-agentf .paper-title{font-size:17cqw;line-height:.9;margin-top:10%}
   .cover-agentf .paper-subtitle{font-size:2.6cqw;line-height:1.35;margin-top:4%}
+  .agentf-tactics-cover{inset:42% 7% 14%}
   .cover-agentf .paper-foot{bottom:3.5%;padding-top:2.5%}
 }
 
@@ -242,6 +228,5 @@
 
 @media(forced-colors:active){
   .paper-cover:is(.cover-agentf,.cover-metacrypt,.cover-listen){border:1px solid CanvasText}
-  .cover-agentf .agentf-matches-cover{border-color:ButtonText}
-  .cover-agentf .agentf-matches-cover:focus-visible{outline-color:Highlight}
+  .agentf-tactics-cover{filter:none}
 }
