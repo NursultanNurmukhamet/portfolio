@@ -92,12 +92,13 @@
   outline-offset:4px;
 }
 
-/* Compact the cover type first so all three match captures fit on iPhone. */
+/* Keep the small-screen cover poster-like; the full match gallery remains
+   available through the case link, while its screenshots stay on larger cards. */
 @media(max-width:519px){
   .cover-agentf .paper-topline{padding-bottom:3.5%}
-  .cover-agentf .paper-title{font-size:14.5cqw;line-height:.9;margin-top:6%}
-  .cover-agentf .paper-subtitle{font-size:2.2cqw;line-height:1.25;margin-top:2.5%}
-  .cover-agentf .agentf-matches-cover{inset:32% 6.5% 14%}
+  .cover-agentf .paper-title{font-size:17cqw;line-height:.9;margin-top:10%}
+  .cover-agentf .paper-subtitle{font-size:2.6cqw;line-height:1.35;margin-top:4%}
+  .cover-agentf .agentf-matches-cover{display:none}
   .cover-agentf .paper-foot{bottom:3.5%;padding-top:2.5%}
 }
 
