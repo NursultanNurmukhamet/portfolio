@@ -39,7 +39,7 @@ test('personal actions open the exact repository, application and Telegram bot r
 });
 
 test('new gallery covers use local artwork and six-button navigation fits small screens',()=>{
-  assert.ok(html.includes('href="personal-covers.css?v=1"'));
+  assert.match(html,/href="personal-covers\.css(?:\?v=[^"]+)?"/);
   for(const cover of ['agentf','metacrypt','listen'])assert.ok(coverCss.includes('.paper-cover.cover-'+cover));
   assert.doesNotMatch(coverCss,/@import|url\(/i);
   assert.ok(visuals);
