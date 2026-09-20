@@ -92,9 +92,13 @@
   outline-offset:4px;
 }
 
-/* Keep the match gallery centered on compact iPhone cards. */
+/* Compact the cover type first so all three match captures fit on iPhone. */
 @media(max-width:519px){
-  .cover-agentf .agentf-matches-cover{inset:34% 6.5% 16%}
+  .cover-agentf .paper-topline{padding-bottom:3.5%}
+  .cover-agentf .paper-title{font-size:14.5cqw;line-height:.9;margin-top:6%}
+  .cover-agentf .paper-subtitle{font-size:2.2cqw;line-height:1.25;margin-top:2.5%}
+  .cover-agentf .agentf-matches-cover{inset:32% 6.5% 14%}
+  .cover-agentf .paper-foot{bottom:3.5%;padding-top:2.5%}
 }
 
 /* MetaCrypt: translucent data layers around a solid, readable lock. */
