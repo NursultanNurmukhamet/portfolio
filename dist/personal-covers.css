@@ -92,13 +92,13 @@
   outline-offset:4px;
 }
 
-/* Keep the small-screen cover poster-like; the full match gallery remains
-   available through the case link, while its screenshots stay on larger cards. */
+/* The cover stays typographic; match captures are available in the case view. */
+.cover-agentf .agentf-matches-cover{display:none}
+
 @media(max-width:519px){
   .cover-agentf .paper-topline{padding-bottom:3.5%}
   .cover-agentf .paper-title{font-size:17cqw;line-height:.9;margin-top:10%}
   .cover-agentf .paper-subtitle{font-size:2.6cqw;line-height:1.35;margin-top:4%}
-  .cover-agentf .agentf-matches-cover{display:none}
   .cover-agentf .paper-foot{bottom:3.5%;padding-top:2.5%}
 }
 
