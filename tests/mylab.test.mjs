@@ -5,7 +5,8 @@ import {resolve} from 'node:path';
 
 const root = resolve(import.meta.dirname, '../dist');
 const html = readFileSync(resolve(root, 'mylab.html'), 'utf8');
-const cover = readFileSync(resolve(root, 'mylab-cover.js'), 'utf8');
+const cover = readFileSync(resolve(root, 'gallery.js'), 'utf8');
+const index = readFileSync(resolve(root, 'index.html'), 'utf8');
 test('MyLab has six linked chapters and a system-map hero', () => {
   assert.equal((html.match(/data-chapter=/g) || []).length, 6);
   assert.equal((html.match(/class="ml-map-node /g) || []).length, 6);
@@ -23,9 +24,12 @@ test('MyLab ships all technology logos and local page resources', () => {
     assert.ok(existsSync(resolve(root, path.split(/[?#]/)[0])), path);
   }
 });
-test('MyLab cover links to the real case without the old 3D image', () => {
-  assert.ok(cover.includes("action.href = 'mylab.html'"));
+test('MyLab is the first gallery entry and links to the real case without the old 3D image', () => {
+  assert.ok(cover.includes("cover:'mylab'"));
+  assert.ok(cover.includes("href:'mylab.html'"));
   assert.ok(cover.includes('MY<span>LAB</span>'));
   assert.ok(!cover.includes('mylab-core.png'));
   assert.ok(cover.includes('От кабеля до кластера.'));
+  assert.ok(!index.includes('mylab-cover.js'), 'the runtime cover patch is gone');
+  assert.ok(!existsSync(resolve(root, 'mylab-cover.js')));
 });

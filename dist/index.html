@@ -2,8 +2,20 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Персональное портфолио Нурсултана. Дизайн-концепция; материалы проектов готовятся.">
-  <meta name="theme-color" content="#087c3e"><title>Nursultan — Ideas in motion</title>
+  <meta name="description" content="Нурсултан Нурмухамет — Backend / Infrastructure Engineer. Семь production-систем в Sapa Technologies, собственная Kubernetes-лаборатория, ЭЦП и SSO.">
+  <meta name="theme-color" content="#087c3e"><title>Nursultan Nurmukhamet — Backend / Infrastructure Engineer</title>
+  <link rel="canonical" href="https://nursultannurmukhamet.github.io/portfolio/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Nursultan Nurmukhamet — Backend / Infrastructure Engineer">
+  <meta property="og:description" content="Семь production-систем в Sapa Technologies, Kubernetes-лаборатория, ЭЦП и SSO. Кейсы, код и контакты.">
+  <meta property="og:url" content="https://nursultannurmukhamet.github.io/portfolio/">
+  <meta property="og:image" content="https://nursultannurmukhamet.github.io/portfolio/assets/og.jpg">
+  <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ru_RU">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Nursultan Nurmukhamet — Backend / Infrastructure Engineer">
+  <meta name="twitter:description" content="Семь production-систем в Sapa Technologies, Kubernetes-лаборатория, ЭЦП и SSO.">
+  <meta name="twitter:image" content="https://nursultannurmukhamet.github.io/portfolio/assets/og.jpg">
   <script>
     // Keep direct links, history restoration and reduced-motion visits immediate.
     (() => {
@@ -32,8 +44,8 @@
   <script src="gallery.js?v=personal-projects-3" defer></script>
   <script src="chapters.js?v=projects-6" defer></script><script src="intro.js" defer></script>
   <script src="contact-config.js?v=direct-contacts" defer></script><script src="verification.js" defer></script><script src="contact.js?v=validation-split" defer></script>
-  <link rel="stylesheet" href="mylab-cover.css?v=2">
-  <script src="mylab-cover.js?v=2" defer></script>
+  <link rel="stylesheet" href="mylab-cover.css?v=3">
+  <link rel="stylesheet" href="positioning.css?v=2">
 </head>
 <body>
   <dialog id="cinematic-intro" class="cinematic-intro" aria-label="Загрузка сайта" tabindex="-1">
@@ -41,10 +53,10 @@
     <div class="loader-progress" role="progressbar" aria-label="Готовность основных ресурсов сайта" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-progress="0%"><span class="loader-value" aria-hidden="true">0%</span></div>
     <button type="button" class="intro-skip">Пропустить загрузку</button>
   </dialog>
-  <a class="skip-link" href="#projects">Перейти к проектам</a>
+  <a class="skip-link" href="#work">Перейти к содержимому</a>
   <header class="site-header">
     <a class="identity" href="#top" aria-label="Нурсултан — на главную"><span class="monogram">nn<span>.</span></span><span class="identity-name">NURSULTAN<br>NURMUKHAMET</span></a>
-    <nav aria-label="Основная навигация"><a href="#projects">Проекты <sup>DEMO</sup></a><a href="#contact">Обсудить задачу</a></nav>
+    <nav aria-label="Основная навигация"><a href="#work">Работа</a><a href="#projects">Проекты</a><a href="#contact">Контакты</a></nav>
     <button class="motion-toggle" type="button" aria-label="Приостановить анимацию" aria-pressed="false" title="Приостановить анимацию"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-pause"></use></svg></button>
   </header>
   <main>
@@ -54,7 +66,12 @@
         <div class="hero-intro">
           <p class="eyebrow"><span class="status-dot"></span> PERSONAL PORTFOLIO <span class="edition">/ 2026</span></p>
           <h1 id="hero-heading">IDEAS<br><span class="title-line">IN <span class="title-asterisk" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-asterisk"></use></svg></span></span><br>MOTION<span class="title-dot">.</span></h1>
-          <p class="hero-caption">Идеи обретают<br>новую форму.</p>
+          <p class="hero-caption">Backend /<br>Infrastructure<br>Engineer</p>
+          <div class="hero-role">
+            <p class="hero-role-name">Нурсултан Нурмухамет</p>
+            <p class="hero-role-facts">7 production-систем в Sapa Technologies <span aria-hidden="true">·</span> Kubernetes-лаборатория <span aria-hidden="true">·</span> ЭЦП и SSO</p>
+            <nav class="hero-role-links" aria-label="Быстрые ссылки"><a href="assets/Nursultan-Nurmukhamet-CV.pdf">CV <small>PDF</small></a><a href="https://github.com/NursultanNurmukhamet" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://t.me/NurmukhametNursultan" target="_blank" rel="noopener noreferrer">Telegram</a></nav>
+          </div>
         </div>
         <div class="art-stage" aria-hidden="true">
           <div class="art-shadow"></div>
@@ -62,27 +79,43 @@
           <canvas id="orbit-canvas"></canvas>
           <span class="art-coordinate">FIG. 01 — EXPLORING DIMENSIONS</span>
         </div>
-        <div class="hero-outro" aria-hidden="true"><p class="eyebrow">A NEW PERSPECTIVE</p><p class="outro-title">NEXT<br>CHAPTER<span>.</span></p><p class="outro-caption">Дальше — проекты.<br>У каждого своя история.</p></div>
+        <div class="hero-outro" aria-hidden="true"><p class="eyebrow">A NEW PERSPECTIVE</p><p class="outro-title">NEXT<br>CHAPTER<span>.</span></p><p class="outro-caption">Дальше — работа и проекты.<br>Что сделано и как.</p></div>
         <div class="hero-bottom"><a class="scroll-cue" href="#projects"><span class="arrow-circle" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-down"></use></svg></span><span>ЛИСТАЙ НИЖЕ<br><small>ЕЩЁ ИНТЕРЕСНЕЕ</small></span></a><span class="palette-label"><i></i><i></i><i></i> CACTUS / KIWI</span><span class="scene-count"><b id="scene-number">01</b> / 02</span></div>
         <div class="scroll-progress" aria-hidden="true"></div>
       </div>
     </section>
     <div class="marquee" aria-hidden="true"><div class="marquee-track"><span>IDEAS INTO REALITY <i><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-asterisk"></use></svg></i> ALWAYS IN MOTION <i><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-asterisk"></use></svg></i> </span><span>IDEAS INTO REALITY <i><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-asterisk"></use></svg></i> ALWAYS IN MOTION <i><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-asterisk"></use></svg></i> </span></div></div>
+    <section class="work-section" id="work" aria-labelledby="work-heading">
+      <div class="work-head">
+        <p class="work-eyebrow">01 / WORK · SAPA TECHNOLOGIES · 2025 — Н. В.</p>
+        <h2 id="work-heading">Семь систем<br>в <em>production.</em></h2>
+        <p class="work-lead">Внутренние продукты компании, где я основной автор кода (85–100 % коммитов): от архитектуры и backend до CI/CD, безопасности и эксплуатации. Код закрыт, поэтому ниже — что сделано и на чём.</p>
+      </div>
+      <ul class="work-grid">
+        <li class="work-card"><span class="work-index">01</span><h3>HR-портал</h3><p>Профили сотрудников, интеграция с 1С, отпуска и заявки, обучение, база знаний, опросы. MFA (TOTP) и корпоративный SAML SSO. Blue-green деплой без простоя, версионируемые миграции.</p><p class="work-stack">Python 3.12 · Flask · SQLAlchemy 2 · PostgreSQL 16 · Alembic · Gunicorn · Nginx</p></li>
+        <li class="work-card"><span class="work-index">02</span><h3>Электронный документооборот с ЭЦП</h3><p>Кадровые документы с юридически значимой подписью: NCALayer в браузере, серверная проверка цепочки и отзыва сертификата через KalkanCrypt SDK НУЦ РК. Маршруты согласования на BPMN-движке, SLA-эскалации, append-only аудит и ежедневный контроль целостности архива по SHA-256.</p><p class="work-stack">Python · PostgreSQL · Operaton (BPMN) · SAML / Authentik · Docker</p></li>
+        <li class="work-card"><span class="work-index">03</span><h3>Платформа корпоративного обучения</h3><p>Конструктор курсов, тесты глав и итоговые экзамены, PDF-сертификаты с QR-проверкой, фишинг-тренировки, аналитика с экспортом. Вход через Telegram-бота, интерфейс на трёх языках.</p><p class="work-stack">Flask · SQLAlchemy · PostgreSQL · python-telegram-bot · ReportLab</p></li>
+        <li class="work-card"><span class="work-index">04</span><h3>Telegram-каталог автомобилей с CRM</h3><p>Бот-каталог с избранным, фильтрами и чатом с менеджером; админ-панель с аналитикой. Backend разделён на слои handlers / services / repositories, админский API закрыт ключом и server-side proxy.</p><p class="work-stack">Go · Gin · Next.js · TypeScript · PostgreSQL · Redis</p></li>
+        <li class="work-card"><span class="work-index">05</span><h3>Служба поддержки</h3><p>Telegram-бот для обращений, API для интеграций и верификации, веб-командный пункт с рассылками. Общая сервисная библиотека и единая база для всех трёх процессов.</p><p class="work-stack">FastAPI · Flask · PostgreSQL · Docker Compose · SonarQube</p></li>
+        <li class="work-card"><span class="work-index">06</span><h3>Бронирование переговорных</h3><p>Telegram WebApp для брони комнат с напоминаниями и уведомлениями по расписанию; два отдельных планировщика и health-мониторинг.</p><p class="work-stack">Flask · PostgreSQL · Telegram WebApp · Gunicorn</p></li>
+      </ul>
+      <p class="work-note">Все проекты развёрнуты в test и production через GitLab CI с Trivy-сканами; секреты только в CI/CD Variables. Внутренние адреса и данные компании на сайте не публикуются.</p>
+    </section>
     <section class="diagonal-showcase" id="projects" aria-labelledby="projects-heading">
       <div class="gallery-stage">
         <div class="gallery-watermark" aria-hidden="true">01</div><div class="diagonal-path" aria-hidden="true"></div>
-        <header class="gallery-top"><div><p class="gallery-eyebrow">01 / SELECTED WORK</p><h2 id="projects-heading">Другая <em>траектория.</em></h2></div><div class="gallery-tools"><span class="demo-badge">6 ИСТОРИЙ</span><button type="button" id="gallery-mode" aria-pressed="false">Без движения <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrows-vertical"></use></svg></button></div></header>
+        <header class="gallery-top"><div><p class="gallery-eyebrow">02 / OPEN PROJECTS</p><h2 id="projects-heading">Открытый <em>код.</em></h2></div><div class="gallery-tools"><span class="demo-badge">5 проектов</span><button type="button" id="gallery-mode" aria-pressed="false">Без движения <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrows-vertical"></use></svg></button></div></header>
         <div class="gallery-panels" id="gallery-panels"></div>
-        <noscript><p class="gallery-no-js">Для диагонального примера включи JavaScript. <a href="project.html">Открыть пустой шаблон проекта</a>.</p></noscript>
-        <footer class="gallery-bottom"><p class="gallery-scroll-hint">Листай по диагонали <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-down-right"></use></svg></p><nav class="gallery-pagination" aria-label="Проекты и демонстрации"></nav><span class="gallery-language">RU + EN <span aria-hidden="true">/</span> WEB / CASES</span></footer>
+        <noscript><p class="gallery-no-js">Для галереи нужен JavaScript. Проекты напрямую: <a href="mylab.html">MyLab</a>, <a href="projects/university/">Университет</a>, <a href="https://github.com/NursultanNurmukhamet">GitHub</a>.</p></noscript>
+        <footer class="gallery-bottom"><p class="gallery-scroll-hint">Листай по диагонали <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-down-right"></use></svg></p><nav class="gallery-pagination" aria-label="Проекты"></nav><span class="gallery-language">RU + EN <span aria-hidden="true">/</span> WEB / CASES</span></footer>
         <div class="gallery-progress" aria-hidden="true"></div>
       </div>
     </section>
-    <dialog class="preview-dialog" aria-labelledby="preview-title"><div class="preview-toolbar"><div><h2 id="preview-title">Макет будущей PDF</h2><p>Демонстрационная обложка, не настоящий проект.</p></div><button class="preview-close" type="button" aria-label="Закрыть превью"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-close"></use></svg></button></div><div class="preview-document"></div></dialog>
+    <dialog class="preview-dialog" aria-labelledby="preview-title"><div class="preview-toolbar"><div><h2 id="preview-title">Превью</h2><p></p></div><button class="preview-close" type="button" aria-label="Закрыть превью"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-close"></use></svg></button></div><div class="preview-document"></div></dialog>
     <section class="contact-section" id="contact" aria-labelledby="contact-heading">
-      <div class="contact-kicker"><span>02 / LET’S SOLVE SOMETHING REAL</span><span>ОТ ИДЕИ К РЕШЕНИЮ <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></span></div>
+      <div class="contact-kicker"><span>03 / LET’S SOLVE SOMETHING REAL</span><span>ОТ ИДЕИ К РЕШЕНИЮ <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></span></div>
       <div class="contact-layout">
-        <div class="contact-intro" id="about"><h2 id="contact-heading">Есть задача?<br>Давайте<br><em>обсудим.</em><span class="contact-spark" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-asterisk"></use></svg></span></h2><p class="contact-english-title" lang="en">Have a challenge? Let’s talk.</p><p class="contact-body">Хочу применять свои навыки к реальным задачам бизнеса и создавать полезные решения. Опишите проблему или напишите мне напрямую — обсудим, с чего начать.</p><p class="contact-body contact-body-en" lang="en">I want to put my skills to work on real business problems and build useful solutions. Describe the problem or contact me directly, and we can discuss where to start.</p><a class="contact-start" href="#lead-form">Описать задачу <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></a><div class="direct-contact"><p>ИЛИ НАПРЯМУЮ / DIRECT CONTACT</p><div id="direct-contact-links"></div><span id="contact-pending">Telegram или email добавим после согласования.</span></div></div>
+        <div class="contact-intro" id="about"><h2 id="contact-heading">Есть задача?<br>Давайте<br><em>обсудим.</em><span class="contact-spark" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-asterisk"></use></svg></span></h2><p class="contact-english-title" lang="en">Have a challenge? Let’s talk.</p><p class="contact-body">Сейчас — инженер в Sapa Technologies. Открыт к задачам по backend, инфраструктуре и прикладному AI: от аудита и архитектуры до запуска в production. Опишите задачу или напишите напрямую — отвечу, с чего начать.</p><p class="contact-body contact-body-en" lang="en">Currently an engineer at Sapa Technologies. Open to backend, infrastructure and applied-AI work: from audit and architecture to production launch. Describe the task or contact me directly and I will reply with a starting point.</p><a class="contact-start" href="#lead-form">Описать задачу <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></a><div class="direct-contact"><p>ИЛИ НАПРЯМУЮ / DIRECT CONTACT</p><div id="direct-contact-links"></div><span id="contact-pending">Telegram или email добавим после согласования.</span></div></div>
         <div class="lead-card"><div class="lead-card-top"><span>НАЧНЁМ С ВАШЕЙ ЗАДАЧИ</span><span lang="en">A QUICK BRIEF</span></div><p class="lead-card-intro">Готовое ТЗ не нужно.<br><em>Достаточно рассказать, что не так.</em></p><ol class="lead-steps" aria-label="Шаги обращения"><li aria-current="step"><span>01</span> Проблема</li><li><span>02</span> Результат</li><li><span>03</span> Контакт</li></ol>
           <form id="lead-form" novalidate hidden>
             <fieldset class="lead-step" data-step="0"><legend>В чём проблема? <small lang="en">What’s the problem?</small></legend><label for="lead-problem">Что сейчас не работает или что хотите изменить?</label><textarea id="lead-problem" name="problem" rows="5" minlength="15" maxlength="6000" required aria-describedby="lead-length-hint" placeholder="Например: заявки приходят в разные чаты, теряются, и их приходится собирать вручную."></textarea><p class="lead-hint" id="lead-length-hint">Можно своими словами. Без паролей и закрытых данных. Длинное обращение бот разделит на несколько сообщений.</p></fieldset>
@@ -109,6 +142,6 @@
       </div>
     </section>
   </main>
-  <footer class="site-footer"><a class="monogram" href="#top" aria-label="Вернуться наверх">nn<span>.</span></a><p>DESIGNED TO MOVE FORWARD.</p><span>© 2026 · ДИЗАЙН-КОНЦЕПЦИЯ</span><a href="#top" class="footer-up" aria-label="Наверх"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up"></use></svg></a></footer>
+  <footer class="site-footer"><a class="monogram" href="#top" aria-label="Вернуться наверх">nn<span>.</span></a><p>DESIGNED TO MOVE FORWARD.</p><span>© 2026 · Нурсултан Нурмухамет</span><a href="#top" class="footer-up" aria-label="Наверх"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up"></use></svg></a></footer>
 </body>
 </html>

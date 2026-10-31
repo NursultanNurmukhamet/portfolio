@@ -13,15 +13,14 @@
   }
   window.portfolioGalleryCore=Object.freeze({sampleTravel,slideFraction});
   if(typeof document==='undefined')return;
-  // One presentation fixture, an event demo, a university case and three personal projects.
+  // Two cases with their own pages and three personal projects with public code.
   // The eight blueprint slots in projects.js remain unchanged.
   const demos = [
-    {id:'demo-01',number:'01',kind:'WEB EXPERIENCE',title:'Интерактивный сайт',english:'Interactive website',ru:'Пример подачи веб-проекта: идея, визуальный язык и взаимодействие с пользователем.',en:'A sample web project presentation: the idea, visual language and user interaction.',cover:'digital',coverTitle:'DIGITAL<br>EXPERIENCE',subtitle:'Идея становится опытом',angle:-5},
-    {id:'demo-02',number:'02',kind:'EVENT WEBSITE / DEMO',title:'OPENCOURT CUP',english:'A fictional tennis weekend',ru:'Демо спортивного события: подача, пролёт мяча через три сцены, программа и карточка участника. Все данные вымышлены.',en:'A sports event demo: a serve, a ball travelling through three scenes, a schedule and a guest pass. All data is fictional.',cover:'sports',coverTitle:'OPENCOURT<br>CUP',subtitle:'THREE DAYS / ONE COURT / DEMO',angle:5,href:'demos/orbit-cup/'},
-    {id:'demo-03',number:'03',kind:'UNIVERSITY / AI / RESEARCH',title:'Университет',english:'University projects',ru:'UniTrack, материалы мастер-класса по ИИ и исследование казахской детской речи. Три направления и мой сертификат.',en:'UniTrack, AI masterclass materials and Kazakh children’s speech research. Three areas of work, with my certificate.',cover:'campus',coverTitle:'CAMPUS<br>PROJECTS',subtitle:'UNITRACK / AI MASTERCLASS / ASR',angle:-5,href:'projects/university/',isCase:true},
-    {id:'demo-04',number:'04',kind:'MULTI-AGENT AI',title:'AgentF',english:'Five agents. One team.',ru:'Пять футбольных AI-агентов: тактика, решения языковой модели и резервная логика.',en:'Five AI football agents: tactics, language-model decisions and fallback logic.',cover:'agentf',coverTitle:'AGENT<br>FOOTBALL',subtitle:'PYTHON / AMAZON NOVA / AGENTCORE',angle:5,href:'https://github.com/NursultanNurmukhamet/AgentF',isPersonal:true,footer:'FIVE AGENTS. ONE TEAM.'},
-    {id:'demo-05',number:'05',kind:'PRIVACY TOOL',title:'MetaCrypt',english:'Your images. Your metadata.',ru:'Метаданные изображений: просмотр, очистка, редактирование и шифрование в браузере.',en:'Image metadata: inspect, clean, edit and encrypt directly in the browser.',cover:'metacrypt',coverTitle:'META<br>CRYPT',subtitle:'REACT / TYPESCRIPT / WEB CRYPTO',angle:-5,href:'https://nursultannurmukhamet.github.io/MetaCrypt/',isPersonal:true,isApp:true,footer:'EXIF / XMP / IPTC'},
-    {id:'demo-06',number:'06',kind:'TELEGRAM MEDIA BOT',title:'ULMusic',english:'A link becomes your playlist.',ru:'Telegram-бот для загрузки аудио, видео и нужных фрагментов по ссылке или поиску.',en:'A Telegram bot for getting audio, video and clips from links or search.',cover:'listen',coverTitle:'UL<br>MUSIC',subtitle:'PYTHON / AIOGRAM / YT-DLP / FFMPEG',angle:5,href:'https://t.me/ShutUpandListen_Bot',isPersonal:true,isBot:true,footer:'MUSIC / AUDIO / VIDEO'}
+    {id:'case-01',number:'01',kind:'INFRASTRUCTURE & SYSTEMS',title:'MyLab',english:'Personal infrastructure lab',ru:'Персональная инфраструктурная лаборатория: вычисления, GPU, сеть, наблюдаемость и проверяемое восстановление.',en:'A personal infrastructure lab spanning compute, GPUs, networking, observability and verified recovery.',cover:'mylab',coverTitle:'MY<br>LAB',subtitle:'PROXMOX / KUBERNETES / GRAFANA',angle:5,href:'mylab.html',isCase:true,caption:'WEB CASE / MYLAB',action:'Открыть кейс '},
+    {id:'case-02',number:'02',kind:'UNIVERSITY / AI / RESEARCH',title:'Университет',english:'University projects',ru:'UniTrack, материалы мастер-класса по ИИ и исследование казахской детской речи. Три направления и мой сертификат.',en:'UniTrack, AI masterclass materials and Kazakh children’s speech research. Three areas of work, with my certificate.',cover:'campus',coverTitle:'CAMPUS<br>PROJECTS',subtitle:'UNITRACK / AI MASTERCLASS / ASR',angle:-5,href:'projects/university/',isCase:true,caption:'CASE / UNIVERSITY',action:'Открыть проекты '},
+    {id:'project-03',number:'03',kind:'MULTI-AGENT AI',title:'AgentF',english:'Five agents. One team.',ru:'Пять футбольных AI-агентов: тактика, решения языковой модели и резервная логика.',en:'Five AI football agents: tactics, language-model decisions and fallback logic.',cover:'agentf',coverTitle:'AGENT<br>FOOTBALL',subtitle:'PYTHON / AMAZON NOVA / AGENTCORE',angle:5,href:'https://github.com/NursultanNurmukhamet/AgentF',isPersonal:true,footer:'FIVE AGENTS. ONE TEAM.',caption:'CODE / PERSONAL PROJECT',action:'Открыть GitHub '},
+    {id:'project-04',number:'04',kind:'PRIVACY TOOL',title:'MetaCrypt',english:'Your images. Your metadata.',ru:'Метаданные изображений: просмотр, очистка, редактирование и шифрование в браузере.',en:'Image metadata: inspect, clean, edit and encrypt directly in the browser.',cover:'metacrypt',coverTitle:'META<br>CRYPT',subtitle:'REACT / TYPESCRIPT / WEB CRYPTO',angle:-5,href:'https://nursultannurmukhamet.github.io/MetaCrypt/',isPersonal:true,isApp:true,footer:'EXIF / XMP / IPTC',caption:'WEB / PRIVACY TOOL',action:'Открыть приложение '},
+    {id:'project-05',number:'05',kind:'TELEGRAM MEDIA BOT',title:'ULMusic',english:'A link becomes your playlist.',ru:'Telegram-бот для загрузки аудио, видео и нужных фрагментов по ссылке или поиску.',en:'A Telegram bot for getting audio, video and clips from links or search.',cover:'listen',coverTitle:'UL<br>MUSIC',subtitle:'PYTHON / AIOGRAM / YT-DLP / FFMPEG',angle:5,href:'https://t.me/ShutUpandListen_Bot',isPersonal:true,isBot:true,footer:'MUSIC / AUDIO / VIDEO',caption:'TELEGRAM / MEDIA BOT',action:'Открыть бота '}
   ];
   const showcase = document.querySelector('.diagonal-showcase');
   showcase.dataset.projectCount=String(demos.length);
@@ -33,7 +32,7 @@
   paginationRoot.innerHTML=demos.map((demo,index)=>
     (index?'<span aria-hidden="true"></span>':'')+'<button type="button" data-slide="'+index+'" aria-label="'+demo.title+'" aria-current="'+String(index===0)+'">'+demo.number+'</button>').join('');
   const pagination=[...paginationRoot.querySelectorAll('[data-slide]')];
-  showcase.querySelector('.demo-badge').textContent=demos.length+' ИСТОРИЙ';
+  showcase.querySelector('.demo-badge').textContent=demos.length+' проектов';
   const watermark = showcase.querySelector('.gallery-watermark');
   const progressBar = showcase.querySelector('.gallery-progress');
   const dialog = document.querySelector('.preview-dialog');
@@ -51,34 +50,62 @@
     metacrypt:"<div class=\"personal-cover-art\" aria-hidden=\"true\"><svg class=\"lab-vault\" viewBox=\"0 0 360 230\" fill=\"none\" focusable=\"false\"><g stroke=\"currentColor\" stroke-width=\"1.4\"><path opacity=\".28\" d=\"m72 77 142-34 76 49-143 35Zm0 35 142-34 76 49-143 35Zm0 35 142-34 76 49-143 35Z\"/><g class=\"lab-lock\"><rect x=\"135\" y=\"102\" width=\"90\" height=\"71\" rx=\"10\" fill=\"var(--cover-fill)\"/><path d=\"M152 101V84a28 28 0 0 1 56 0v17\" stroke-width=\"6\"/><circle cx=\"180\" cy=\"130\" r=\"7\" fill=\"currentColor\"/><path d=\"M180 137v13\" stroke-width=\"4\"/></g><path d=\"M50 52v-9h9m242 0h9v9M50 184v9h9m242 0h9v-9\" opacity=\".55\"/></g></svg></div>",
     listen:"<div class=\"personal-cover-art\" aria-hidden=\"true\"><svg class=\"lab-audio\" viewBox=\"0 0 360 230\" fill=\"none\" focusable=\"false\"><g class=\"lab-wave\" stroke=\"currentColor\" stroke-width=\"6\" stroke-linecap=\"round\"><path d=\"M55 103v24m16-40v56m16-70v84m16-54v24m16-58v92m16-80v68m16-46v24m16-75v126m16-101v76m16-49v22m16-58v94m16-108v122m16-89v56m16-40v24m16-27v30m16-59v88\"/></g><path d=\"M103 186h153\" stroke=\"currentColor\" opacity=\".3\"/><circle cx=\"142\" cy=\"186\" r=\"5\" fill=\"currentColor\"/><path d=\"m165 33 28 15-28 15Z\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></div>"
   };
+  // MyLab's cover shares the case page's editorial identity (mylab-cover.css).
+  const mylabCover=`<div class="paper-cover cover-mylab ml-editorial-cover"><div class="ml-cover-grid" aria-hidden="true"></div>
+    <div class="paper-topline"><span>CASE 01</span><span>PERSONAL INFRASTRUCTURE</span></div>
+    <p class="ml-cover-wordmark" lang="en">MY<span>LAB</span><b>.</b></p>
+    <p class="ml-cover-lead">Моя инфраструктура.<br>От кабеля до кластера.</p>
+    <svg class="ml-cover-art" viewBox="0 0 600 430" fill="none" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="ml-plate" x1="110" y1="90" x2="475" y2="310" gradientUnits="userSpaceOnUse"><stop stop-color="#34496a"/><stop offset="1" stop-color="#131b30"/></linearGradient>
+        <linearGradient id="ml-core" x1="235" y1="90" x2="360" y2="210" gradientUnits="userSpaceOnUse"><stop stop-color="#ffad71"/><stop offset="1" stop-color="#ff7048"/></linearGradient>
+        <radialGradient id="ml-glow"><stop stop-color="#3157ea" stop-opacity=".4"/><stop offset="1" stop-color="#3157ea" stop-opacity="0"/></radialGradient>
+      </defs>
+      <ellipse cx="300" cy="265" rx="270" ry="165" fill="url(#ml-glow)"/>
+      <ellipse cx="300" cy="350" rx="166" ry="27" fill="#050916" opacity=".7"/>
+      <g class="ml-cover-machine">
+        <path d="M102 271 300 367 498 271v17L300 385 102 288Z" fill="#090f21" stroke="#536581"/>
+        <path d="m102 271 198-97 198 97-198 96Z" fill="url(#ml-plate)" stroke="#738cae"/>
+        <path d="m148 271 152-74 152 74-152 73Z" stroke="#90abc5" stroke-opacity=".25"/>
+        <path d="m170 280 72 35m15 7 16 8m67-1 36-18m13-6 16-8" stroke="#62dfbc" stroke-width="3"/>
+        <g class="ml-cover-middle">
+          <path d="M102 209 300 305 498 209v17L300 323 102 226Z" fill="#162b66" stroke="#5777da"/>
+          <path d="m102 209 198-97 198 97-198 96Z" fill="#21397a" stroke="#9bb9ff"/>
+          <path d="m154 209 146-71 146 71-146 71Z" stroke="#648be8"/>
+          <path d="M204 191v35m33-51v68m33-84v100m33-113v128m33-113v96m33-80v64m33-48v32" stroke="#4666b4"/>
+          <path d="m134 230 18 9m10 5 18 9m10 5 18 9" stroke="#cbff55" stroke-width="4"/>
+        </g>
+        <g class="ml-cover-top">
+          <path d="M102 134 300 230 498 134v17L300 248 102 151Z" fill="#141c30" stroke="#8196b5"/>
+          <path d="m102 134 198-97 198 97-198 96Z" fill="url(#ml-plate)" stroke="#bed0e8"/>
+          <path d="m151 134 149-73 149 73-149 72Z" stroke="#7e99bd" stroke-dasharray="3 6"/>
+          <path d="m227 134 73-36 73 36-73 36Z" fill="url(#ml-core)" stroke="#ffd0a2" stroke-width="2"/>
+          <path d="M227 134v12l73 36 73-36v-12l-73 36Z" fill="#bc4d34"/>
+          <path d="m267 117 65 32m-49-40 65 32m-81 10 65-32m-49 40 65-32" stroke="#63251c" stroke-opacity=".6" stroke-width="2"/>
+          <path d="m175 137 32 16m-16-40 28-13m188 38 20-10m-34 32 14-7" stroke="#62dfbc" stroke-width="3"/>
+        </g>
+        <path d="M102 153v116m396-116v116M300 248v117" stroke="#93b6e4" stroke-opacity=".45" stroke-dasharray="3 5"/>
+      </g>
+      <g stroke="#91a8c7" stroke-width="1.2">
+        <path d="M236 68 190 44H71M120 217H60v64M429 268h105v-59"/>
+        <path class="ml-cover-signal" d="M71 44h119l46 24M60 281v-64h60M429 268h105v-59" stroke="#cbff55" stroke-width="2" stroke-dasharray="7 85"/>
+      </g>
+      <g fill="#cbff55"><circle cx="71" cy="44" r="4"/><circle cx="60" cy="281" r="4"/><circle cx="534" cy="209" r="4"/></g>
+      <g font-family="Manrope,Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#d5e0f1">
+        <text x="70" y="30">02 / GPU</text><text x="21" y="304">NETWORK</text><text x="482" y="195">K8S</text>
+      </g>
+      <text x="300" y="418" text-anchor="middle" font-family="Manrope,Arial,sans-serif" font-size="10" letter-spacing="3" fill="#8199bc">BUILD / CONNECT / OBSERVE / RECOVER</text>
+    </svg>
+    <div class="paper-foot"><span>ОТКРЫТЬ КАРТУ КЕЙСА</span><span class="ml-cover-arrow" aria-hidden="true">${window.portfolioIcon('arrow-up-right')}</span></div></div>`;
   function cover(demo) {
-    const visual = demo.cover==='sports' ? '<div class="sports-cover-court" aria-hidden="true"></div><img class="sports-cover-art" src="demos/orbit-cup/assets/tennis-player-v2.png" width="1024" height="1536" loading="lazy" decoding="async" alt=""><span class="sports-cover-ball" aria-hidden="true"></span>' : demo.cover==='digital' ? '<img class="paper-visual" src="assets/chrome-knot.webp" width="1254" height="1254" alt="">' : demo.cover==='system' ? '<div class="system-diagram" aria-hidden="true"><div><span>CONTEXT</span><b>01</b><span>THE CHALLENGE</span></div><div><span>PROCESS</span><i><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></i></div><div><span>RESULT</span><i><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-plus"></use></svg></i></div></div>' : '<div class="lab-grid" aria-hidden="true"></div><div class="lab-type" aria-hidden="true">ai</div><span class="lab-tag" lang="en">TRY. LEARN. REPEAT.</span>';
+    if(demo.cover==='mylab')return mylabCover;
     const campusVisual='<div class="campus-network" aria-hidden="true"><span class="campus-orbit"></span><div class="campus-node campus-node-track"><small>01 / PRODUCT</small><b>UniTrack</b><i></i><i></i><i></i></div><div class="campus-node campus-node-ai"><small>02 / EDUCATION</small><b>AI</b><span>KZ + RU</span></div><div class="campus-node campus-node-asr"><small>03 / RESEARCH</small><b>ASR</b><span>VOICE / TEXT</span></div></div>';
-    return `<div class="paper-cover cover-${demo.cover}"><div class="paper-topline"><span>${demo.isPersonal?'PERSONAL PROJECT / PORTFOLIO':demo.isCase?'SELECTED WORK / PORTFOLIO':'DEMO / PORTFOLIO'}</span><span>${demo.number}</span></div><p class="paper-title" lang="en">${demo.coverTitle}</p><p class="paper-subtitle">${demo.subtitle}</p>${personalVisuals[demo.cover]||(demo.cover==='campus'?campusVisual:visual)}<div class="paper-foot"><span>${demo.footer||(demo.isCase?'ПРОЕКТЫ · ИССЛЕДОВАНИЕ · СЕРТИФИКАТ':'ОБРАЗЕЦ ОБЛОЖКИ · НЕ КЕЙС')}</span><span class="paper-number">${demo.number}</span></div></div>`;
+    const visual=personalVisuals[demo.cover]||(demo.cover==='campus'?campusVisual:'<div class="lab-grid" aria-hidden="true"></div>');
+    return `<div class="paper-cover cover-${demo.cover}"><div class="paper-topline"><span>${demo.isPersonal?'PERSONAL PROJECT / PORTFOLIO':'SELECTED WORK / PORTFOLIO'}</span><span>${demo.number}</span></div><p class="paper-title" lang="en">${demo.coverTitle}</p><p class="paper-subtitle">${demo.subtitle}</p>${visual}<div class="paper-foot"><span>${demo.footer||'ПРОЕКТЫ · ИССЛЕДОВАНИЕ · СЕРТИФИКАТ'}</span><span class="paper-number">${demo.number}</span></div></div>`;
   }
-  panelsRoot.innerHTML=demos.map((demo,index)=>`<article class="gallery-panel ${index%2?'is-reversed':''}" id="${demo.id}" aria-labelledby="${demo.id}-title" style="--rest-angle:${demo.angle}deg"><div class="project-story"><p class="story-meta">DEMO ${demo.number} <span>${demo.kind}</span></p><h3 id="${demo.id}-title">${demo.title}</h3><p class="english-title" lang="en">${demo.english}</p><div class="bilingual-copy"><div class="language-copy" lang="ru"><span>RU</span><p>${demo.ru}</p></div><div class="language-copy" lang="en"><span>EN</span><p>${demo.en}</p></div></div><button class="preview-trigger" type="button" data-preview="${index}" aria-label="Посмотреть макет обложки: ${demo.title}">Посмотреть макет <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></button></div><div class="pdf-object" aria-label="Демонстрационная обложка будущей PDF"><div class="paper-stack" style="--paper-angle:${demo.angle}deg">${cover(demo)}<span class="pdf-caption">PDF / ОБРАЗЕЦ ОБЛОЖКИ</span></div></div></article>`).join('');
+  const arrow=()=>window.portfolioIcon('arrow-up-right');
+  panelsRoot.innerHTML=demos.map((demo,index)=>`<article class="gallery-panel ${index%2?'is-reversed':''}" id="${demo.id}" aria-labelledby="${demo.id}-title" style="--rest-angle:${demo.angle}deg"><div class="project-story"><p class="story-meta">${demo.isPersonal?'PROJECT':'CASE'} ${demo.number} <span>${demo.kind}</span></p><h3 id="${demo.id}-title">${demo.title}</h3><p class="english-title" lang="en">${demo.english}</p><div class="bilingual-copy"><div class="language-copy" lang="ru"><span>RU</span><p>${demo.ru}</p></div><div class="language-copy" lang="en"><span>EN</span><p>${demo.en}</p></div></div><a class="preview-trigger" href="${demo.href}"${demo.isPersonal?' target="_blank" rel="noopener noreferrer"':''}>${demo.action}<span aria-hidden="true">${arrow()}</span></a>${demo.cover==='agentf'?'<button type="button" class="matches-trigger" data-matches>Три победы над ботами / Match wins</button>':''}</div><div class="pdf-object" aria-label="Обложка проекта ${demo.title}"><div class="paper-stack" style="--paper-angle:${demo.angle}deg">${cover(demo)}<span class="pdf-caption">${demo.caption}</span></div></div></article>`).join('');
   const panels=[...panelsRoot.querySelectorAll('.gallery-panel')];
-  // Linked entries open their own demo or case page; fixture previews stay local.
-  demos.forEach((demo,index)=>{
-    if(!demo.href)return;
-    const panel=panels[index];
-    const link=document.createElement('a');
-    link.className='preview-trigger';link.href=demo.href;
-    link.textContent=demo.isBot?'Открыть бота ':demo.isApp?'Открыть приложение ':demo.isPersonal?'Открыть GitHub ':demo.isCase?'Открыть проекты ':'Открыть демосайт ';
-    if(demo.isPersonal){link.target='_blank';link.rel='noopener noreferrer';}
-    if(demo.cover==='agentf'){
-      const matchesButton=document.createElement('button');
-      matchesButton.type='button';matchesButton.className='matches-trigger';matchesButton.dataset.matches='';
-      matchesButton.textContent='Три победы над ботами / Match wins';
-      panel.querySelector('.project-story').append(matchesButton);
-    }
-    const arrow=document.createElement('span');arrow.innerHTML=window.portfolioIcon('arrow-up-right');arrow.setAttribute('aria-hidden','true');link.append(arrow);
-    panel.querySelector('.preview-trigger').replaceWith(link);
-    panel.querySelector('.pdf-caption').textContent=demo.isBot?'TELEGRAM / MEDIA BOT':demo.isApp?'WEB / PRIVACY TOOL':demo.isPersonal?'CODE / PERSONAL PROJECT':demo.isCase?'CASE / UNIVERSITY':'WEB / INTERACTIVE DEMO';
-    panel.querySelector('.pdf-object').setAttribute('aria-label',demo.isPersonal||demo.isCase?`Обложка проекта ${demo.title}`:`Обложка самостоятельного демосайта ${demo.title}`);
-    if(demo.isCase||demo.isPersonal)panel.querySelector('.story-meta').firstChild.textContent=(demo.isPersonal?'PROJECT ':'CASE ')+demo.number+' ';
-    else panel.querySelector('.paper-foot>span').textContent='ВЫМЫШЛЕННОЕ СОБЫТИЕ · ДЕМО';
-  });
   function render() {
     frame=0;
     const range=Math.max(1,showcase.offsetHeight-stage.offsetHeight);
@@ -153,14 +180,6 @@
         '<figure class="match-evidence"><a href="'+match.file+'" target="_blank" rel="noopener noreferrer" aria-label="Открыть полный скриншот: SapaTech '+match.score+' '+match.opponent+'"><img src="'+match.file+'" width="'+match.width+'" height="'+match.height+'" alt="Скриншот победы SapaTech над '+match.opponent+', счёт '+match.score+'"></a><figcaption><span>0'+(index+1)+' / SAPATECH</span><strong>'+match.score+'</strong><span>'+match.opponent+'</span></figcaption></figure>').join('');
       document.body.classList.add('preview-open');dialog.showModal();return;
     }
-    const trigger=event.target.closest('[data-preview]');if(!trigger)return;
-    dialog.classList.remove('matches-preview');
-    dialog.querySelector('.preview-toolbar p').textContent='Демонстрационная обложка, не настоящий проект.';
-    lastFocus=trigger;
-    const demo=demos[Number(trigger.dataset.preview)];
-    document.querySelector('#preview-title').textContent=`${demo.title} / ${demo.english}`;
-    dialog.querySelector('.preview-document').innerHTML=cover(demo);
-    document.body.classList.add('preview-open');dialog.showModal();
   });
   dialog.querySelector('.preview-close').addEventListener('click',()=>dialog.close());
   dialog.addEventListener('click',event=>{if(event.target===dialog){const box=dialog.getBoundingClientRect();if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)dialog.close();}});

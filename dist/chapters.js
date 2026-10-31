@@ -69,7 +69,8 @@
   const heroStage = document.querySelector('.hero-stage');
   const gallery = document.querySelector('.diagonal-showcase');
   const galleryStage = document.querySelector('.gallery-stage');
-  const lab = document.querySelector('#lab');
+  // The closed-source work section (or an older #lab block) begins ordinary reading.
+  const lab = document.querySelector('#work') || document.querySelector('#lab');
   const contact = document.querySelector('#contact');
   if (!hero || !heroStage || !gallery || !galleryStage || !contact) return;
 
@@ -112,6 +113,8 @@
       {id: 'contact', top: contactTop}
     ];
     const maximum = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    // The reading region may precede the gallery; order stops by position, not by kind.
+    candidates.sort((a, b) => a.top - b.top);
     frames = candidates.map(frame => ({...frame, top: Math.min(maximum, Math.max(0, frame.top))}))
       .filter((frame, index, all) => !index || frame.top - all[index - 1].top > POSITION_EPSILON);
     return frames.map(frame => ({...frame}));

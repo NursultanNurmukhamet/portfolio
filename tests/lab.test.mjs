@@ -18,7 +18,8 @@ test('three personal projects join the gallery without a duplicate standalone se
     assert.ok(personal[index].includes("en:'"));
     assert.ok(personal[index].includes("angle:"+(index%2?-5:5)));
   }
-  assert.ok(html.includes('6 ИСТОРИЙ'));
+  assert.ok(html.includes('5 проектов'));
+  assert.doesNotMatch(html+js,/\bDEMO\b|концепц|образец|ОБРАЗЕЦ|демонстрац|orbit-cup/,'no demo or placeholder wording remains');
   assert.ok(js.includes('showcase.dataset.projectCount=String(demos.length)'));
 });
 
@@ -34,7 +35,7 @@ test('personal actions open the exact repository, application and Telegram bot r
   assert.ok(personal[2].includes("title:'ULMusic'"));
   assert.ok(personal[2].includes("coverTitle:'UL<br>MUSIC'"));
   for(const label of ['Открыть GitHub','Открыть приложение','Открыть бота'])assert.ok(js.includes(label));
-  assert.ok(js.includes("link.target='_blank';link.rel='noopener noreferrer'"));
+  assert.ok(js.includes(`target="_blank" rel="noopener noreferrer"`));
   assert.doesNotMatch(personal.join(''),/github.com\/NursultanNurmukhamet\/(?:MetaCrypt|shut-up-and-listen)|open.source|winner|100%|гарантир/iu);
 });
 

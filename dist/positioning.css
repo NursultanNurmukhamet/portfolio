@@ -1,0 +1,47 @@
+/* Positioning layer: role block in the hero and the closed-source work section. */
+.hero-caption{max-width:190px;font-weight:700;letter-spacing:.01em}
+.hero-role{position:relative;z-index:2;margin-top:clamp(18px,2.6vh,34px);max-width:min(62%,560px);color:var(--paper)}
+.hero-role-name{margin:0 0 6px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--lime)}
+.hero-role-facts{margin:0;font-size:clamp(13px,1.05vw,16px);line-height:1.5;letter-spacing:-.01em;max-width:46ch}
+.hero-role-facts span{opacity:.55;padding:0 .35em}
+.hero-role-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.hero-role-links a{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border:1px solid rgba(244,245,237,.55);border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;transition:background .2s,color .2s,border-color .2s}
+.hero-role-links a:first-child{background:var(--lime);border-color:var(--lime);color:var(--deep)}
+.hero-role-links a:hover{background:var(--paper);border-color:var(--paper);color:var(--deep)}
+.hero-role-links small{font-size:9px;opacity:.7}
+@media(max-width:759px){
+  .hero-caption{display:none}
+  .hero-role{max-width:100%;margin-top:12px}
+  .hero-role-name{font-size:11px;margin-bottom:4px}
+  .hero-role-facts{font-size:12px;line-height:1.4;max-width:34ch}
+  .hero-role-links{gap:8px;margin-top:10px}
+  .hero-role-links a{padding:8px 12px;font-size:11px}
+  /* Make room for the role block: the sculpture starts lower and ends above the scroll cue. */
+  .hero-role-facts{display:none}
+  .art-stage{top:calc(230px + var(--hero-type,80px)*2.88);bottom:64px;height:auto}
+  .art-coordinate{display:none}
+}
+
+.work-section{position:relative;padding:clamp(72px,10vh,128px) var(--gutter) clamp(56px,8vh,96px);background:var(--paper);color:var(--deep);border-top:1px solid var(--line)}
+.work-head{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px clamp(28px,5vw,96px);align-items:end;margin-bottom:clamp(36px,5vh,64px)}
+.work-eyebrow{grid-column:1/-1;margin:0;font-size:12px;font-weight:700;letter-spacing:.12em}
+.work-section h2{margin:0;font-family:Anton,Impact,sans-serif;font-weight:400;font-size:clamp(56px,7.2vw,124px);line-height:.95;letter-spacing:-.03em}
+.work-section h2 em{font-style:normal;color:var(--green)}
+.work-lead{margin:0;font-size:clamp(15px,1.2vw,19px);line-height:1.55;max-width:46ch}
+.work-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--deep);border-left:1px solid var(--deep)}
+.work-card{position:relative;padding:28px 26px 30px;border-right:1px solid var(--deep);border-bottom:1px solid var(--deep);display:flex;flex-direction:column;gap:12px;background:var(--paper);transition:background .25s}
+.work-card:hover{background:#fff}
+.work-index{font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--green)}
+.work-card h3{margin:0;font-size:clamp(20px,1.6vw,26px);line-height:1.15;letter-spacing:-.02em}
+.work-card p{margin:0;font-size:14.5px;line-height:1.55}
+.work-stack{margin-top:auto!important;padding-top:14px;font-size:12px!important;font-weight:700;letter-spacing:.02em;color:var(--green);border-top:1px dashed var(--line)}
+.work-note{margin:22px 0 0;font-size:12.5px;line-height:1.6;color:rgba(6,40,27,.72);max-width:72ch}
+@media(max-width:1000px){.work-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:759px){
+  .work-head{grid-template-columns:1fr;gap:18px;align-items:start}
+  .work-section h2{font-size:clamp(46px,15vw,72px)}
+  .work-grid{grid-template-columns:1fr}
+  .work-card{padding:22px 18px 24px}
+}
+/* The work section is ordinary reading content: pin it as the start of native scrolling. */
+.page-on-paper .work-section{scroll-margin-top:0}
