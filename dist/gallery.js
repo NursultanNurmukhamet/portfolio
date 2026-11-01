@@ -1,44 +1,15 @@
 (() => {
   'use strict';
-  const clamp = value => Math.max(0,Math.min(1,Number(value)||0));
-  const smooth = value => {const x=clamp(value);return x*x*(3-2*x);};
-  function slideFraction(index,count) { return count<=1?0:clamp(index/(count-1)); }
-  function sampleTravel(progress,count) {
-    if(count<=1)return {travel:0,selected:0,cameraX:0,leg:0};
-    const position=clamp(progress)*(count-1);
-    const leg=Math.min(count-2,Math.floor(position));
-    const legProgress=smooth((position-leg-.22)/.56);
-    const travel=leg+legProgress;
-    return {travel,selected:Math.min(count-1,Math.round(travel)),cameraX:leg%2?1-legProgress:legProgress,leg};
-  }
-  window.portfolioGalleryCore=Object.freeze({sampleTravel,slideFraction});
-  if(typeof document==='undefined')return;
+  // Project data and cover artwork for the main page. The TUI file manager in
+  // tui.js renders window.portfolioProjects; nothing here depends on scrolling.
   // Two cases with their own pages and three personal projects with public code.
-  // The eight blueprint slots in projects.js remain unchanged.
   const demos = [
-    {id:'case-01',number:'01',kind:'INFRASTRUCTURE & SYSTEMS',title:'MyLab',english:'Personal infrastructure lab',ru:'Персональная инфраструктурная лаборатория: вычисления, GPU, сеть, наблюдаемость и проверяемое восстановление.',en:'A personal infrastructure lab spanning compute, GPUs, networking, observability and verified recovery.',cover:'mylab',coverTitle:'MY<br>LAB',subtitle:'PROXMOX / KUBERNETES / GRAFANA',angle:5,href:'mylab.html',isCase:true,caption:'WEB CASE / MYLAB',action:'Открыть кейс '},
-    {id:'case-02',number:'02',kind:'UNIVERSITY / AI / RESEARCH',title:'Университет',english:'University projects',ru:'UniTrack, материалы мастер-класса по ИИ и исследование казахской детской речи. Три направления и мой сертификат.',en:'UniTrack, AI masterclass materials and Kazakh children’s speech research. Three areas of work, with my certificate.',cover:'campus',coverTitle:'CAMPUS<br>PROJECTS',subtitle:'UNITRACK / AI MASTERCLASS / ASR',angle:-5,href:'projects/university/',isCase:true,caption:'CASE / UNIVERSITY',action:'Открыть проекты '},
-    {id:'project-03',number:'03',kind:'MULTI-AGENT AI',title:'AgentF',english:'Five agents. One team.',ru:'Пять футбольных AI-агентов: тактика, решения языковой модели и резервная логика.',en:'Five AI football agents: tactics, language-model decisions and fallback logic.',cover:'agentf',coverTitle:'AGENT<br>FOOTBALL',subtitle:'PYTHON / AMAZON NOVA / AGENTCORE',angle:5,href:'https://github.com/NursultanNurmukhamet/AgentF',isPersonal:true,footer:'FIVE AGENTS. ONE TEAM.',caption:'CODE / PERSONAL PROJECT',action:'Открыть GitHub '},
-    {id:'project-04',number:'04',kind:'PRIVACY TOOL',title:'MetaCrypt',english:'Your images. Your metadata.',ru:'Метаданные изображений: просмотр, очистка, редактирование и шифрование в браузере.',en:'Image metadata: inspect, clean, edit and encrypt directly in the browser.',cover:'metacrypt',coverTitle:'META<br>CRYPT',subtitle:'REACT / TYPESCRIPT / WEB CRYPTO',angle:-5,href:'https://nursultannurmukhamet.github.io/MetaCrypt/',isPersonal:true,isApp:true,footer:'EXIF / XMP / IPTC',caption:'WEB / PRIVACY TOOL',action:'Открыть приложение '},
-    {id:'project-05',number:'05',kind:'TELEGRAM MEDIA BOT',title:'ULMusic',english:'A link becomes your playlist.',ru:'Telegram-бот для загрузки аудио, видео и нужных фрагментов по ссылке или поиску.',en:'A Telegram bot for getting audio, video and clips from links or search.',cover:'listen',coverTitle:'UL<br>MUSIC',subtitle:'PYTHON / AIOGRAM / YT-DLP / FFMPEG',angle:5,href:'https://t.me/ShutUpandListen_Bot',isPersonal:true,isBot:true,footer:'MUSIC / AUDIO / VIDEO',caption:'TELEGRAM / MEDIA BOT',action:'Открыть бота '}
+    {id:'case-01',number:'01',kind:'INFRASTRUCTURE & SYSTEMS',title:'MyLab',english:'Personal infrastructure lab',ru:'Персональная инфраструктурная лаборатория: вычисления, GPU, сеть, наблюдаемость и проверяемое восстановление.',en:'A personal infrastructure lab spanning compute, GPUs, networking, observability and verified recovery.',cover:'mylab',coverTitle:'MY<br>LAB',subtitle:'PROXMOX / KUBERNETES / GRAFANA',angle:5,href:'mylab.html',isCase:true,caption:'WEB CASE / MYLAB',action:'Открыть кейс ',file:'mylab/',tag:'INFRA',perm:'кейс',size:'6 глав'},
+    {id:'case-02',number:'02',kind:'UNIVERSITY / AI / RESEARCH',title:'Университет',english:'University projects',ru:'UniTrack, материалы мастер-класса по ИИ и исследование казахской детской речи. Три направления и мой сертификат.',en:'UniTrack, AI masterclass materials and Kazakh children’s speech research. Three areas of work, with my certificate.',cover:'campus',coverTitle:'CAMPUS<br>PROJECTS',subtitle:'UNITRACK / AI MASTERCLASS / ASR',angle:-5,href:'projects/university/',isCase:true,caption:'CASE / UNIVERSITY',action:'Открыть проекты ',file:'university/',tag:'AI · RESEARCH',perm:'кейс',size:'3 проекта'},
+    {id:'project-03',number:'03',kind:'MULTI-AGENT AI',title:'AgentF',english:'Five agents. One team.',ru:'Пять футбольных AI-агентов: тактика, решения языковой модели и резервная логика.',en:'Five AI football agents: tactics, language-model decisions and fallback logic.',cover:'agentf',coverTitle:'AGENT<br>FOOTBALL',subtitle:'PYTHON / AMAZON NOVA / AGENTCORE',angle:5,href:'https://github.com/NursultanNurmukhamet/AgentF',isPersonal:true,footer:'FIVE AGENTS. ONE TEAM.',caption:'CODE / PERSONAL PROJECT',action:'Открыть GitHub ',file:'agentf.py',tag:'AI · AGENTS',perm:'код',size:'5 агентов'},
+    {id:'project-04',number:'04',kind:'PRIVACY TOOL',title:'MetaCrypt',english:'Your images. Your metadata.',ru:'Метаданные изображений: просмотр, очистка, редактирование и шифрование в браузере.',en:'Image metadata: inspect, clean, edit and encrypt directly in the browser.',cover:'metacrypt',coverTitle:'META<br>CRYPT',subtitle:'REACT / TYPESCRIPT / WEB CRYPTO',angle:-5,href:'https://nursultannurmukhamet.github.io/MetaCrypt/',isPersonal:true,isApp:true,footer:'EXIF / XMP / IPTC',caption:'WEB / PRIVACY TOOL',action:'Открыть приложение ',file:'metacrypt.tsx',tag:'SECURITY · WEB',perm:'приложение',size:'в браузере'},
+    {id:'project-05',number:'05',kind:'TELEGRAM MEDIA BOT',title:'ULMusic',english:'A link becomes your playlist.',ru:'Telegram-бот для загрузки аудио, видео и нужных фрагментов по ссылке или поиску.',en:'A Telegram bot for getting audio, video and clips from links or search.',cover:'listen',coverTitle:'UL<br>MUSIC',subtitle:'PYTHON / AIOGRAM / YT-DLP / FFMPEG',angle:5,href:'https://t.me/ShutUpandListen_Bot',isPersonal:true,isBot:true,footer:'MUSIC / AUDIO / VIDEO',caption:'TELEGRAM / MEDIA BOT',action:'Открыть бота ',file:'ulmusic.bot',tag:'BOT · MEDIA',perm:'бот',size:'telegram'}
   ];
-  const showcase = document.querySelector('.diagonal-showcase');
-  showcase.dataset.projectCount=String(demos.length);
-  showcase.style.setProperty('--gallery-height',((demos.length-1)*150+100)+'svh');
-  const stage = showcase.querySelector('.gallery-stage');
-  const panelsRoot = document.querySelector('#gallery-panels');
-  const modeButton = document.querySelector('#gallery-mode');
-  const paginationRoot=showcase.querySelector('.gallery-pagination');
-  paginationRoot.innerHTML=demos.map((demo,index)=>
-    (index?'<span aria-hidden="true"></span>':'')+'<button type="button" data-slide="'+index+'" aria-label="'+demo.title+'" aria-current="'+String(index===0)+'">'+demo.number+'</button>').join('');
-  const pagination=[...paginationRoot.querySelectorAll('[data-slide]')];
-  showcase.querySelector('.demo-badge').textContent=demos.length+' проектов';
-  const watermark = showcase.querySelector('.gallery-watermark');
-  const progressBar = showcase.querySelector('.gallery-progress');
-  const dialog = document.querySelector('.preview-dialog');
-  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const shortScreen = matchMedia('(max-height: 479px), (max-width: 519px) and (max-height: 699px)');
-  let manualStatic=false, isStatic=false, frame=0, current=0, lastFocus=null, restoringFocus=false;
   const agentMatches=[
     {file:'assets/agentf/match-total-attack.png',opponent:'Total Attack United',score:'2:1',width:1200,height:647},
     {file:'assets/agentf/match-benchmark.png',opponent:'The Benchmark FC',score:'2:0',width:1204,height:650},
@@ -50,8 +21,9 @@
     metacrypt:"<div class=\"personal-cover-art\" aria-hidden=\"true\"><svg class=\"lab-vault\" viewBox=\"0 0 360 230\" fill=\"none\" focusable=\"false\"><g stroke=\"currentColor\" stroke-width=\"1.4\"><path opacity=\".28\" d=\"m72 77 142-34 76 49-143 35Zm0 35 142-34 76 49-143 35Zm0 35 142-34 76 49-143 35Z\"/><g class=\"lab-lock\"><rect x=\"135\" y=\"102\" width=\"90\" height=\"71\" rx=\"10\" fill=\"var(--cover-fill)\"/><path d=\"M152 101V84a28 28 0 0 1 56 0v17\" stroke-width=\"6\"/><circle cx=\"180\" cy=\"130\" r=\"7\" fill=\"currentColor\"/><path d=\"M180 137v13\" stroke-width=\"4\"/></g><path d=\"M50 52v-9h9m242 0h9v9M50 184v9h9m242 0h9v-9\" opacity=\".55\"/></g></svg></div>",
     listen:"<div class=\"personal-cover-art\" aria-hidden=\"true\"><svg class=\"lab-audio\" viewBox=\"0 0 360 230\" fill=\"none\" focusable=\"false\"><g class=\"lab-wave\" stroke=\"currentColor\" stroke-width=\"6\" stroke-linecap=\"round\"><path d=\"M55 103v24m16-40v56m16-70v84m16-54v24m16-58v92m16-80v68m16-46v24m16-75v126m16-101v76m16-49v22m16-58v94m16-108v122m16-89v56m16-40v24m16-27v30m16-59v88\"/></g><path d=\"M103 186h153\" stroke=\"currentColor\" opacity=\".3\"/><circle cx=\"142\" cy=\"186\" r=\"5\" fill=\"currentColor\"/><path d=\"m165 33 28 15-28 15Z\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></div>"
   };
+  const icon=name=>typeof window.portfolioIcon==='function'?window.portfolioIcon(name):'';
   // MyLab's cover shares the case page's editorial identity (mylab-cover.css).
-  const mylabCover=`<div class="paper-cover cover-mylab ml-editorial-cover"><div class="ml-cover-grid" aria-hidden="true"></div>
+  const mylabCover=()=>`<div class="paper-cover cover-mylab ml-editorial-cover"><div class="ml-cover-grid" aria-hidden="true"></div>
     <div class="paper-topline"><span>CASE 01</span><span>PERSONAL INFRASTRUCTURE</span></div>
     <p class="ml-cover-wordmark" lang="en">MY<span>LAB</span><b>.</b></p>
     <p class="ml-cover-lead">Моя инфраструктура.<br>От кабеля до кластера.</p>
@@ -96,95 +68,37 @@
       </g>
       <text x="300" y="418" text-anchor="middle" font-family="Manrope,Arial,sans-serif" font-size="10" letter-spacing="3" fill="#8199bc">BUILD / CONNECT / OBSERVE / RECOVER</text>
     </svg>
-    <div class="paper-foot"><span>ОТКРЫТЬ КАРТУ КЕЙСА</span><span class="ml-cover-arrow" aria-hidden="true">${window.portfolioIcon('arrow-up-right')}</span></div></div>`;
+    <div class="paper-foot"><span>ОТКРЫТЬ КАРТУ КЕЙСА</span><span class="ml-cover-arrow" aria-hidden="true">${icon('arrow-up-right')}</span></div></div>`;
   function cover(demo) {
-    if(demo.cover==='mylab')return mylabCover;
+    if(demo.cover==='mylab')return mylabCover();
     const campusVisual='<div class="campus-network" aria-hidden="true"><span class="campus-orbit"></span><div class="campus-node campus-node-track"><small>01 / PRODUCT</small><b>UniTrack</b><i></i><i></i><i></i></div><div class="campus-node campus-node-ai"><small>02 / EDUCATION</small><b>AI</b><span>KZ + RU</span></div><div class="campus-node campus-node-asr"><small>03 / RESEARCH</small><b>ASR</b><span>VOICE / TEXT</span></div></div>';
     const visual=personalVisuals[demo.cover]||(demo.cover==='campus'?campusVisual:'<div class="lab-grid" aria-hidden="true"></div>');
     return `<div class="paper-cover cover-${demo.cover}"><div class="paper-topline"><span>${demo.isPersonal?'PERSONAL PROJECT / PORTFOLIO':'SELECTED WORK / PORTFOLIO'}</span><span>${demo.number}</span></div><p class="paper-title" lang="en">${demo.coverTitle}</p><p class="paper-subtitle">${demo.subtitle}</p>${visual}<div class="paper-foot"><span>${demo.footer||'ПРОЕКТЫ · ИССЛЕДОВАНИЕ · СЕРТИФИКАТ'}</span><span class="paper-number">${demo.number}</span></div></div>`;
   }
-  const arrow=()=>window.portfolioIcon('arrow-up-right');
-  panelsRoot.innerHTML=demos.map((demo,index)=>`<article class="gallery-panel ${index%2?'is-reversed':''}" id="${demo.id}" aria-labelledby="${demo.id}-title" style="--rest-angle:${demo.angle}deg"><div class="project-story"><p class="story-meta">${demo.isPersonal?'PROJECT':'CASE'} ${demo.number} <span>${demo.kind}</span></p><h3 id="${demo.id}-title">${demo.title}</h3><p class="english-title" lang="en">${demo.english}</p><div class="bilingual-copy"><div class="language-copy" lang="ru"><span>RU</span><p>${demo.ru}</p></div><div class="language-copy" lang="en"><span>EN</span><p>${demo.en}</p></div></div><a class="preview-trigger" href="${demo.href}"${demo.isPersonal?' target="_blank" rel="noopener noreferrer"':''}>${demo.action}<span aria-hidden="true">${arrow()}</span></a>${demo.cover==='agentf'?'<button type="button" class="matches-trigger" data-matches>Три победы над ботами / Match wins</button>':''}</div><div class="pdf-object" aria-label="Обложка проекта ${demo.title}"><div class="paper-stack" style="--paper-angle:${demo.angle}deg">${cover(demo)}<span class="pdf-caption">${demo.caption}</span></div></div></article>`).join('');
-  const panels=[...panelsRoot.querySelectorAll('.gallery-panel')];
-  function render() {
-    frame=0;
-    const range=Math.max(1,showcase.offsetHeight-stage.offsetHeight);
-    const progress=clamp(-showcase.getBoundingClientRect().top/range);
-    const sample=sampleTravel(progress,demos.length);
-    const {travel,cameraX,leg}=sample;
-    const selected=isStatic?current:sample.selected;
-    const width=panelsRoot.clientWidth,height=panelsRoot.clientHeight;
-    const mobile=innerWidth<760;
-    // Alternate horizontal direction on every leg for any number of projects.
-    panels.forEach((panel,index)=>{
-      const offset=index-travel;
-      const active=isStatic||index===selected;
-      panel.classList.toggle('is-active',active);
-      panel.inert=!active;
-      panel.setAttribute('aria-hidden',String(!active));
-      if(isStatic){panel.style.transform='none';panel.style.opacity='1';panel.style.visibility='visible';return;}
-      panel.style.transform=`translate3d(${(index%2-cameraX)*width*(mobile?.58:.87)}px,${offset*height*1.13}px,0)`;
-      panel.style.opacity=String(clamp(1-Math.max(0,Math.abs(offset)-.15)*.85));
-      panel.style.visibility=Math.abs(offset)<1.28?'visible':'hidden';
-      panel.querySelector('.paper-stack').style.setProperty('--paper-angle',`${demos[index].angle+offset*9}deg`);
-    });
-    if(selected!==current){
-      const previous=panels[current];
-      // A focused action must not become trapped inside an inert outgoing slide.
-      if(!restoringFocus && previous.contains(document.activeElement)) pagination[selected].focus({preventScroll:true});
-      current=selected;
-    }
-    pagination.forEach((button,index)=>button.setAttribute('aria-current',String(index===selected)));
-    watermark.textContent=demos[selected].number;
-    watermark.style.transform=`translate3d(${-travel*28}px,${travel*18}px,0)`;
-    if(!isStatic)showcase.querySelector('.gallery-scroll-hint').innerHTML=selected===demos.length-1?'Дальше — обсудим задачу <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-down"></use></svg>':`Листай зигзагом ${window.portfolioIcon(leg%2?'arrow-down-left':'arrow-down-right')}`;
-    progressBar.style.transform=`scaleX(${progress})`;
+  // External destinations always open in a new tab with the opener severed.
+  const actionLink=demo=>`<a class="fm-action" href="${demo.href}"${demo.isPersonal?' target="_blank" rel="noopener noreferrer"':''}>${demo.action}<span aria-hidden="true">${icon('arrow-up-right')}</span></a>`;
+  let lastFocus=null;
+  // AgentF evidence: three unaltered match screenshots in the shared dialog.
+  function openMatches(matchTrigger){
+    if(typeof document==='undefined')return;
+    const dialog=document.querySelector('.preview-dialog');
+    if(!dialog)return;
+    lastFocus=matchTrigger;
+    document.querySelector('#preview-title').textContent='AgentF / Три победы над ботами';
+    dialog.querySelector('.preview-toolbar p').textContent='SapaTech · AWS Agentic Football Cup · Победы в отдельных матчах / Individual match wins';
+    dialog.classList.add('matches-preview');
+    dialog.querySelector('.preview-document').innerHTML=agentMatches.map((match,index)=>
+      '<figure class="match-evidence"><a href="'+match.file+'" target="_blank" rel="noopener noreferrer" aria-label="Открыть полный скриншот: SapaTech '+match.score+' '+match.opponent+'"><img src="'+match.file+'" width="'+match.width+'" height="'+match.height+'" alt="Скриншот победы SapaTech над '+match.opponent+', счёт '+match.score+'" loading="lazy"></a><figcaption><span>0'+(index+1)+' / SAPATECH</span><strong>'+match.score+'</strong><span>'+match.opponent+'</span></figcaption></figure>').join('');
+    document.body.classList.add('preview-open');dialog.showModal();
   }
-  function schedule(){if(!frame)frame=requestAnimationFrame(render);}
-  function updateMode(keepPosition=false){
-    const topBefore=showcase.getBoundingClientRect().top;
-    const wasInside=topBefore<=100&&showcase.getBoundingClientRect().bottom>0;
-    const previous=isStatic;
-    const referenceIndex=previous&&wasInside?panels.reduce((best,panel,index)=>Math.abs(panel.getBoundingClientRect().top+panel.offsetHeight/2-innerHeight/2)<Math.abs(panels[best].getBoundingClientRect().top+panels[best].offsetHeight/2-innerHeight/2)?index:best,0):current;
-    isStatic=manualStatic||reduceMotion.matches||shortScreen.matches||document.body.classList.contains('motion-paused');
-    showcase.classList.toggle('gallery-static',isStatic);
-    modeButton.setAttribute('aria-pressed',String(isStatic));
-    modeButton.disabled=reduceMotion.matches||shortScreen.matches||document.body.classList.contains('motion-paused');
-    modeButton.innerHTML=isStatic?'Диагональный вид <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-down-right"></use></svg>':'Без движения <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrows-vertical"></use></svg>';
-    if(modeButton.disabled)modeButton.textContent=reduceMotion.matches?'Движение отключено':'Режим чтения';
-    showcase.querySelector('.gallery-scroll-hint').innerHTML=isStatic?demos.length+' проектов':'Листай по диагонали <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-down-right"></use></svg>';
-    render();
-    if(keepPosition && wasInside && previous!==isStatic){
-      const sectionTop=scrollY+showcase.getBoundingClientRect().top;
-      current=referenceIndex;
-      const target=isStatic?scrollY+panels[referenceIndex].getBoundingClientRect().top-24:sectionTop+(showcase.offsetHeight-stage.offsetHeight)*slideFraction(referenceIndex,demos.length);
-      window.scrollTo({top:target,behavior:'instant'});
-      schedule();
+  if(typeof document!=='undefined'){
+    const dialog=document.querySelector('.preview-dialog');
+    if(dialog){
+      dialog.querySelector('.preview-close').addEventListener('click',()=>dialog.close());
+      dialog.addEventListener('click',event=>{if(event.target===dialog){const box=dialog.getBoundingClientRect();if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)dialog.close();}});
+      dialog.addEventListener('close',()=>{document.body.classList.remove('preview-open');if(lastFocus&&!lastFocus.closest('[inert]'))lastFocus.focus({preventScroll:true});lastFocus=null;});
     }
   }
-  function goTo(index){
-    const sectionTop=scrollY+showcase.getBoundingClientRect().top;
-    const target=isStatic?scrollY+panels[index].getBoundingClientRect().top-24:sectionTop+(showcase.offsetHeight-stage.offsetHeight)*slideFraction(index,demos.length);
-    window.scrollTo({top:target,behavior:reduceMotion.matches?'instant':'smooth'});
-  }
-  modeButton.addEventListener('click',()=>{manualStatic=!manualStatic;updateMode(true);});
-  pagination.forEach(button=>button.addEventListener('click',()=>goTo(Number(button.dataset.slide))));
-  panelsRoot.addEventListener('click',event=>{
-    const matchTrigger=event.target.closest('[data-matches]');
-    if(matchTrigger){
-      lastFocus=matchTrigger;
-      document.querySelector('#preview-title').textContent='AgentF / Три победы над ботами';
-      dialog.querySelector('.preview-toolbar p').textContent='SapaTech · AWS Agentic Football Cup · Победы в отдельных матчах / Individual match wins';
-      dialog.classList.add('matches-preview');
-      dialog.querySelector('.preview-document').innerHTML=agentMatches.map((match,index)=>
-        '<figure class="match-evidence"><a href="'+match.file+'" target="_blank" rel="noopener noreferrer" aria-label="Открыть полный скриншот: SapaTech '+match.score+' '+match.opponent+'"><img src="'+match.file+'" width="'+match.width+'" height="'+match.height+'" alt="Скриншот победы SapaTech над '+match.opponent+', счёт '+match.score+'"></a><figcaption><span>0'+(index+1)+' / SAPATECH</span><strong>'+match.score+'</strong><span>'+match.opponent+'</span></figcaption></figure>').join('');
-      document.body.classList.add('preview-open');dialog.showModal();return;
-    }
-  });
-  dialog.querySelector('.preview-close').addEventListener('click',()=>dialog.close());
-  dialog.addEventListener('click',event=>{if(event.target===dialog){const box=dialog.getBoundingClientRect();if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)dialog.close();}});
-  dialog.addEventListener('close',()=>{document.body.classList.remove('preview-open');restoringFocus=true;if(lastFocus&&!lastFocus.closest('[inert]'))lastFocus.focus({preventScroll:true});restoringFocus=false;});
-  addEventListener('scroll',schedule,{passive:true});addEventListener('resize',()=>{updateMode();schedule();});
-  addEventListener('portfolio:motion',()=>updateMode());reduceMotion.addEventListener('change',()=>updateMode(true));shortScreen.addEventListener('change',()=>updateMode(true));
-  updateMode();
+  const matchesButton='<button type="button" class="matches-trigger" data-matches>Три победы над ботами / Match wins</button>';
+  window.portfolioProjects=Object.freeze({demos,agentMatches,cover,actionLink,openMatches,matchesButton});
 })();

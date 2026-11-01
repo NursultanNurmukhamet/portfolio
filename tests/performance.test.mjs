@@ -6,7 +6,6 @@ import {gzipSync} from 'node:zlib';
 
 const read = name => readFileSync(new URL(`../${name}`, import.meta.url));
 const sceneSource = read('src/scene.js').toString().replace(/^import .*;\r?\n/, '');
-const appSource = read('dist/app.js').toString();
 function classes(...initial) {
   const values = new Set(initial);
   return {contains: value => values.has(value), add: value => values.add(value), remove: value => values.delete(value),
@@ -33,7 +32,7 @@ function sceneHarness({pending = false, reduced = false, failWebGL = false} = {}
   const window = events(), clock = frameClock();
   let resize, intersection, mutation, renders = 0, sizes = 0;
   const document = {...events(), documentElement: root, body, hidden: false,
-    querySelector(name) { return {'#orbit-canvas': canvas, '.art-stage': host, '.hero-story': {}}[name]; }};
+    querySelector(name) { return {'#orbit-canvas': canvas, '.mon-map': host}[name]; }};
   class Object3D {
     constructor() { this.position = {set() {}}; this.rotation = {set() {}}; this.scale = {setScalar() {}}; }
     add() {} updateProjectionMatrix() {}
@@ -43,7 +42,7 @@ function sceneHarness({pending = false, reduced = false, failWebGL = false} = {}
     setPixelRatio() {} setClearColor() {} setSize() { sizes++; } render() { renders++; }
   }
   const THREE = {WebGLRenderer: Renderer};
-  for(const name of ['Scene', 'PerspectiveCamera', 'HemisphereLight', 'DirectionalLight', 'PointLight', 'Group', 'MeshBasicMaterial', 'Mesh', 'TorusGeometry', 'SphereGeometry', 'MeshStandardMaterial'])THREE[name] = Object3D;
+  for(const name of ['Scene', 'PerspectiveCamera', 'HemisphereLight', 'DirectionalLight', 'PointLight', 'Group', 'MeshBasicMaterial', 'Mesh', 'TorusGeometry', 'SphereGeometry', 'BoxGeometry', 'MeshStandardMaterial'])THREE[name] = Object3D;
   vm.runInNewContext(sceneSource, {document, THREE, devicePixelRatio: 2, matchMedia: () => ({matches: reduced}),
     addEventListener: window.addEventListener, requestAnimationFrame: clock.requestAnimationFrame, cancelAnimationFrame: clock.cancelAnimationFrame,
     ResizeObserver: class { constructor(callback) { resize = callback; } observe() {} },
@@ -119,37 +118,4 @@ test('offscreen, hidden and lost-context scenes stay suspended despite update ev
 test('WebGL failure leaves the ordinary sculpture fallback available', () => {
   const h = sceneHarness({failWebGL: true});
   assert.equal(h.canvas.hidden, true);assert.equal(h.clock.pending, 0);
-});
-
-test('hero skips repeated offscreen DOM writes but retains pointer and scroll transitions', () => {
-  const clock = frameClock(), window = events();
-  let writes = 0, rectangles = 0, position = 0, progressEvents = 0;
-  function node() { return {...events(), style: new Proxy({}, {set(target, key, value) { writes++;target[key] = value;return true; }}),
-    classList: classes(), setAttribute() {}, querySelector() { return coordinate; }}; }
-  const coordinate = node();
-  const names = ['.motion-toggle', '.hero-story', '.hero-stage', '.hero-intro', '.hero-outro', '.art-stage', '.pink-panel', '.hero-bottom', '#scene-number', '.scroll-progress'];
-  const nodes = Object.fromEntries(names.map(name => [name, node()]));
-  nodes['.hero-story'].offsetHeight = 2550;
-  nodes['.hero-story'].getBoundingClientRect = () => { rectangles++;return {top: -position, bottom: 2550 - position}; };
-  nodes['.hero-stage'].offsetHeight = 1000;
-  const reduced = {...events(), matches: false};
-  const document = {body: {classList: classes()}, documentElement: {classList: classes()}, querySelector: name => nodes[name]};
-  window.dispatchEvent = event => { if(event.type === 'portfolio:progress')progressEvents++;window.emit(event.type, event); };
-  window.portfolioIcon = name => name;
-  vm.runInNewContext(appSource, {document, window, innerWidth: 1440, innerHeight: 1000, matchMedia: () => reduced,
-    addEventListener: window.addEventListener, requestAnimationFrame: clock.requestAnimationFrame,
-    CustomEvent: class { constructor(type, options) { this.type = type;this.detail = options.detail; } }
-  });
-  clock.step();assert.equal(rectangles, 1);
-  position = 5000;window.emit('scroll');clock.step();
-  const afterExit = writes, eventsAfterExit = progressEvents;
-  position = 5200;window.emit('scroll');clock.step();
-  assert.equal(writes, afterExit);assert.equal(progressEvents, eventsAfterExit);
-  assert.equal(rectangles, 3, 'one rectangle read per scheduled frame');
-  position = 0;window.emit('scroll');clock.step();assert.ok(writes > afterExit);
-  const beforePointer = writes, eventsBeforePointer = progressEvents;
-  nodes['.hero-stage'].emit('pointermove', {pointerType: 'mouse', clientX: 1000, clientY: 100});clock.step();
-  assert.ok(writes > beforePointer);assert.equal(progressEvents, eventsBeforePointer, 'pointer parallax does not rebroadcast unchanged progress');
-  nodes['.motion-toggle'].emit('click');clock.step();
-  assert.equal(document.body.classList.contains('motion-paused'), true);
 });
