@@ -35,16 +35,24 @@ if (renderer) {
   const packetGeometry = new THREE.SphereGeometry(.07, 12, 12);
   const packetMaterial = new THREE.MeshBasicMaterial({ color: 0xd5ff65 });
   const linkMaterial = new THREE.MeshBasicMaterial({ color: 0x34404f });
+  // Packets follow the terminal colour theme chosen before this module loaded.
+  if (typeof getComputedStyle === 'function' && packetMaterial.color && packetMaterial.color.set) {
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+    if (/^#[0-9a-f]{6}$/i.test(accent)) packetMaterial.color.set(accent);
+  }
 
   const floor = new THREE.Mesh(floorGeometry, linkMaterial);
   floor.rotation.set(Math.PI / 2, 0, 0); floor.position.set(0, -1.2, 0); cluster.add(floor);
 
   // Racks sit on a shallow arc; each blade has two status lights.
   const rackPositions = [[-2.1, 0, .3], [0, 0, -.35], [2.1, 0, .3]];
-  const leds = [];
+  const leds = [], racks = [], rackBodies = [];
+  const selectedMaterial = new THREE.MeshStandardMaterial({ color: 0x2c3a2a, metalness: .5, roughness: .35 });
+  const offMaterial = new THREE.MeshBasicMaterial({ color: 0x252d38 });
   rackPositions.forEach(([x, y, z], rackIndex) => {
     const rack = new THREE.Group(); rack.position.set(x, y, z); rack.rotation.set(0, -x * .12, 0);
-    rack.add(new THREE.Mesh(rackGeometry, bodyMaterial));
+    const body = new THREE.Mesh(rackGeometry, bodyMaterial); body.userData = { rack: rackIndex };
+    rack.add(body); racks.push(rack); rackBodies.push(body);
     for (let slot = 0; slot < 8; slot++) {
       const blade = new THREE.Mesh(bladeGeometry, bladeMaterial);
       blade.position.set(0, .9 - slot * .26, .53); rack.add(blade);
@@ -52,7 +60,7 @@ if (renderer) {
         const material = ledMaterials[(slot + rackIndex + side * 2) % ledMaterials.length];
         const led = new THREE.Mesh(ledGeometry, material);
         led.position.set(.36 + side * .12, .9 - slot * .26, .59);
-        led.userData = { phase: rackIndex * 1.7 + slot * .9 + side * 2.3 };
+        led.userData = { phase: rackIndex * 1.7 + slot * .9 + side * 2.3, on: material };
         rack.add(led); leds.push(led);
       }
     }
@@ -82,8 +90,23 @@ if (renderer) {
   const introBlocking = () => document.documentElement.classList.contains('intro-pending') || document.documentElement.classList.contains('intro-running');
   let introActive = introBlocking();
   let contextLost = false, visible = true, frame = 0, lastTime = 0, elapsed = 0, progress = 0;
-  let lastWidth = 0, lastHeight = 0, dragYaw = 0, dragPitch = 0, dragging = null;
+  let lastWidth = 0, lastHeight = 0, dragYaw = 0, dragPitch = 0, dragging = null, selected = -1;
   const drawable = () => visible && !document.hidden && !introActive && !contextLost;
+  // Lights come on as the visitor collects finds: 35 % at the start, all at the end.
+  // Lit LEDs are shuffled deterministically so they spread over all racks.
+  const ledOrder = leds.map((led, index) => ({ led, key: Math.sin(index * 12.9898) * 43758.5453 % 1 })).sort((a, b) => a.key - b.key).map(item => item.led);
+  function applyFlags(state) {
+    const share = state && state.total ? state.count / state.total : 0;
+    const lit = Math.round(ledOrder.length * (.35 + .65 * share));
+    ledOrder.forEach((led, index) => { led.material = index < lit ? led.userData.on : offMaterial; });
+  }
+  applyFlags(globalThis.portfolioFlagState);
+  function select(index) {
+    selected = index;
+    rackBodies.forEach((body, rackIndex) => { body.material = rackIndex === index ? selectedMaterial : bodyMaterial; });
+    racks.forEach((rack, rackIndex) => { rack.position.set(rackPositions[rackIndex][0], rackIndex === index ? .12 : 0, rackPositions[rackIndex][2]); });
+  }
+  function redraw() { if (!frame && drawable()) { place(elapsed); renderer.render(scene, camera); } }
   function place(time) {
     cluster.rotation.set(-.08 + dragPitch, Math.sin(time * .18) * .32 + dragYaw - progress * .4, 0);
     packets.forEach(packet => {
@@ -109,20 +132,51 @@ if (renderer) {
     if (!width || !height) return;
     if (width !== lastWidth || height !== lastHeight) {
       lastWidth = width; lastHeight = height;
-      renderer.setSize(width, height, false); camera.aspect = width / height; camera.updateProjectionMatrix();
+      renderer.setSize(width, height, false); camera.aspect = width / height;
+      // Narrow canvases (phones) step the camera back so all three racks fit.
+      const distance = camera.aspect < 1.5 ? 7.4 * Math.min(1.6, 1.5 / camera.aspect) : 7.4;
+      camera.position.set(0, 2.4 * distance / 7.4, distance); camera.lookAt?.(0, .2, 0);
+      camera.updateProjectionMatrix();
     }
     start();
   }
-  // Drag to rotate; vertical page scrolling on touch screens stays native.
-  canvas.addEventListener('pointerdown', event => { dragging = { x: event.clientX, y: event.clientY, yaw: dragYaw, pitch: dragPitch }; canvas.setPointerCapture?.(event.pointerId); });
+  // Drag to rotate, click a rack to select it; vertical page scrolling on
+  // touch screens stays native.
+  const raycaster = THREE.Raycaster ? new THREE.Raycaster() : null;
+  function pick(event) {
+    if (!raycaster || !THREE.Vector2) return -1;
+    const box = canvas.getBoundingClientRect();
+    const point = new THREE.Vector2(((event.clientX - box.left) / box.width) * 2 - 1, -((event.clientY - box.top) / box.height) * 2 + 1);
+    raycaster.setFromCamera(point, camera);
+    const hit = raycaster.intersectObjects(racks, true)[0];
+    if (!hit) return -1;
+    let node = hit.object;
+    while (node && !racks.includes(node)) node = node.parent;
+    return racks.indexOf(node);
+  }
+  canvas.addEventListener('pointerdown', event => { dragging = { x: event.clientX, y: event.clientY, yaw: dragYaw, pitch: dragPitch, moved: false }; canvas.setPointerCapture?.(event.pointerId); });
   canvas.addEventListener('pointermove', event => {
-    if (!dragging) return;
+    if (!dragging) { if (event.pointerType === 'mouse') canvas.style.cursor = pick(event) >= 0 ? 'pointer' : 'grab'; return; }
+    if (Math.abs(event.clientX - dragging.x) + Math.abs(event.clientY - dragging.y) > 5) dragging.moved = true;
     dragYaw = dragging.yaw + (event.clientX - dragging.x) * .01;
     dragPitch = Math.max(-.35, Math.min(.35, dragging.pitch + (event.clientY - dragging.y) * .004));
     if (paused) { place(elapsed); renderer.render(scene, camera); } else start();
   });
-  const release = () => { dragging = null; };
-  canvas.addEventListener('pointerup', release); canvas.addEventListener('pointercancel', release);
+  canvas.addEventListener('pointerup', event => {
+    const wasClick = dragging && !dragging.moved; dragging = null;
+    if (!wasClick) return;
+    const index = pick(event);
+    if (index < 0) return;
+    select(index); redraw();
+    globalThis.dispatchEvent?.(new CustomEvent('portfolio:rack', { detail: { index } }));
+  });
+  canvas.addEventListener('pointercancel', () => { dragging = null; });
+  addEventListener('portfolio:rack-select', event => { select(event.detail.index); redraw(); });
+  addEventListener('portfolio:flags', event => { applyFlags(event.detail); redraw(); });
+  addEventListener('portfolio:theme', event => {
+    const accent = event.detail && event.detail.accent;
+    if (/^#[0-9a-f]{6}$/i.test(accent || "") && packetMaterial.color && packetMaterial.color.set) { packetMaterial.color.set(accent); glow.color && glow.color.set && glow.color.set(accent); redraw(); }
+  });
   new ResizeObserver(resize).observe(host);
   new IntersectionObserver(entries => {
     visible = entries[0].isIntersecting;

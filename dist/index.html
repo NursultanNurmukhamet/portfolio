@@ -52,15 +52,15 @@
   <header class="site-header tui-bar">
     <a class="identity tui-prompt" href="#top" aria-label="Нурсултан — на главную"><span class="monogram">nn<span>.</span></span><span class="tui-host">@sapa<i>:~$</i></span></a>
     <nav class="tui-tabs" aria-label="Основная навигация">
-      <a href="#top" data-section="top"><kbd>1</kbd>Обо мне</a>
-      <a href="#work" data-section="work"><kbd>2</kbd>Работа</a>
-      <a href="#projects" data-section="projects"><kbd>3</kbd>Проекты</a>
-      <a href="#roadmap" data-section="roadmap"><kbd>4</kbd>Путь</a>
-      <a href="#contact" data-section="contact"><kbd>5</kbd>Контакты</a>
+      <a href="#top" data-section="top"><kbd>1</kbd><span>Обо мне</span></a>
+      <a href="#work" data-section="work"><kbd>2</kbd><span>Работа</span></a>
+      <a href="#projects" data-section="projects"><kbd>3</kbd><span>Проекты</span></a>
+      <a href="#roadmap" data-section="roadmap"><kbd>4</kbd><span>Путь</span></a>
+      <a href="#contact" data-section="contact"><kbd>5</kbd><span>Контакты</span></a>
     </nav>
     <div class="tui-bar-right">
-      <button type="button" class="tui-flags" id="flags-button" aria-haspopup="dialog" aria-controls="help-dialog" title="Находки: отметки за исследование сайта, и горячие клавиши"><span class="tui-flag-dot" aria-hidden="true"></span>НАХОДКИ <b class="flag-count">0</b>/7</button>
-      <time class="tui-clock" id="tui-clock" aria-hidden="true">--:--:--</time>
+      <button type="button" class="tui-flags" id="flags-button" aria-haspopup="dialog" aria-controls="help-dialog" title="Находки: награды за исследование сайта"><span class="tui-flag-dot" aria-hidden="true"></span><span class="tui-flags-label">НАХОДКИ</span> <b class="flag-count">0</b>/<span class="flag-total">10</span></button>
+      <button type="button" class="theme-toggle" id="theme-button" title="Сменить цвет терминала" aria-label="Сменить цвет терминала"><span class="theme-swatch" aria-hidden="true"></span></button>
       <button class="motion-toggle" type="button" aria-label="Приостановить анимацию" aria-pressed="false" title="Приостановить анимацию"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-pause"></use></svg></button>
     </div>
   </header>
@@ -68,39 +68,47 @@
     <section class="pane pane-hero" id="top" aria-labelledby="hero-heading">
       <div class="pane-title"><span>Обо мне</span><span class="pane-title-meta">about.sh <i aria-hidden="true"></i> 2026</span></div>
       <div class="hero-grid">
-        <div class="hero-text">
+        <div class="hero-main">
           <p class="cmd"><span class="ps1" aria-hidden="true">$</span> whoami</p>
           <h1 id="hero-heading">Нурсултан<br>Нурмухамет</h1>
           <p class="hero-role">Backend / Infrastructure Engineer</p>
           <p class="hero-plain">Делаю серверную часть и инфраструктуру: внутренние системы, которыми компания пользуется каждый день, и серверы, на которых они работают надёжно и безопасно.</p>
-          <p class="cmd"><span class="ps1" aria-hidden="true">$</span> cat facts.txt</p>
-          <ul class="hero-facts">
-            <li><b>7</b> рабочих систем в Sapa Technologies: от кода до запуска и поддержки</li>
-            <li>Собственная серверная лаборатория (Kubernetes, GPU) для экспериментов и обучения</li>
-            <li>Электронная подпись (ЭЦП) и единый вход (SSO) в рабочих системах</li>
-          </ul>
-          <p class="cmd"><span class="ps1" aria-hidden="true">$</span> ls links/</p>
-          <nav class="hero-links" aria-label="Быстрые ссылки"><a href="assets/Nursultan-Nurmukhamet-CV.pdf" data-flag="cv">cv.pdf</a><a href="https://github.com/NursultanNurmukhamet" target="_blank" rel="noopener noreferrer">github</a><a href="https://t.me/NurmukhametNursultan" target="_blank" rel="noopener noreferrer">telegram</a></nav>
+          <nav class="hero-links" aria-label="Быстрые ссылки"><a href="assets/Nursultan-Nurmukhamet-CV.pdf" data-flag="cv">резюме.pdf</a><a href="https://github.com/NursultanNurmukhamet" target="_blank" rel="noopener noreferrer">github</a><a href="https://t.me/NurmukhametNursultan" target="_blank" rel="noopener noreferrer">telegram</a></nav>
+          <form class="terminal" id="terminal" autocomplete="off">
+            <div class="term-head"><span><span class="term-lights" aria-hidden="true"><i></i><i></i><i></i></span>игровой терминал</span><span class="term-hint">нажмите кнопку или наберите команду</span></div>
+            <output class="term-out" id="term-out" role="log" aria-live="polite" aria-label="Вывод терминала"><p class="term-line term-sys">Это игровой терминал сайта. Нажмите любую кнопку ниже: он сам выполнит команду. За исследование сайта начисляются находки.</p></output>
+            <div class="term-chips" role="group" aria-label="Быстрые команды">
+              <button type="button" data-cmd="whoami">Кто ты?</button>
+              <button type="button" data-cmd="deploy">Выкатить релиз</button>
+              <button type="button" data-cmd="top">Навыки вживую</button>
+              <button type="button" data-cmd="ls projects">Проекты</button>
+              <button type="button" data-cmd="theme">Сменить цвет</button>
+              <button type="button" data-cmd="ping nursultan">Написать мне</button>
+              <button type="button" data-cmd="help">Все команды</button>
+            </div>
+            <label class="term-input-row"><span class="ps1" aria-hidden="true">nn@sapa:~$</span><span class="visually-hidden">Команда терминала</span><input id="term-input" name="command" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" maxlength="80" placeholder="help"></label>
+          </form>
         </div>
-        <aside class="hero-monitor" aria-label="Монитор: состояние систем и схема контура">
+        <aside class="hero-monitor" aria-label="Монитор: состояние систем и 3D-схема кластера">
           <div class="mon-head"><span><span class="status-dot" aria-hidden="true"></span>СОСТОЯНИЕ</span><span>работа <i aria-hidden="true"></i> лаборатория</span></div>
           <dl class="mon-rows">
             <div class="mon-row"><dt>системы</dt><dd><span class="mon-bar" style="--v:1" aria-hidden="true"></span><span class="mon-value">7 из 7 работают</span></dd></div>
-            <div class="mon-row"><dt>мой код</dt><dd><span class="mon-bar" style="--v:.92" aria-hidden="true"></span><span class="mon-value">85–100 % в каждой системе</span></dd></div>
-            <div class="mon-row"><dt>лаборатория</dt><dd><span class="mon-bar mon-bar-info" style="--v:.8" aria-hidden="true"></span><span class="mon-value">серверы, GPU, защищённая сеть</span></dd></div>
-            <div class="mon-row"><dt>защита</dt><dd><span class="mon-bar mon-bar-warn" style="--v:.86" aria-hidden="true"></span><span class="mon-value">ЭЦП, единый вход, двухфакторная</span></dd></div>
+            <div class="mon-row"><dt>мой код</dt><dd><span class="mon-bar" style="--v:.92" aria-hidden="true"></span><span class="mon-value">85–100 % в каждой</span></dd></div>
+            <div class="mon-row"><dt>лаборатория</dt><dd><span class="mon-bar mon-bar-info" style="--v:.8" aria-hidden="true"></span><span class="mon-value">серверы и GPU</span></dd></div>
+            <div class="mon-row"><dt>защита</dt><dd><span class="mon-bar mon-bar-warn" style="--v:.86" aria-hidden="true"></span><span class="mon-value">ЭЦП и единый вход</span></dd></div>
           </dl>
           <div class="mon-map">
-            <canvas id="orbit-canvas" aria-hidden="true"></canvas><p class="mon-map-fallback">3D-схема недоступна в этом браузере.</p>
-            <p class="mon-caption">СХЕМА <i aria-hidden="true"></i> кластер серверов в 3D: узлы обмениваются данными, можно вращать мышью</p>
+            <canvas id="orbit-canvas" aria-hidden="true"></canvas><p class="mon-map-fallback">3D-схема недоступна в этом браузере. Стойки можно выбрать кнопками ниже.</p>
+            <p class="mon-lit" id="mon-lit" aria-hidden="true">огни кластера: <b>0</b>%</p>
           </div>
+          <div class="rack-picker" role="group" aria-label="Стойки кластера">
+            <button type="button" data-rack="0" aria-pressed="false">Стойка 1<small>работа</small></button>
+            <button type="button" data-rack="1" aria-pressed="false">Стойка 2<small>лаборатория</small></button>
+            <button type="button" data-rack="2" aria-pressed="false">Стойка 3<small>проекты</small></button>
+          </div>
+          <p class="rack-info" id="rack-info" aria-live="polite">Нажмите на стойку в 3D-схеме или кнопку выше, чтобы узнать, что на ней. Схему можно вращать мышью. Огни загораются по мере того, как вы собираете находки.</p>
         </aside>
       </div>
-      <form class="terminal" id="terminal" autocomplete="off">
-        <div class="term-head"><span>игровой терминал</span><span>наберите <kbd>help</kbd> и нажмите Enter <i aria-hidden="true"></i> клавиша <kbd>/</kbd></span></div>
-        <output class="term-out" id="term-out" role="log" aria-live="polite" aria-label="Вывод терминала"><p class="term-line term-sys">Это игровой терминал сайта. Наберите help, чтобы увидеть команды: можно открыть проекты, резюме или найти скрытые находки.</p></output>
-        <label class="term-input-row"><span class="ps1" aria-hidden="true">nn@sapa:~$</span><span class="visually-hidden">Команда терминала</span><input id="term-input" name="command" type="text" spellcheck="false" autocapitalize="off" maxlength="80" placeholder="help"></label>
-      </form>
     </section>
 
     <section class="pane work-section" id="work" aria-labelledby="work-heading">
@@ -108,17 +116,26 @@
       <div class="pane-head">
         <p class="cmd"><span class="ps1" aria-hidden="true">$</span> kubectl get systems -n sapa</p>
         <h2 id="work-heading">Семь систем,<br>которые <em>работают.</em></h2>
-        <p class="work-lead">Внутренние продукты компании, где я основной автор кода (85–100 %): придумал устройство системы, написал серверную часть, настроил автоматический выпуск обновлений, защиту и поддержку. Код закрыт, поэтому ниже — что сделано и на чём.</p>
+        <p class="work-lead">Внутренние продукты компании, где я основной автор кода (85–100 %): придумал устройство системы, написал серверную часть, настроил автоматический выпуск обновлений, защиту и поддержку. Код закрыт, поэтому ниже — что сделано и на чём. Нажмите «Подробнее», чтобы раскрыть карточку.</p>
+      </div>
+      <div class="work-filter" role="group" aria-label="Фильтр систем по технологиям">
+        <button type="button" data-filter="all" aria-pressed="true">Все</button>
+        <button type="button" data-filter="python" aria-pressed="false">Python</button>
+        <button type="button" data-filter="go" aria-pressed="false">Go</button>
+        <button type="button" data-filter="telegram" aria-pressed="false">Telegram</button>
+        <button type="button" data-filter="security" aria-pressed="false">Безопасность</button>
+        <span class="work-count" id="work-count" aria-live="polite">показано: 7</span>
       </div>
       <ul class="work-grid">
-        <li class="work-card"><div class="work-card-head"><span class="work-index">01</span><span class="work-status">работает</span></div><h3>HR-портал</h3><p>Профили сотрудников, интеграция с 1С, отпуска и заявки, обучение, база знаний, опросы. MFA (TOTP) и корпоративный SAML SSO. Blue-green деплой без простоя, версионируемые миграции.</p><p class="work-stack">Python 3.12 · Flask · SQLAlchemy 2 · PostgreSQL 16 · Alembic · Gunicorn · Nginx</p></li>
-        <li class="work-card"><div class="work-card-head"><span class="work-index">02</span><span class="work-status">работает</span></div><h3>Электронный документооборот с ЭЦП</h3><p>Кадровые документы с юридически значимой подписью: NCALayer в браузере, серверная проверка цепочки и отзыва сертификата через KalkanCrypt SDK НУЦ РК. Маршруты согласования на BPMN-движке, SLA-эскалации, append-only аудит и ежедневный контроль целостности архива по SHA-256.</p><p class="work-stack">Python · PostgreSQL · Operaton (BPMN) · SAML / Authentik · Docker</p></li>
-        <li class="work-card"><div class="work-card-head"><span class="work-index">03</span><span class="work-status">работает</span></div><h3>Платформа корпоративного обучения</h3><p>Конструктор курсов, тесты глав и итоговые экзамены, PDF-сертификаты с QR-проверкой, фишинг-тренировки, аналитика с экспортом. Вход через Telegram-бота, интерфейс на трёх языках.</p><p class="work-stack">Flask · SQLAlchemy · PostgreSQL · python-telegram-bot · ReportLab</p></li>
-        <li class="work-card"><div class="work-card-head"><span class="work-index">04</span><span class="work-status">работает</span></div><h3>Telegram-каталог автомобилей с CRM</h3><p>Бот-каталог с избранным, фильтрами и чатом с менеджером; админ-панель с аналитикой. Backend разделён на слои handlers / services / repositories, админский API закрыт ключом и server-side proxy.</p><p class="work-stack">Go · Gin · Next.js · TypeScript · PostgreSQL · Redis</p></li>
-        <li class="work-card"><div class="work-card-head"><span class="work-index">05</span><span class="work-status">работает</span></div><h3>Служба поддержки</h3><p>Telegram-бот для обращений, API для интеграций и верификации, веб-командный пункт с рассылками. Общая сервисная библиотека и единая база для всех трёх процессов.</p><p class="work-stack">FastAPI · Flask · PostgreSQL · Docker Compose · SonarQube</p></li>
-        <li class="work-card"><div class="work-card-head"><span class="work-index">06</span><span class="work-status">работает</span></div><h3>Бронирование переговорных</h3><p>Telegram WebApp для брони комнат с напоминаниями и уведомлениями по расписанию; два отдельных планировщика и health-мониторинг.</p><p class="work-stack">Flask · PostgreSQL · Telegram WebApp · Gunicorn</p></li>
+        <li class="work-card" data-tags="python security web"><div class="work-card-head"><span class="work-index">01</span><span class="work-kind">веб-портал</span><span class="work-status">работает</span></div><h3>HR-портал</h3><p class="work-summary">Личный кабинет сотрудника: отпуска, заявки, обучение и документы в одном месте.</p><details class="work-more"><summary>Подробнее</summary><p>Профили сотрудников, интеграция с 1С, отпуска и заявки, обучение, база знаний, опросы. MFA (TOTP) и корпоративный SAML SSO. Blue-green деплой без простоя, версионируемые миграции.</p><p class="work-stack">Python 3.12 · Flask · SQLAlchemy 2 · PostgreSQL 16 · Alembic · Gunicorn · Nginx</p></details></li>
+        <li class="work-card" data-tags="python security web"><div class="work-card-head"><span class="work-index">02</span><span class="work-kind">документы</span><span class="work-status">работает</span></div><h3>Электронный документооборот с ЭЦП</h3><p class="work-summary">Кадровые документы подписываются электронной подписью и имеют юридическую силу.</p><details class="work-more"><summary>Подробнее</summary><p>Кадровые документы с юридически значимой подписью: NCALayer в браузере, серверная проверка цепочки и отзыва сертификата через KalkanCrypt SDK НУЦ РК. Маршруты согласования на BPMN-движке, SLA-эскалации, append-only аудит и ежедневный контроль целостности архива по SHA-256.</p><p class="work-stack">Python · PostgreSQL · Operaton (BPMN) · SAML / Authentik · Docker</p></details></li>
+        <li class="work-card" data-tags="python telegram web"><div class="work-card-head"><span class="work-index">03</span><span class="work-kind">обучение</span><span class="work-status">работает</span></div><h3>Платформа корпоративного обучения</h3><p class="work-summary">Курсы, экзамены и сертификаты для сотрудников, вход через Telegram.</p><details class="work-more"><summary>Подробнее</summary><p>Конструктор курсов, тесты глав и итоговые экзамены, PDF-сертификаты с QR-проверкой, фишинг-тренировки, аналитика с экспортом. Вход через Telegram-бота, интерфейс на трёх языках.</p><p class="work-stack">Flask · SQLAlchemy · PostgreSQL · python-telegram-bot · ReportLab</p></details></li>
+        <li class="work-card" data-tags="go telegram web security"><div class="work-card-head"><span class="work-index">04</span><span class="work-kind">бот и CRM</span><span class="work-status">работает</span></div><h3>Telegram-каталог автомобилей с CRM</h3><p class="work-summary">Каталог машин в Telegram для клиентов и панель для менеджеров.</p><details class="work-more"><summary>Подробнее</summary><p>Бот-каталог с избранным, фильтрами и чатом с менеджером; админ-панель с аналитикой. Backend разделён на слои handlers / services / repositories, админский API закрыт ключом и server-side proxy.</p><p class="work-stack">Go · Gin · Next.js · TypeScript · PostgreSQL · Redis</p></details></li>
+        <li class="work-card" data-tags="python telegram"><div class="work-card-head"><span class="work-index">05</span><span class="work-kind">поддержка</span><span class="work-status">работает</span></div><h3>Служба поддержки</h3><p class="work-summary">Обращения через Telegram-бота и рабочее место для операторов.</p><details class="work-more"><summary>Подробнее</summary><p>Telegram-бот для обращений, API для интеграций и верификации, веб-командный пункт с рассылками. Общая сервисная библиотека и единая база для всех трёх процессов.</p><p class="work-stack">FastAPI · Flask · PostgreSQL · Docker Compose · SonarQube</p></details></li>
+        <li class="work-card" data-tags="python telegram"><div class="work-card-head"><span class="work-index">06</span><span class="work-kind">бронирование</span><span class="work-status">работает</span></div><h3>Бронирование переговорных</h3><p class="work-summary">Бронирование комнат прямо в Telegram с напоминаниями.</p><details class="work-more"><summary>Подробнее</summary><p>Telegram WebApp для брони комнат с напоминаниями и уведомлениями по расписанию; два отдельных планировщика и health-мониторинг.</p><p class="work-stack">Flask · PostgreSQL · Telegram WebApp · Gunicorn</p></details></li>
+        <li class="work-card work-card-locked" data-tags=""><div class="work-card-head"><span class="work-index">07</span><span class="work-kind">внутренняя</span><span class="work-status work-status-locked">закрыто</span></div><h3>Седьмая система</h3><p class="work-summary">Ещё одна внутренняя система компании. Её описание не публикуется.</p></li>
       </ul>
-      <p class="work-note"><span class="ps1" aria-hidden="true">#</span> Все системы выпускаются автоматически (GitLab CI) с проверкой на уязвимости (Trivy); пароли и ключи хранятся только в защищённых настройках. Внутренние адреса и данные компании на сайте не публикуются.</p>
+      <p class="work-note"><span class="ps1" aria-hidden="true">#</span> Все системы выпускаются автоматически (GitLab CI) с проверкой на уязвимости (Trivy); пароли и ключи хранятся только в защищённых настройках. Внутренние адреса и данные компании на сайте не публикуются. Хотите увидеть, как это выглядит? Нажмите в терминале «Выкатить релиз».</p>
     </section>
 
     <section class="pane projects-section" id="projects" aria-labelledby="projects-heading">
@@ -126,34 +143,41 @@
       <div class="pane-head">
         <p class="cmd"><span class="ps1" aria-hidden="true">$</span> ls -la ~/projects</p>
         <h2 id="projects-heading">Открытый <em>код.</em></h2>
-        <p class="work-lead">Личные проекты и учебные кейсы, которые можно открыть и посмотреть. Выберите проект слева, справа появится описание и ссылка.</p>
+        <p class="work-lead">Личные проекты и учебные кейсы, которые можно открыть и посмотреть. Выберите проект в списке, рядом появится описание и ссылка.</p>
       </div>
       <div class="fm" id="file-manager">
         <div class="fm-list" role="tablist" aria-label="Проекты" aria-orientation="vertical" id="fm-list"></div>
         <div class="fm-view" id="fm-view"></div>
       </div>
       <noscript><p class="fm-no-js">Для файлового менеджера нужен JavaScript. Проекты напрямую: <a href="mylab.html">MyLab</a>, <a href="projects/university/">Университет</a>, <a href="https://github.com/NursultanNurmukhamet">GitHub</a>.</p></noscript>
-      <p class="fm-hint" aria-hidden="true">стрелки на клавиатуре или мышь <i aria-hidden="true"></i> <kbd>Enter</kbd> открывает проект</p>
     </section>
 
     <section class="pane roadmap-section" id="roadmap" aria-labelledby="roadmap-heading">
       <div class="pane-title"><span>Путь</span><span class="pane-title-meta">история в виде веток</span></div>
       <div class="pane-head">
-        <p class="cmd"><span class="ps1" aria-hidden="true">$</span> git log --graph --oneline --all</p>
+        <p class="cmd"><span class="ps1" aria-hidden="true">$</span> git log --graph --all</p>
         <h2 id="roadmap-heading">Мой путь <em>по веткам.</em></h2>
-        <p class="work-lead">Как в истории изменений кода: четыре направления, серверная разработка, инфраструктура, безопасность и искусственный интеллект. Самое свежее сверху.</p>
+        <p class="work-lead">Как история изменений в коде: основная линия и ветки, которые отходят от неё и потом сливаются обратно. Нажмите на веху, чтобы раскрыть её, или на ветку в легенде, чтобы скрыть её.</p>
       </div>
-      <ul class="git-legend" aria-label="Ветки"><li data-lane="main">основная: серверная разработка</li><li data-lane="infra">инфраструктура</li><li data-lane="security">безопасность</li><li data-lane="ai">искусственный интеллект</li></ul>
-      <ol class="git-log" reversed>
-        <li class="git-commit" data-lane="main"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">HEAD</code><div class="git-msg"><b>Сейчас: инженер в Sapa Technologies, открыт к новым задачам</b><span>серверная разработка, инфраструктура, прикладной AI</span></div></li>
-        <li class="git-commit" data-lane="ai"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">20.10.26</code><div class="git-msg"><b>HackAlem AI: сертификат участника рекорда Гиннесса</b><span>искусственный интеллект <i aria-hidden="true"></i> 20.10.2026</span></div></li>
-        <li class="git-commit" data-lane="ai"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">07.09.26</code><div class="git-msg"><b>Исследование распознавания казахской детской речи, сертификат КазНУ</b><span>искусственный интеллект <i aria-hidden="true"></i> модели Whisper и MMS, 07.09.2026</span></div></li>
-        <li class="git-commit" data-lane="security"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">prod</code><div class="git-msg"><b>Электронная подпись и единый вход в рабочих системах</b><span>безопасность <i aria-hidden="true"></i> юридически значимая подпись документов, двухфакторный вход, журнал действий</span></div></li>
-        <li class="git-commit" data-lane="main"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">2025</code><div class="git-msg"><b>Семь рабочих систем для Sapa Technologies</b><span>серверная разработка <i aria-hidden="true"></i> по договору с 24.07.2025, в штате с 10.08.2026 <i aria-hidden="true"></i> Python, Go, PostgreSQL</span></div></li>
-        <li class="git-commit" data-lane="ai"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">cup</code><div class="git-msg"><b>AgentF: команда из пяти AI-агентов для футбольного турнира AWS</b><span>искусственный интеллект <i aria-hidden="true"></i> Amazon Nova, три победы над ботами соперников</span></div></li>
-        <li class="git-commit" data-lane="infra"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">lab</code><div class="git-msg"><b>MyLab: собственная серверная лаборатория</b><span>инфраструктура <i aria-hidden="true"></i> от кабеля до кластера: серверы, GPU, сеть, мониторинг, <a href="mylab.html">подробный кейс</a></span></div></li>
-        <li class="git-commit" data-lane="main"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">init</code><div class="git-msg"><b>КазНУ: факультет ИТ и искусственного интеллекта</b><span>начало пути <i aria-hidden="true"></i> с августа 2023, программа «Высоконагруженные информационные системы с ИИ», 4 курс <i aria-hidden="true"></i> <a href="projects/university/">университетские проекты</a></span></div></li>
-      </ol>
+      <div class="git-legend" role="group" aria-label="Ветки">
+        <button type="button" data-lane="main" aria-pressed="true">основная линия</button>
+        <button type="button" data-lane="infra" aria-pressed="true">инфраструктура</button>
+        <button type="button" data-lane="security" aria-pressed="true">безопасность</button>
+        <button type="button" data-lane="ai" aria-pressed="true">искусственный интеллект</button>
+      </div>
+      <div class="git-wrap" id="git-wrap">
+        <svg class="git-graph" id="git-graph" aria-hidden="true" focusable="false"></svg>
+        <ol class="git-log" reversed>
+          <li class="git-commit" data-lane="main"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">HEAD</code><details class="git-msg"><summary><b>Сейчас: инженер в Sapa Technologies, открыт к новым задачам</b><span>основная линия <i aria-hidden="true"></i> сюда сливаются все ветки</span></summary><p class="git-more">Ищу задачи, где нужно спроектировать и запустить серверную систему или навести порядок в инфраструктуре: от аудита до выпуска в работу. Пишите в Telegram или через форму ниже.</p></details></li>
+          <li class="git-commit" data-lane="ai"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">b72d04c</code><details class="git-msg"><summary><b>HackAlem AI: сертификат участника рекорда Гиннесса</b><span>искусственный интеллект <i aria-hidden="true"></i> 20.10.2026</span></summary><p class="git-more">Участник HackAlem AI, мероприятия, которое вошло в Книгу рекордов Гиннесса. Есть сертификат участника.</p></details></li>
+          <li class="git-commit" data-lane="ai"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">9e41f6a</code><details class="git-msg"><summary><b>Исследование распознавания казахской детской речи</b><span>искусственный интеллект <i aria-hidden="true"></i> сертификат КазНУ, 07.09.2026</span></summary><p class="git-more">Исследование автоматического распознавания речи детей на казахском языке на моделях Whisper и MMS. КазНУ выдал сертификат за вклад. Подробнее в <a href="projects/university/">университетских проектах</a>.</p></details></li>
+          <li class="git-commit" data-lane="security"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">c05b8d2</code><details class="git-msg"><summary><b>Электронная подпись и единый вход в рабочих системах</b><span>безопасность <i aria-hidden="true"></i> ветка от основной линии</span></summary><p class="git-more">Документы подписываются электронной подписью с юридической силой, сервер сам проверяет сертификат. Вход в системы через единый корпоративный вход и второй фактор, все действия пишутся в журнал.</p></details></li>
+          <li class="git-commit" data-lane="main"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">7a3e9f1</code><details class="git-msg"><summary><b>Семь рабочих систем для Sapa Technologies</b><span>основная линия <i aria-hidden="true"></i> по договору с 24.07.2025, в штате с 10.08.2026</span></summary><p class="git-more">Работаю без перерывов с июля 2025: сначала по договору, с августа 2026 в штате. Семь внутренних систем, где я основной автор кода: HR-портал, документооборот, обучение, каталог с CRM, поддержка, бронирование и ещё одна закрытая.</p></details></li>
+          <li class="git-commit" data-lane="ai"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">e6d21b4</code><details class="git-msg"><summary><b>AgentF: команда из пяти AI-агентов</b><span>искусственный интеллект <i aria-hidden="true"></i> AWS Agentic Football Cup</span></summary><p class="git-more">Пять футбольных AI-агентов: тактика, решения языковой модели и запасная логика на случай сбоя. Три победы над ботами соперников в отдельных матчах.</p></details></li>
+          <li class="git-commit" data-lane="infra"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">4b8c7a0</code><details class="git-msg"><summary><b>MyLab: собственная серверная лаборатория</b><span>инфраструктура <i aria-hidden="true"></i> от кабеля до кластера</span></summary><p class="git-more">Собрал свою лабораторию: серверы с GPU, виртуализация, Kubernetes, защищённая сеть, мониторинг и проверка восстановления после сбоев. Подробный <a href="mylab.html">кейс MyLab</a>.</p></details></li>
+          <li class="git-commit" data-lane="main"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">0a1b2c3</code><details class="git-msg"><summary><b>КазНУ: факультет ИТ и искусственного интеллекта</b><span>начало пути <i aria-hidden="true"></i> с августа 2023, 4 курс</span></summary><p class="git-more">Программа «Высоконагруженные информационные системы с искусственным интеллектом». Учебные проекты: UniTrack, мастер-класс по ИИ и исследование речи, смотрите <a href="projects/university/">университетские проекты</a>.</p></details></li>
+        </ol>
+      </div>
     </section>
 
     <section class="pane contact-section" id="contact" aria-labelledby="contact-heading">
@@ -162,9 +186,8 @@
         <div class="contact-intro" id="about">
           <p class="cmd"><span class="ps1" aria-hidden="true">$</span> ./new-task --describe</p>
           <h2 id="contact-heading">Есть задача?<br>Давайте <em>обсудим.</em></h2>
-          <p class="contact-english-title" lang="en">Have a challenge? Let’s talk.</p>
+          <p class="contact-plain">Расскажите своими словами, что не работает. Форма из трёх шагов, готовое ТЗ не нужно.</p>
           <p class="contact-body">Сейчас — инженер в Sapa Technologies. Открыт к задачам по backend, инфраструктуре и прикладному AI: от аудита и архитектуры до запуска в production. Опишите задачу или напишите напрямую — отвечу, с чего начать.</p>
-          <p class="contact-body contact-body-en" lang="en">Currently an engineer at Sapa Technologies. Open to backend, infrastructure and applied-AI work: from audit and architecture to production launch. Describe the task or contact me directly and I will reply with a starting point.</p>
           <a class="contact-start" href="#lead-form">Описать задачу <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></a>
           <div class="direct-contact"><p>ИЛИ НАПРЯМУЮ / DIRECT CONTACT</p><div id="direct-contact-links"></div><span id="contact-pending">Telegram или email добавим после согласования.</span></div>
         </div>
@@ -194,17 +217,18 @@
       </div>
     </section>
   </main>
-  <footer class="site-footer tui-status"><a class="monogram" href="#top" aria-label="Вернуться наверх">nn<span>.</span></a><p>НАХОДКИ <b class="flag-count">0</b>/7 <i aria-hidden="true"></i> <kbd>?</kbd> справка</p><span>© 2026 · Нурсултан Нурмухамет</span><a href="#top" class="footer-up" aria-label="Наверх"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up"></use></svg></a></footer>
+  <footer class="site-footer tui-status"><a class="monogram" href="#top" aria-label="Вернуться наверх">nn<span>.</span></a><p>НАХОДКИ <b class="flag-count">0</b>/<span class="flag-total">10</span> <i aria-hidden="true"></i> <kbd>?</kbd> справка</p><span>© 2026 · Нурсултан Нурмухамет</span><a href="#top" class="footer-up" aria-label="Наверх"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up"></use></svg></a></footer>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <dialog class="preview-dialog" aria-labelledby="preview-title"><div class="preview-toolbar"><div><h2 id="preview-title">Превью</h2><p></p></div><button class="preview-close" type="button" aria-label="Закрыть превью"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-close"></use></svg></button></div><div class="preview-document"></div></dialog>
   <dialog class="help-dialog" id="help-dialog" aria-labelledby="help-title">
-    <div class="preview-toolbar"><div><h2 id="help-title">Справка: находки и клавиши</h2><p>На сайте спрятано семь находок за исследование страниц. Прогресс хранится только в вашем браузере и никуда не отправляется.</p></div><button class="preview-close help-close" type="button" aria-label="Закрыть справку"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-close"></use></svg></button></div>
+    <div class="preview-toolbar"><div><h2 id="help-title">Справка: находки и клавиши</h2><p>За исследование сайта начисляются находки. Соберите все, чтобы открыть секретный цвет терминала. Прогресс хранится только в вашем браузере.</p></div><button class="preview-close help-close" type="button" aria-label="Закрыть справку"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-close"></use></svg></button></div>
     <div class="help-body">
+      <div class="flag-progress" aria-hidden="true"><span id="flag-progress-bar"></span></div>
       <ul class="flag-list" id="flag-list" aria-label="Находки"></ul>
       <dl class="key-list" aria-label="Горячие клавиши">
-        <div><dt><kbd>1</kbd>…<kbd>5</kbd></dt><dd>разделы</dd></div>
-        <div><dt><kbd>/</kbd></dt><dd>фокус в терминал</dd></div>
-        <div><dt><kbd>j</kbd> <kbd>k</kbd></dt><dd>проекты в файловом менеджере</dd></div>
+        <div><dt><kbd>1</kbd> <kbd>5</kbd></dt><dd>разделы с первого по пятый</dd></div>
+        <div><dt><kbd>/</kbd></dt><dd>перейти в терминал</dd></div>
+        <div><dt><kbd>j</kbd> <kbd>k</kbd></dt><dd>следующий и предыдущий проект</dd></div>
         <div><dt><kbd>?</kbd></dt><dd>эта справка</dd></div>
         <div><dt><kbd>Esc</kbd></dt><dd>закрыть окно</dd></div>
       </dl>
