@@ -390,7 +390,7 @@
     },
     kubectl(argument){
       if(!/get\s+(pods|systems|po)/.test(argument||'')){print('Попробуйте: kubectl get pods','warn');return;}
-      table(['NAME                 READY  STATUS','hr-portal            1/1    Running','edo-sign             1/1    Running','learning-platform    1/1    Running','auto-catalog-crm     1/1    Running','support-desk         1/1    Running','room-booking         1/1    Running','internal-07          1/1    Running (описание закрыто)'].join('\n'));
+      table(['NAME                 READY  STATUS','hr-portal            1/1    Running','edo-sign             1/1    Running','learning-platform    1/1    Running','auto-catalog-crm     1/1    Running','support-desk         1/1    Running','room-booking         1/1    Running','feedback-forms       1/1    Running'].join('\n'));
       printHtml('Это семь моих систем в Sapa Technologies, все работают. Подробности в разделе <a href="#work">Работа</a>.','sys');
     },
     git(argument){

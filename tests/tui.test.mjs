@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,existsSync} from 'node:fs';
 
 const html=readFileSync(new URL('../dist/index.html',import.meta.url),'utf8');
 const css=readFileSync(new URL('../dist/tui.css',import.meta.url),'utf8');
@@ -18,11 +18,12 @@ test('the terminal sits on the first screen with clickable commands for non-tech
   assert.match(hero,/role="log" aria-live="polite"/);
 });
 
-test('seven systems are shown; six expand with native details and one stays closed',()=>{
+test('seven systems are shown and every one expands with native details',()=>{
   const cards=html.match(/<li class="work-card[^"]*"/g)||[];
   assert.equal(cards.length,7);
-  assert.equal((html.match(/<details class="work-more">/g)||[]).length,6);
-  assert.equal((html.match(/work-card-locked/g)||[]).length,1);
+  assert.equal((html.match(/<details class="work-more">/g)||[]).length,7);
+  assert.doesNotMatch(html,/work-card-locked|Седьмая система/);
+  assert.ok(existsSync(new URL('../dist/assets/Nursultan-Nurmukhamet-CV.pdf',import.meta.url)),'the CV link in the hero has a real file behind it');
   const filters=[...html.matchAll(/data-filter="([^"]+)" aria-pressed="(true|false)"/g)];
   assert.ok(filters.length>=4);
   assert.equal(filters.filter(match=>match[2]==='true').length,1,'exactly one filter starts pressed');
