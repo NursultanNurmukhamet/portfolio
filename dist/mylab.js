@@ -5,7 +5,7 @@
     mapKind: 'LAYER MAP', mapCompute: 'Physical foundation', mapData: 'Data',
     mapHint: 'Choose a layer to explore its story. A case map, not live monitoring.',
     conclusionNote: 'MyLab is my full-cycle practice: from crimping cables and installing a hypervisor to diagnosing failures and verifying data. Not just launching systems, but understanding how they work.',
-    skip: 'Skip to the case study', navHardware: 'Hardware', navNetwork: 'Network', navRecovery: 'Recovery', back: 'All projects ',
+    skip: 'Skip to the case study', navHardware: 'Hardware', navNetwork: 'Network', navRecovery: 'Recovery', back: 'All projects',
     heroKicker: 'PERSONAL INFRASTRUCTURE', heroLead: 'My infrastructure. From cable to cluster.',
     heroNote: 'From two GPUs and Proxmox to a hand-built network, Kubernetes, Grafana and a verifiable archive.', heroCta: 'Open the case map',
     heroProof: 'Primary compute host · two physical GPUs', metricNodes: 'infrastructure nodes', metricThreads: 'hardware threads', snapshot: 'VERIFIED HISTORICAL SNAPSHOT · 2026',
@@ -84,7 +84,7 @@
     honesty2: 'Daily copies and the curated archive remained on one physical HDD — this was not yet a full 3-2-1 strategy.',
     honesty3: 'Metrics and statuses on this page are historical snapshots, not a promise of current uptime.',
     conclusionTitle: 'Build. Understand. Recover.',
-    nextProjects: ' All projects', nextContact: 'Discuss a challenge ', footerSnapshot: 'VERIFIED HISTORICAL SNAPSHOT · 2026'
+    nextProjects: 'All projects', nextContact: 'Discuss a challenge', footerSnapshot: 'VERIFIED HISTORICAL SNAPSHOT · 2026'
   };
 
   const copy = { ru, en };
@@ -158,9 +158,9 @@
   });
   reduceMotion.addEventListener('change', () => { updateMotionLabel(); scheduleFrame(); });
 
+  // Reading progress and reveal-on-scroll come from the shared shell (shell.js / shell.css).
   const hero = document.querySelector('.ml-hero');
   const heroProof = document.querySelector('.ml-system-map');
-  const progress = document.querySelector('.ml-progress');
   const caseMap = document.querySelector('.ml-case-map');
   const chapters = [...document.querySelectorAll('[data-chapter]')];
   const chapterLinks = [...document.querySelectorAll('[data-case-link]')];
@@ -190,16 +190,12 @@
 
   const render = () => {
     frame = 0;
-    const doc = document.documentElement;
-    const maxScroll = Math.max(1, doc.scrollHeight - innerHeight);
-    caseMap?.style.setProperty('--case-progress', Math.min(1, Math.max(0, scrollY / maxScroll)).toFixed(4));
-    if (hero && progress) {
+    if (hero && heroProof) {
       const rect = hero.getBoundingClientRect();
       const heroProgress = Math.min(1, Math.max(0, -rect.top / Math.max(1, hero.offsetHeight - innerHeight * 0.25)));
-      progress.style.transform = `scaleX(${heroProgress})`;
-      if (heroProof && !isMotionPaused() && innerWidth > 900 && rect.bottom > 0) {
+      if (!isMotionPaused() && innerWidth > 980 && rect.bottom > 0) {
         heroProof.style.transform = `translate3d(${pointerX}px, ${pointerY + heroProgress * 18}px, 0) rotate(${pointerX * 0.03}deg)`;
-      } else if (heroProof) heroProof.style.transform = '';
+      } else heroProof.style.transform = '';
     }
     updateChapterState();
   };
@@ -215,20 +211,6 @@
   hero?.addEventListener('pointerleave', () => { pointerX = 0; pointerY = 0; scheduleFrame(); });
   addEventListener('scroll', scheduleFrame, { passive: true });
   addEventListener('resize', scheduleFrame);
-
-  const revealTargets = [...document.querySelectorAll('[data-reveal]')];
-  document.body.classList.add('ml-reveal-ready');
-  if (reduceMotion.matches || !('IntersectionObserver' in window)) revealTargets.forEach((node) => node.classList.add('is-visible'));
-  else {
-    const observer = new IntersectionObserver((entries, revealObserver) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        revealObserver.unobserve(entry.target);
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
-    revealTargets.forEach((node) => observer.observe(node));
-  }
 
   document.querySelectorAll('[data-lightbox]').forEach((button) => {
     button.addEventListener('click', () => {
