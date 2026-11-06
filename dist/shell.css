@@ -48,3 +48,7 @@ html.js [data-reveal-group].is-revealed>:nth-child(n+7){transition-delay:400ms}
   .shell-lift:hover{transform:none}
   .shell-img:hover img{transform:none}
 }
+
+/* Shared top bar: the owner's name next to the monogram reads the same on every page. */
+.tui-bar .tui-host{font-family:Manrope,"Segoe UI",Arial,sans-serif;font-size:14px;color:var(--dim);margin-left:4px}
+.tui-bar .tui-host i{display:none}

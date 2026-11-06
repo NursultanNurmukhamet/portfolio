@@ -66,7 +66,7 @@ test('index loads the icon helper before each classic script that consumes it',(
   const helper=scripts.findIndex(script=>script.src==='icons.js');
   assert.ok(helper>=0,'icons.js must be loaded');
   assert.equal(scripts.filter(script=>script.src==='icons.js').length,1);
-  for(const src of ['icons.js','gallery.js','tui.js','contact.js']){
+  for(const src of ['icons.js','gallery.js','home.js','contact.js']){
     const index=scripts.findIndex(script=>script.src?.split(/[?#]/)[0]===src);
     assert.ok(index>=0,`${src} must be loaded`);
     if(src!=='icons.js')assert.ok(helper<index,`icons.js must precede ${src}`);
