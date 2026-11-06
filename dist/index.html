@@ -16,41 +16,19 @@
   <meta name="twitter:title" content="Nursultan Nurmukhamet — Backend / Infrastructure Engineer">
   <meta name="twitter:description" content="Семь production-систем в Sapa Technologies, Kubernetes-лаборатория, ЭЦП и SSO.">
   <meta name="twitter:image" content="https://nursultannurmukhamet.github.io/portfolio/assets/og.jpg">
-  <script>
-    // Keep direct links, history restoration and reduced-motion visits immediate.
-    (() => {
-      try {
-        const directLink=location.hash && location.hash!=='#top';
-        const returning=performance.getEntriesByType('navigation')[0]?.type==='back_forward';
-        if(directLink||returning||matchMedia('(prefers-reduced-motion: reduce)').matches||sessionStorage.getItem('portfolio:loader-seen-v2'))return;
-        document.documentElement.classList.add('intro-pending');
-        window.portfolioIntroWatchdog=setTimeout(()=>{
-          document.documentElement.classList.remove('intro-pending','intro-running');
-          const intro=document.querySelector('#cinematic-intro');if(intro?.open)intro.close();
-        },5000);
-      } catch { /* The site remains usable if session storage is unavailable. */ }
-    })();
-  </script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="assets/loader-pixel.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/anton.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="intro.css">
-  <link rel="stylesheet" href="tui.css?v=1">
+  <link rel="stylesheet" href="tui.css?v=2">
+  <link rel="stylesheet" href="shell.css?v=1">
   <link rel="stylesheet" href="personal-covers.css?v=6">
   <link rel="stylesheet" href="mylab-cover.css?v=3">
-  <script src="icons.js" defer></script><script src="gallery.js?v=tui-1" defer></script><script src="tui.js?v=1" defer></script><script src="scene.js?v=tui-1" type="module"></script>
-  <script src="intro.js" defer></script>
+  <script src="icons.js" defer></script><script src="gallery.js?v=tui-1" defer></script><script src="shell.js?v=1" defer></script><script src="tui.js?v=2" defer></script>
   <script src="contact-config.js?v=direct-contacts" defer></script><script src="verification.js" defer></script><script src="contact.js?v=validation-split" defer></script>
 </head>
 <body>
-  <dialog id="cinematic-intro" class="cinematic-intro" aria-label="Загрузка сайта" tabindex="-1">
-    <div class="loader-fill" aria-hidden="true"></div>
-    <div class="loader-progress" role="progressbar" aria-label="Готовность основных ресурсов сайта" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-progress="0%"><span class="loader-value" aria-hidden="true">0%</span></div>
-    <button type="button" class="intro-skip">Пропустить загрузку</button>
-  </dialog>
   <a class="skip-link" href="#work">Перейти к содержимому</a>
   <header class="site-header tui-bar">
-    <a class="identity tui-prompt" href="#top" aria-label="Нурсултан — на главную"><span class="monogram">nn<span>.</span></span><span class="tui-host">@sapa<i>:~$</i></span></a>
+    <a class="identity tui-prompt" href="#top" aria-label="Нурсултан — на главную"><span class="monogram">nn<span>.</span></span><span class="tui-host">@portfolio<i>:~$</i></span></a>
     <nav class="tui-tabs" aria-label="Основная навигация">
       <a href="#top" data-section="top"><kbd>1</kbd><span>Обо мне</span></a>
       <a href="#work" data-section="work"><kbd>2</kbd><span>Работа</span></a>
@@ -72,11 +50,12 @@
           <p class="cmd"><span class="ps1" aria-hidden="true">$</span> whoami</p>
           <h1 id="hero-heading">Нурсултан<br>Нурмухамет</h1>
           <p class="hero-role">Backend / Infrastructure Engineer</p>
+          <p class="hero-facts"><span>Sapa Technologies, с июля 2025</span><i aria-hidden="true"></i><span>Казахстан</span><i aria-hidden="true"></i><span>4 курс КазНУ</span><i aria-hidden="true"></i><span class="hero-facts-open">открыт к предложениям</span></p>
           <p class="hero-plain">Делаю серверную часть и инфраструктуру: внутренние системы, которыми компания пользуется каждый день, и серверы, на которых они работают надёжно и безопасно.</p>
-          <nav class="hero-links" aria-label="Быстрые ссылки"><a href="assets/Nursultan-Nurmukhamet-CV.pdf" data-flag="cv">резюме.pdf</a><a href="https://github.com/NursultanNurmukhamet" target="_blank" rel="noopener noreferrer">github</a><a href="https://t.me/NurmukhametNursultan" target="_blank" rel="noopener noreferrer">telegram</a></nav>
+          <nav class="hero-links" aria-label="Быстрые ссылки"><a class="hero-cta" href="assets/Nursultan-Nurmukhamet-CV.pdf" data-flag="cv"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-down"></use></svg> Скачать резюме (PDF)</a><a class="hero-cta hero-cta-secondary" href="https://t.me/NurmukhametNursultan" target="_blank" rel="noopener noreferrer">Написать в Telegram <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></a><a class="hero-link-plain" href="https://github.com/NursultanNurmukhamet" target="_blank" rel="noopener noreferrer">GitHub</a></nav>
           <form class="terminal" id="terminal" autocomplete="off">
             <div class="term-head"><span><span class="term-lights" aria-hidden="true"><i></i><i></i><i></i></span>игровой терминал</span><span class="term-hint">нажмите кнопку или наберите команду</span></div>
-            <output class="term-out" id="term-out" role="log" aria-live="polite" aria-label="Вывод терминала"><p class="term-line term-sys">Это игровой терминал сайта. Нажмите любую кнопку ниже: он сам выполнит команду. За исследование сайта начисляются находки.</p></output>
+            <output class="term-out" id="term-out" role="log" aria-live="polite" aria-label="Вывод терминала"><p class="term-line term-sys">Это игровой терминал сайта. Нажмите любую кнопку ниже: он сам выполнит команду и покажет, как я работаю.</p></output>
             <div class="term-chips" role="group" aria-label="Быстрые команды">
               <button type="button" data-cmd="whoami">Кто ты?</button>
               <button type="button" data-cmd="deploy">Выкатить релиз</button>
@@ -86,37 +65,37 @@
               <button type="button" data-cmd="ping nursultan">Написать мне</button>
               <button type="button" data-cmd="help">Все команды</button>
             </div>
-            <label class="term-input-row"><span class="ps1" aria-hidden="true">nn@sapa:~$</span><span class="visually-hidden">Команда терминала</span><input id="term-input" name="command" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" maxlength="80" placeholder="help"></label>
+            <label class="term-input-row"><span class="ps1" aria-hidden="true">nn@portfolio:~$</span><span class="visually-hidden">Команда терминала</span><input id="term-input" name="command" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" maxlength="80" placeholder="help"></label>
           </form>
         </div>
         <aside class="hero-monitor" aria-label="Монитор: состояние систем и 3D-схема кластера">
           <div class="mon-head"><span><span class="status-dot" aria-hidden="true"></span>СОСТОЯНИЕ</span><span>работа <i aria-hidden="true"></i> лаборатория</span></div>
           <dl class="mon-rows">
             <div class="mon-row"><dt>системы</dt><dd><span class="mon-bar" style="--v:1" aria-hidden="true"></span><span class="mon-value">7 из 7 работают</span></dd></div>
-            <div class="mon-row"><dt>мой код</dt><dd><span class="mon-bar" style="--v:.92" aria-hidden="true"></span><span class="mon-value">85–100 % в каждой</span></dd></div>
+            <div class="mon-row"><dt>стаж</dt><dd><span class="mon-bar" style="--v:.72" aria-hidden="true"></span><span class="mon-value" id="mon-uptime">с июля 2025</span></dd></div>
             <div class="mon-row"><dt>лаборатория</dt><dd><span class="mon-bar mon-bar-info" style="--v:.8" aria-hidden="true"></span><span class="mon-value">серверы и GPU</span></dd></div>
             <div class="mon-row"><dt>защита</dt><dd><span class="mon-bar mon-bar-warn" style="--v:.86" aria-hidden="true"></span><span class="mon-value">ЭЦП и единый вход</span></dd></div>
           </dl>
           <div class="mon-map">
             <canvas id="orbit-canvas" aria-hidden="true"></canvas><p class="mon-map-fallback">3D-схема недоступна в этом браузере. Стойки можно выбрать кнопками ниже.</p>
-            <p class="mon-lit" id="mon-lit" aria-hidden="true">огни кластера: <b>0</b>%</p>
+            <p class="mon-lit" id="mon-lit" aria-hidden="true">подсветка схемы: <b>0</b>%</p>
           </div>
           <div class="rack-picker" role="group" aria-label="Стойки кластера">
             <button type="button" data-rack="0" aria-pressed="false">Стойка 1<small>работа</small></button>
             <button type="button" data-rack="1" aria-pressed="false">Стойка 2<small>лаборатория</small></button>
             <button type="button" data-rack="2" aria-pressed="false">Стойка 3<small>проекты</small></button>
           </div>
-          <p class="rack-info" id="rack-info" aria-live="polite">Нажмите на стойку в 3D-схеме или кнопку выше, чтобы узнать, что на ней. Схему можно вращать мышью. Огни загораются по мере того, как вы собираете находки.</p>
+          <p class="rack-info" id="rack-info" aria-live="polite">Три стойки — три части моей работы. Нажмите на стойку в схеме или кнопку выше, чтобы узнать, что на ней. Схему можно вращать мышью.</p>
         </aside>
       </div>
     </section>
 
-    <section class="pane work-section" id="work" aria-labelledby="work-heading">
+    <section class="pane work-section" id="work" aria-labelledby="work-heading" data-reveal>
       <div class="pane-title"><span>Работа</span><span class="pane-title-meta">Sapa Technologies <i aria-hidden="true"></i> с июля 2025</span></div>
       <div class="pane-head">
         <p class="cmd"><span class="ps1" aria-hidden="true">$</span> kubectl get systems -n sapa</p>
         <h2 id="work-heading">Семь систем,<br>которые <em>работают.</em></h2>
-        <p class="work-lead">Внутренние продукты компании, где я основной автор кода (85–100 %): придумал устройство системы, написал серверную часть, настроил автоматический выпуск обновлений, защиту и поддержку. Код закрыт, поэтому ниже — что сделано и на чём. Нажмите «Подробнее», чтобы раскрыть карточку.</p>
+        <p class="work-lead">Внутренние продукты компании, где я основной автор кода: придумал устройство системы, написал серверную часть, настроил автоматический выпуск обновлений, защиту и поддержку. Код закрыт, поэтому ниже — что сделано и на чём.</p>
       </div>
       <div class="work-filter" role="group" aria-label="Фильтр систем по технологиям">
         <button type="button" data-filter="all" aria-pressed="true">Все</button>
@@ -126,7 +105,7 @@
         <button type="button" data-filter="security" aria-pressed="false">Безопасность</button>
         <span class="work-count" id="work-count" aria-live="polite">показано: 7</span>
       </div>
-      <ul class="work-grid">
+      <ul class="work-grid" data-reveal-group>
         <li class="work-card" data-tags="python security web"><div class="work-card-head"><span class="work-index">01</span><span class="work-kind">веб-портал</span><span class="work-status">работает</span></div><h3>HR-портал</h3><p class="work-summary">Личный кабинет сотрудника: отпуска, заявки, обучение и документы в одном месте.</p><details class="work-more"><summary>Подробнее</summary><p>Профили сотрудников, интеграция с 1С, отпуска и заявки, обучение, база знаний, опросы. MFA (TOTP) и корпоративный SAML SSO. Blue-green деплой без простоя, версионируемые миграции.</p><p class="work-stack">Python 3.12 · Flask · SQLAlchemy 2 · PostgreSQL 16 · Alembic · Gunicorn · Nginx</p></details></li>
         <li class="work-card" data-tags="python security web"><div class="work-card-head"><span class="work-index">02</span><span class="work-kind">документы</span><span class="work-status">работает</span></div><h3>Электронный документооборот с ЭЦП</h3><p class="work-summary">Кадровые документы подписываются электронной подписью и имеют юридическую силу.</p><details class="work-more"><summary>Подробнее</summary><p>Кадровые документы с юридически значимой подписью: NCALayer в браузере, серверная проверка цепочки и отзыва сертификата через KalkanCrypt SDK НУЦ РК. Маршруты согласования на BPMN-движке, SLA-эскалации, append-only аудит и ежедневный контроль целостности архива по SHA-256.</p><p class="work-stack">Python · PostgreSQL · Operaton (BPMN) · SAML / Authentik · Docker</p></details></li>
         <li class="work-card" data-tags="python telegram web"><div class="work-card-head"><span class="work-index">03</span><span class="work-kind">обучение</span><span class="work-status">работает</span></div><h3>Платформа корпоративного обучения</h3><p class="work-summary">Курсы, экзамены и сертификаты для сотрудников, вход через Telegram.</p><details class="work-more"><summary>Подробнее</summary><p>Конструктор курсов, тесты глав и итоговые экзамены, PDF-сертификаты с QR-проверкой, фишинг-тренировки, аналитика с экспортом. Вход через Telegram-бота, интерфейс на трёх языках.</p><p class="work-stack">Flask · SQLAlchemy · PostgreSQL · python-telegram-bot · ReportLab</p></details></li>
@@ -135,10 +114,10 @@
         <li class="work-card" data-tags="python telegram"><div class="work-card-head"><span class="work-index">06</span><span class="work-kind">бронирование</span><span class="work-status">работает</span></div><h3>Бронирование переговорных</h3><p class="work-summary">Бронирование комнат прямо в Telegram с напоминаниями.</p><details class="work-more"><summary>Подробнее</summary><p>Telegram WebApp для брони комнат с напоминаниями и уведомлениями по расписанию; два отдельных планировщика и health-мониторинг.</p><p class="work-stack">Flask · PostgreSQL · Telegram WebApp · Gunicorn</p></details></li>
         <li class="work-card" data-tags="python telegram security web"><div class="work-card-head"><span class="work-index">07</span><span class="work-kind">обратная связь</span><span class="work-status">работает</span></div><h3>Сбор обратной связи</h3><p class="work-summary">Веб-формы для клиентов: сообщения и файлы сразу попадают в нужный Telegram-чат команды.</p><details class="work-more"><summary>Подробнее</summary><p>Два отдельных сервиса — публичные формы и админ-панель проектов. Каждому проекту назначается свой Telegram-чат и тред; вложения до 50 МБ. CSRF, rate limiting, whitelist проектов, security headers.</p><p class="work-stack">Flask · PostgreSQL 15 · python-telegram-bot · Gunicorn · Docker</p></details></li>
       </ul>
-      <p class="work-note"><span class="ps1" aria-hidden="true">#</span> Все системы выпускаются автоматически (GitLab CI) с проверкой на уязвимости (Trivy); пароли и ключи хранятся только в защищённых настройках. Внутренние адреса и данные компании на сайте не публикуются. Хотите увидеть, как это выглядит? Нажмите в терминале «Выкатить релиз».</p>
+      <p class="work-note"><span class="ps1" aria-hidden="true">#</span> Все системы выпускаются автоматически (GitLab CI) с проверкой на уязвимости (Trivy); пароли и ключи хранятся только в защищённых настройках. Внутренние адреса и данные компании на сайте не публикуются.</p>
     </section>
 
-    <section class="pane projects-section" id="projects" aria-labelledby="projects-heading">
+    <section class="pane projects-section" id="projects" aria-labelledby="projects-heading" data-reveal>
       <div class="pane-title"><span>Проекты</span><span class="pane-title-meta">открытый код <i aria-hidden="true"></i> 5 проектов</span></div>
       <div class="pane-head">
         <p class="cmd"><span class="ps1" aria-hidden="true">$</span> ls -la ~/projects</p>
@@ -152,7 +131,7 @@
       <noscript><p class="fm-no-js">Для файлового менеджера нужен JavaScript. Проекты напрямую: <a href="mylab.html">MyLab</a>, <a href="projects/university/">Университет</a>, <a href="https://github.com/NursultanNurmukhamet">GitHub</a>.</p></noscript>
     </section>
 
-    <section class="pane roadmap-section" id="roadmap" aria-labelledby="roadmap-heading">
+    <section class="pane roadmap-section" id="roadmap" aria-labelledby="roadmap-heading" data-reveal>
       <div class="pane-title"><span>Путь</span><span class="pane-title-meta">история в виде веток</span></div>
       <div class="pane-head">
         <p class="cmd"><span class="ps1" aria-hidden="true">$</span> git log --graph --all</p>
@@ -172,7 +151,7 @@
           <li class="git-commit" data-lane="ai"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">b72d04c</code><details class="git-msg"><summary><b>HackAlem AI: сертификат участника рекорда Гиннесса</b><span>искусственный интеллект <i aria-hidden="true"></i> 20.10.2026</span></summary><p class="git-more">Участник HackAlem AI, мероприятия, которое вошло в Книгу рекордов Гиннесса. Есть сертификат участника.</p></details></li>
           <li class="git-commit" data-lane="ai"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">9e41f6a</code><details class="git-msg"><summary><b>Исследование распознавания казахской детской речи</b><span>искусственный интеллект <i aria-hidden="true"></i> сертификат КазНУ, 07.09.2026</span></summary><p class="git-more">Исследование автоматического распознавания речи детей на казахском языке на моделях Whisper и MMS. КазНУ выдал сертификат за вклад. Подробнее в <a href="projects/university/">университетских проектах</a>.</p></details></li>
           <li class="git-commit" data-lane="security"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">c05b8d2</code><details class="git-msg"><summary><b>Электронная подпись и единый вход в рабочих системах</b><span>безопасность <i aria-hidden="true"></i> ветка от основной линии</span></summary><p class="git-more">Документы подписываются электронной подписью с юридической силой, сервер сам проверяет сертификат. Вход в системы через единый корпоративный вход и второй фактор, все действия пишутся в журнал.</p></details></li>
-          <li class="git-commit" data-lane="main"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">7a3e9f1</code><details class="git-msg"><summary><b>Семь рабочих систем для Sapa Technologies</b><span>основная линия <i aria-hidden="true"></i> по договору с 24.07.2025, в штате с 10.08.2026</span></summary><p class="git-more">Работаю без перерывов с июля 2025: сначала по договору, с августа 2026 в штате. Семь внутренних систем, где я основной автор кода: HR-портал, документооборот, обучение, каталог с CRM, поддержка, бронирование и ещё одна закрытая.</p></details></li>
+          <li class="git-commit" data-lane="main"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">7a3e9f1</code><details class="git-msg"><summary><b>Семь рабочих систем для Sapa Technologies</b><span>основная линия <i aria-hidden="true"></i> по договору с 24.07.2025, в штате с 10.08.2026</span></summary><p class="git-more">Работаю без перерывов с июля 2025: сначала по договору, с августа 2026 в штате. Семь внутренних систем, где я основной автор кода: HR-портал, документооборот, обучение, каталог с CRM, поддержка, бронирование и сбор обратной связи.</p></details></li>
           <li class="git-commit" data-lane="ai"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">e6d21b4</code><details class="git-msg"><summary><b>AgentF: команда из пяти AI-агентов</b><span>искусственный интеллект <i aria-hidden="true"></i> AWS Agentic Football Cup</span></summary><p class="git-more">Пять футбольных AI-агентов: тактика, решения языковой модели и запасная логика на случай сбоя. Три победы над ботами соперников в отдельных матчах.</p></details></li>
           <li class="git-commit" data-lane="infra"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">4b8c7a0</code><details class="git-msg"><summary><b>MyLab: собственная серверная лаборатория</b><span>инфраструктура <i aria-hidden="true"></i> от кабеля до кластера</span></summary><p class="git-more">Собрал свою лабораторию: серверы с GPU, виртуализация, Kubernetes, защищённая сеть, мониторинг и проверка восстановления после сбоев. Подробный <a href="mylab.html">кейс MyLab</a>.</p></details></li>
           <li class="git-commit" data-lane="main"><span class="git-dot" aria-hidden="true"></span><code class="git-hash">0a1b2c3</code><details class="git-msg"><summary><b>КазНУ: факультет ИТ и искусственного интеллекта</b><span>начало пути <i aria-hidden="true"></i> с августа 2023, 4 курс</span></summary><p class="git-more">Программа «Высоконагруженные информационные системы с искусственным интеллектом». Учебные проекты: UniTrack, мастер-класс по ИИ и исследование речи, смотрите <a href="projects/university/">университетские проекты</a>.</p></details></li>
@@ -180,30 +159,30 @@
       </div>
     </section>
 
-    <section class="pane contact-section" id="contact" aria-labelledby="contact-heading">
+    <section class="pane contact-section" id="contact" aria-labelledby="contact-heading" data-reveal>
       <div class="pane-title"><span>Контакты</span><span class="pane-title-meta">форма и прямая связь</span></div>
       <div class="contact-layout">
-        <div class="contact-intro" id="about">
+        <div class="contact-intro">
           <p class="cmd"><span class="ps1" aria-hidden="true">$</span> ./new-task --describe</p>
           <h2 id="contact-heading">Есть задача?<br>Давайте <em>обсудим.</em></h2>
-          <p class="contact-plain">Расскажите своими словами, что не работает. Форма из трёх шагов, готовое ТЗ не нужно.</p>
-          <p class="contact-body">Сейчас — инженер в Sapa Technologies. Открыт к задачам по backend, инфраструктуре и прикладному AI: от аудита и архитектуры до запуска в production. Опишите задачу или напишите напрямую — отвечу, с чего начать.</p>
+          <p class="contact-body">Сейчас — инженер в Sapa Technologies. Открыт к задачам по backend, инфраструктуре и прикладному AI: от аудита и архитектуры до запуска в production. Отвечу, с чего начать.</p>
+          <div class="direct-contact"><p>Напрямую</p><div id="direct-contact-links"></div><span id="contact-pending">Telegram: @NurmukhametNursultan</span></div>
+          <p class="contact-plain">Или опишите задачу в форме справа: три коротких шага, готовое ТЗ не нужно.</p>
           <a class="contact-start" href="#lead-form">Описать задачу <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></a>
-          <div class="direct-contact"><p>ИЛИ НАПРЯМУЮ / DIRECT CONTACT</p><div id="direct-contact-links"></div><span id="contact-pending">Telegram или email добавим после согласования.</span></div>
         </div>
-        <div class="lead-card"><div class="lead-card-top"><span>НАЧНЁМ С ВАШЕЙ ЗАДАЧИ</span><span lang="en">A QUICK BRIEF</span></div><p class="lead-card-intro">Готовое ТЗ не нужно.<br><em>Достаточно рассказать, что не так.</em></p><ol class="lead-steps" aria-label="Шаги обращения"><li aria-current="step"><span>01</span> Проблема</li><li><span>02</span> Результат</li><li><span>03</span> Контакт</li></ol>
+        <div class="lead-card"><div class="lead-card-top"><span>Начнём с вашей задачи</span><span>3 шага</span></div><p class="lead-card-intro">Достаточно рассказать,<br><em>что сейчас не так.</em></p><ol class="lead-steps" aria-label="Шаги обращения"><li aria-current="step"><span>01</span> Проблема</li><li><span>02</span> Результат</li><li><span>03</span> Контакт</li></ol>
           <form id="lead-form" novalidate hidden>
-            <fieldset class="lead-step" data-step="0"><legend>В чём проблема? <small lang="en">What’s the problem?</small></legend><label for="lead-problem">Что сейчас не работает или что хотите изменить?</label><textarea id="lead-problem" name="problem" rows="5" minlength="15" maxlength="6000" required aria-describedby="lead-length-hint" placeholder="Например: заявки приходят в разные чаты, теряются, и их приходится собирать вручную."></textarea><p class="lead-hint" id="lead-length-hint">Можно своими словами. Без паролей и закрытых данных. Длинное обращение бот разделит на несколько сообщений.</p></fieldset>
-            <fieldset class="lead-step" data-step="1" hidden><legend>Какой результат нужен? <small lang="en">What would a good outcome look like?</small></legend><label for="lead-outcome">Что должно стать проще, быстрее или удобнее?</label><textarea id="lead-outcome" name="outcome" rows="5" minlength="10" maxlength="4000" required placeholder="Например: видеть все заявки в одном месте и понимать, кто за них отвечает."></textarea><p class="lead-hint">Если решение пока неясно, так и напишите — начнём с задачи. Длинное обращение бот разделит на несколько сообщений.</p></fieldset>
+            <fieldset class="lead-step" data-step="0"><legend>В чём проблема?</legend><label for="lead-problem">Что сейчас не работает или что хотите изменить?</label><textarea id="lead-problem" name="problem" rows="5" minlength="15" maxlength="6000" required aria-describedby="lead-length-hint" placeholder="Например: заявки приходят в разные чаты, теряются, и их приходится собирать вручную."></textarea><p class="lead-hint" id="lead-length-hint">Можно своими словами. Без паролей и закрытых данных. Длинное обращение бот разделит на несколько сообщений.</p></fieldset>
+            <fieldset class="lead-step" data-step="1" hidden><legend>Какой результат нужен?</legend><label for="lead-outcome">Что должно стать проще, быстрее или удобнее?</label><textarea id="lead-outcome" name="outcome" rows="5" minlength="10" maxlength="4000" required placeholder="Например: видеть все заявки в одном месте и понимать, кто за них отвечает."></textarea><p class="lead-hint">Если решение пока неясно, так и напишите — начнём с задачи.</p></fieldset>
             <fieldset class="lead-step" data-step="2" hidden>
-              <legend>Как с вами связаться? <small lang="en">How can I reach you?</small></legend>
-              <label for="lead-name">Как к вам обращаться <span lang="en">/ Name</span></label>
+              <legend>Как с вами связаться?</legend>
+              <label for="lead-name">Как к вам обращаться</label>
               <input id="lead-name" name="name" autocomplete="name" minlength="2" maxlength="80" required placeholder="Ваше имя" aria-describedby="lead-name-hint">
               <p class="lead-hint" id="lead-name-hint">Минимум 2 буквы. Допустимы пробел, дефис и апостроф.</p>
-              <label for="lead-phone">Номер телефона <span lang="en">/ Phone number</span></label>
+              <label for="lead-phone">Номер телефона</label>
               <input id="lead-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="32" placeholder="+7 (___) ___-__-__" aria-describedby="lead-phone-hint">
               <p class="lead-hint" id="lead-phone-hint">Необязательно. Номер для звонка или WhatsApp, с кодом страны.</p>
-              <label for="lead-contact">Telegram или email <span lang="en">/ Telegram or email</span></label>
+              <label for="lead-contact">Telegram или email</label>
               <input id="lead-contact" name="contact" autocomplete="off" minlength="5" maxlength="160" required placeholder="Email, @telegram или t.me/username" aria-describedby="lead-contact-hint">
               <p class="lead-hint" id="lead-contact-hint">Email, @username или ссылка t.me/username.</p>
               <label class="lead-consent" hidden><input id="lead-consent" name="consent" type="checkbox" required disabled><span>Передать описание задачи и мои контакты Нурсултану в Telegram.</span></label>
@@ -211,8 +190,8 @@
             <div class="lead-trap" aria-hidden="true"><label for="lead-website">Website</label><input id="lead-website" name="website" tabindex="-1" autocomplete="off"></div>
             <div class="lead-actions"><button type="button" class="lead-back" hidden><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-left"></use></svg> Назад</button><button type="submit" class="lead-next">Дальше <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></button></div>
           </form>
-          <div class="lead-result" hidden><h3 tabindex="-1">Текст обращения готов.</h3><p>Сообщение ещё не отправлено. Скопируйте его и отправьте удобным способом.</p><label for="lead-message">Ваше сообщение / Your message</label><textarea id="lead-message" readonly rows="8"></textarea><div class="lead-result-actions"><button type="button" id="copy-message">Скопировать сообщение <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></button><button type="button" id="edit-message">Изменить</button></div><div id="lead-send-links"></div></div>
-          <p class="lead-status" role="status" aria-live="polite"></p><p class="lead-privacy">Демо-форма: данные не отправляются и не сохраняются после закрытия страницы.</p><noscript><p>Для примера формы нужен JavaScript. Контакт для прямой связи будет добавлен позже.</p></noscript>
+          <div class="lead-result" hidden><h3 tabindex="-1">Текст обращения готов.</h3><p>Сообщение ещё не отправлено. Скопируйте его и отправьте удобным способом.</p><label for="lead-message">Ваше сообщение</label><textarea id="lead-message" readonly rows="8"></textarea><div class="lead-result-actions"><button type="button" id="copy-message">Скопировать сообщение <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg></button><button type="button" id="edit-message">Изменить</button></div><div id="lead-send-links"></div></div>
+          <p class="lead-status" role="status" aria-live="polite"></p><p class="lead-privacy">После отправки описание задачи и контакт передаются Нурсултану в личный Telegram. Не добавляйте пароли и закрытые данные.</p><noscript><p>Для формы нужен JavaScript. Напишите напрямую: Telegram @NurmukhametNursultan.</p></noscript>
         </div>
       </div>
     </section>
@@ -226,9 +205,9 @@
       <div class="flag-progress" aria-hidden="true"><span id="flag-progress-bar"></span></div>
       <ul class="flag-list" id="flag-list" aria-label="Находки"></ul>
       <dl class="key-list" aria-label="Горячие клавиши">
-        <div><dt><kbd>1</kbd> <kbd>5</kbd></dt><dd>разделы с первого по пятый</dd></div>
+        <div><dt><kbd>Alt</kbd> + <kbd>1</kbd>…<kbd>5</kbd></dt><dd>разделы с первого по пятый</dd></div>
         <div><dt><kbd>/</kbd></dt><dd>перейти в терминал</dd></div>
-        <div><dt><kbd>j</kbd> <kbd>k</kbd></dt><dd>следующий и предыдущий проект</dd></div>
+        <div><dt><kbd>j</kbd> <kbd>k</kbd></dt><dd>следующий и предыдущий проект (когда список проектов в фокусе)</dd></div>
         <div><dt><kbd>?</kbd></dt><dd>эта справка</dd></div>
         <div><dt><kbd>Esc</kbd></dt><dd>закрыть окно</dd></div>
       </dl>

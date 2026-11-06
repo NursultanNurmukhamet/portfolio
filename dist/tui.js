@@ -247,7 +247,7 @@
 
   /* ---------- 3D cluster racks ---------- */
   const RACKS=[
-    '<b>Стойка 1: работа.</b> Семь внутренних систем Sapa Technologies: HR-портал, документооборот с электронной подписью, обучение, каталог с CRM, поддержка, бронирование и одна закрытая. <a href="#work">Смотреть системы</a>',
+    '<b>Стойка 1: работа.</b> Семь внутренних систем Sapa Technologies: HR-портал, документооборот с электронной подписью, обучение, каталог с CRM, поддержка, бронирование и сбор обратной связи. <a href="#work">Смотреть системы</a>',
     '<b>Стойка 2: лаборатория MyLab.</b> Мои собственные серверы с видеокартами, Kubernetes, защищённая сеть и мониторинг. Здесь я пробую то, что потом приношу в работу. <a href="mylab.html">Открыть кейс</a>',
     '<b>Стойка 3: проекты.</b> AgentF, MetaCrypt, ULMusic и университетские работы, код открыт. <a href="#projects">Смотреть проекты</a>'
   ];
@@ -292,12 +292,15 @@
     const steps=8,delay=70+Math.random()*60;
     for(let step=1;step<=steps;step++){bar.style.width=`${step/steps*100}%`;await wait(delay);}
   }
+  let cancelChoice=null;
   function choose(options){
     return new Promise(resolve=>{
       const box=document.createElement('div');box.className='term-choice';
+      // `clear` during an incident must not leave the release stuck forever.
+      cancelChoice=()=>{cancelChoice=null;resolve(null);};
       for(const option of options){
         const button=document.createElement('button');button.type='button';button.textContent=option.label;
-        button.addEventListener('click',()=>{box.querySelectorAll('button').forEach(item=>{item.disabled=true;});resolve(option);});
+        button.addEventListener('click',()=>{box.querySelectorAll('button').forEach(item=>{item.disabled=true;});cancelChoice=null;resolve(option);});
         box.append(button);
       }
       append(box);box.querySelector('button').focus({preventScroll:true});
@@ -306,7 +309,7 @@
   async function deploy(){
     if(deploying){print('Релиз уже идёт, дождитесь окончания.','warn');return;}
     deploying=true;deployRuns++;
-    const services=['HR-портал','документооборот','платформа обучения','служба поддержки','бронирование переговорных'];
+    const services=['HR-портал','документооборот','платформа обучения','каталог с CRM','служба поддержки','бронирование переговорных','сбор обратной связи'];
     const service=services[Math.floor(Math.random()*services.length)];
     printHtml(`Выкатываю новую версию: <b>${escapeHtml(service)}</b>. Так выглядит обычный выпуск обновления у меня на работе.`);
     const stages=[['Сборка','собираю приложение из кода'],['Тесты','проверяю, что ничего не сломалось'],['Проверка уязвимостей','ищу известные дыры в библиотеках'],['Выкатка','новая версия заменяет старую без остановки']];
@@ -323,6 +326,7 @@
           {label:'Отключить проверку',ok:false,why:'Проверку не отключают ради скорости: она и нужна, чтобы ловить такие случаи.'}
         ].sort(()=>Math.random()-.5);
         const answer=await choose(options);
+        if(!answer){deploying=false;return;}
         if(!answer.ok){print(`${answer.why} Релиз остановлен. Наберите deploy или нажмите кнопку, чтобы попробовать снова.`,'warn');deploying=false;return;}
         print('Верно. Обновляю библиотеку, пересобираю и проверяю ещё раз.','ok');
         row.classList.remove('is-failed');row.querySelector('.term-bar>span').style.width='0';
@@ -340,6 +344,8 @@
     clearInterval(topTimer);
     const skills=[['Python',92],['PostgreSQL',86],['Linux',85],['Docker',83],['GitLab CI',82],['Безопасность',78],['Kubernetes',74],['Go',70],['TypeScript',60]];
     const node=table('');
+    // The ticking table is decoration for sighted users; screen readers hear only the final state.
+    node.setAttribute('aria-hidden','true');
     const render=()=>{
       node.textContent=['НАВЫК          УВЕРЕННОСТЬ',...skills.map(([name,base])=>{
         const value=Math.max(5,Math.min(99,base+(quiet()?0:Math.round((Math.random()-.5)*8))));
@@ -350,7 +356,8 @@
     };
     render();
     print('Это шуточный монитор: столбики показывают, насколько уверенно я работаю с инструментом.','sys');
-    if(!quiet()){let ticks=0;topTimer=setInterval(()=>{render();if(++ticks>=12)clearInterval(topTimer);},650);}
+    if(!quiet()){let ticks=0;topTimer=setInterval(()=>{render();if(++ticks>=12){clearInterval(topTimer);node.removeAttribute('aria-hidden');}},650);}
+    else node.removeAttribute('aria-hidden');
     capture('skills');
   }
 
@@ -411,7 +418,7 @@
     },
     deploy,top:topSkills,htop:topSkills,
     neofetch(){
-      table(['nn@sapa','-------','Роль: серверная разработка и инфраструктура','Работа: Sapa Technologies, с июля 2025','Учёба: КазНУ, факультет ИТ и ИИ, 4 курс','Лаборатория: свои серверы, Kubernetes, GPU','Безопасность: ЭЦП, единый вход, второй фактор','Языки: Python, Go, TypeScript, SQL'].join('\n'));
+      table(['nn@portfolio','------------','Роль: серверная разработка и инфраструктура','Работа: Sapa Technologies, с июля 2025','Учёба: КазНУ, факультет ИТ и ИИ, 4 курс','Лаборатория: свои серверы, Kubernetes, GPU','Безопасность: ЭЦП, единый вход, второй фактор','Языки: Python, Go, TypeScript, SQL'].join('\n'));
     },
     uptime(){
       const days=Math.max(0,Math.floor((Date.now()-new Date(2025,6,24))/864e5));
@@ -419,14 +426,14 @@
     },
     flags(){print(`Находки: ${captured.size}/${FLAGS.length}. ${FLAGS.map(flag=>(captured.has(flag.id)?'[x] ':'[ ] ')+flag.title).join('  ')}`,'info');},
     date(){print(new Date().toLocaleString('ru-RU'));},
-    clear(){out.replaceChildren();},
+    clear(){out.replaceChildren();clearInterval(topTimer);if(cancelChoice)cancelChoice();deploying=false;},
     echo(argument){print(argument||'');},
     sudo(){print('nn is not in the sudoers file. This incident will be reported. Шучу: вы нашли секретную команду.','warn');capture('root');},
     rm(){print('rm: отказано в доступе. Это портфолио, а не рабочий сервер. Но секрет вы нашли.','warn');capture('root');},
     vim(){print('Вы вошли в vim и даже вышли из него. Это достижение.','ok');capture('root');},
     exit(){print('Это сайт, вкладку закрывать не обязательно.','info');},
     uname(){print('Linux mylab 6.x x86_64 GNU/Linux');},
-    hostname(){print('sapa');}
+    hostname(){print('portfolio');}
   };
   Object.assign(commands,{vi:commands.vim,nano:commands.vim,man:commands.help,'?':commands.help,cd:commands.goto,work(){commands.goto('work');},projects(){commands.goto('projects');},roadmap(){commands.goto('roadmap');},contact(){commands.goto('contact');}});
   let autoTyping=0;
@@ -476,12 +483,34 @@
     if(event.defaultPrevented||event.ctrlKey||event.metaKey||event.altKey)return;
     if(document.querySelector('dialog[open]'))return;
     if(editable(event.target))return;
-    const section={'1':'top','2':'work','3':'projects','4':'roadmap','5':'contact'}[event.key];
-    if(section){event.preventDefault();goto(section);return;}
     if(event.key==='/'){event.preventDefault();stopAuto();goto('top');input.focus({preventScroll:true});return;}
     if(event.key==='?'){event.preventDefault();openHelp();return;}
-    if((event.key==='j'||event.key==='k')&&list){event.preventDefault();window.portfolioSelectProject?.(currentProject+(event.key==='j'?1:-1),true);}
   });
+  // Section jumps need Alt so that stray digits while reading never move the page.
+  document.addEventListener('keydown',event=>{
+    if(!event.altKey||event.ctrlKey||event.metaKey||editable(event.target))return;
+    const section={'1':'top','2':'work','3':'projects','4':'roadmap','5':'contact'}[event.key];
+    if(section){event.preventDefault();goto(section);}
+  });
+
+  /* ---------- Live tenure in the monitor ---------- */
+  const monUptime=document.querySelector('#mon-uptime');
+  if(monUptime){
+    const months=Math.max(0,Math.round((Date.now()-new Date(2025,6,24))/2628e6));
+    monUptime.textContent=months>=12?`${Math.floor(months/12)} г. ${months%12} мес.`:`${months} мес.`;
+  }
+
+  /* ---------- 3D cluster: load Three.js only when the map is about to be seen ---------- */
+  const monMap=document.querySelector('.mon-map');
+  const sceneWanted=monMap&&matchMedia('(min-width:981px)').matches&&!navigator.connection?.saveData;
+  if(sceneWanted){
+    let loaded=false;
+    const load=()=>{if(loaded)return;loaded=true;import('./scene.js?v=tui-2').catch(()=>{monMap.classList.add('is-fallback');});};
+    if('IntersectionObserver' in window){
+      const io=new IntersectionObserver(entries=>{if(entries.some(entry=>entry.isIntersecting)){io.disconnect();load();}},{rootMargin:'200px'});
+      io.observe(monMap);
+    }else load();
+  }else if(monMap)monMap.classList.add('is-fallback');
 
   renderFlags();
 })();
