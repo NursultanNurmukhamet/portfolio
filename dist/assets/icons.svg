@@ -12,4 +12,4 @@
   <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/></symbol>
   <symbol id="icon-pause" viewBox="0 0 24 24"><path d="M8 4v16M16 4v16"/></symbol>
   <symbol id="icon-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8Z"/></symbol>
-</svg>
+<symbol id="icon-arrow-right" viewBox="0 0 24 24"><path d="M3 12h18m-7-7 7 7-7 7"/></symbol><symbol id="icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol></svg>

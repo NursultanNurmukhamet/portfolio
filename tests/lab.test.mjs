@@ -18,11 +18,13 @@ test('three personal projects share the catalog with the two cases, without a du
     assert.ok(personal[index].includes("ru:'"));
     assert.ok(personal[index].includes("en:'"));
     assert.ok(personal[index].includes("angle:"+(index%2?-5:5)));
-    assert.ok(html.includes(`data-cover="${cover}"`),`${cover} cover is rendered in the catalog`);
   }
+  const inventory=readFileSync(new URL('../dist/inventory.js',import.meta.url),'utf8');
+  for(const cover of ['metacrypt','listen'])assert.ok(inventory.includes(`cover:'${cover}'`),`${cover} cover is reused by the inventory`);
+  assert.ok(inventory.includes("id:'agentf'")&&inventory.includes('match-total-attack.png'),'AgentF shows a real match screenshot');
   assert.doesNotMatch(html+js+home,/\bDEMO\b|концепц|образец|ОБРАЗЕЦ|демонстрац|orbit-cup/,'no demo or placeholder wording remains');
   assert.ok(js.includes('window.portfolioProjects=Object.freeze('));
-  assert.ok(home.includes('data.cover(demo)'),'covers come from the shared gallery data');
+  assert.ok(home.includes('gallery.cover(demo)'),'covers come from the shared gallery data');
 });
 
 test('personal actions open the exact repository, application and Telegram bot requested',()=>{
@@ -51,7 +53,7 @@ test('covers use local artwork and the file manager stays keyboard accessible on
   assert.equal((visuals.match(/aria-hidden/g)||[]).length,2);
   assert.ok(css.includes('@media(max-width:759px)')&&css.includes('@media(max-width:519px)'));
   assert.ok(css.includes('prefers-reduced-motion:reduce'));
-  assert.equal((html.match(/<li class="catalog-card">/g)||[]).length,5,'every project is an ordinary card with a plain link');
+  assert.ok(html.includes('id="inventory-grid"')&&home.includes('class="item-card"'),'projects render as inventory cards');
 });
 
 test('AgentF displays three existing match screenshots with exact opponents and scores',()=>{
