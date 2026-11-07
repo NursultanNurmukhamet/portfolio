@@ -48,12 +48,29 @@
       if(demo)return gallery.cover(demo);
     }
     const tile=item.tile||{glyph:'?',label:''};
-    return `<div class="item-tile item-tile-${item.cat}" aria-hidden="true"><span>${escapeHtml(tile.label)}</span><b>${escapeHtml(tile.glyph)}</b></div>`;
+    // A text tile carries the item's first tags so a card without a photo still says something.
+    const spec=(item.tags||[]).slice(0,3).map(escapeHtml).join(' <i aria-hidden="true"></i> ');
+    return `<div class="item-tile item-tile-${item.cat}" aria-hidden="true"><span>${escapeHtml(tile.label)}</span><b>${escapeHtml(tile.glyph)}</b>${spec?`<em>${spec}</em>`:''}</div>`;
   }
+  const hasPicture=item=>Boolean(item.image||(item.cover&&gallery&&gallery.demos.some(demo=>demo.cover===item.cover)));
 
-  /* ---------- Shelf counters in the hero ---------- */
+  /* ---------- Shelf counters in the hero: count up once they are on screen ---------- */
   for(const node of document.querySelectorAll('[data-count]')){
-    node.textContent=String(ITEMS.filter(item=>item.cat===node.dataset.count).length);
+    const total=ITEMS.filter(item=>item.cat===node.dataset.count).length;
+    node.textContent=String(total);
+    if(reduceMotion.matches||!('IntersectionObserver' in window))continue;
+    const observer=new IntersectionObserver(entries=>{
+      if(!entries.some(entry=>entry.isIntersecting))return;
+      observer.disconnect();
+      const started=performance.now(),duration=700;
+      const tick=now=>{
+        const progress=Math.min(1,(now-started)/duration),eased=1-Math.pow(1-progress,3);
+        node.textContent=String(Math.round(total*eased));
+        if(progress<1)requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    },{threshold:.6});
+    observer.observe(node);
   }
   document.querySelectorAll('[data-shelf]').forEach(link=>link.addEventListener('click',()=>{setCategory(link.dataset.shelf);}));
 
@@ -90,7 +107,10 @@
   function renderGrid(){
     visible=ITEMS.filter(matches);
     const current=CATEGORIES.find(item=>item.id===category);
-    hint.textContent=current?.hint||`${ITEMS.length} предметов на пяти полках. Нажмите на любой, чтобы посмотреть подробнее.`;
+    const plural=(count,one,few,many)=>{const n=count%100,m=count%10;return n>=11&&n<=19?many:m===1?one:m>=2&&m<=4?few:many;};
+    hint.textContent=query
+      ?(visible.length?`${visible.length} ${plural(visible.length,'предмет','предмета','предметов')} по запросу «${search.value.trim()}»${category!=='all'?` на полке «${current.label}»`:''}.`:'')
+      :(current?.hint||`${ITEMS.length} предметов на пяти полках. Нажмите на любой, чтобы посмотреть подробнее.`);
     grid.innerHTML=visible.map((item,index)=>`<li class="item-card"><button type="button" data-item="${item.id}" style="--delay:${Math.min(index,12)*40}ms" aria-haspopup="dialog">
       <div class="item-media">${media(item)}<span class="item-badge">${escapeHtml(categoryLabel(item.cat))}</span></div>
       <div class="item-body"><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.short)}</p>
@@ -100,17 +120,35 @@
     if(window.portfolioShell)requestAnimationFrame(()=>window.portfolioShell.revealAll());
   }
   grid.addEventListener('click',event=>{const button=event.target.closest('[data-item]');if(button)openItem(button.dataset.item,button);});
+  // A soft spotlight follows the mouse over a card; touch and reduced motion get the plain card.
+  grid.addEventListener('pointermove',event=>{
+    if(event.pointerType!=='mouse'||reduceMotion.matches)return;
+    const button=event.target.closest('[data-item]');
+    if(!button)return;
+    const box=button.getBoundingClientRect();
+    button.style.setProperty('--mx',`${event.clientX-box.left}px`);
+    button.style.setProperty('--my',`${event.clientY-box.top}px`);
+  });
   search.addEventListener('input',()=>{query=search.value.trim().toLowerCase();renderGrid();});
+  search.addEventListener('keydown',event=>{if(event.key==='Escape'&&search.value){event.preventDefault();search.value='';query='';renderGrid();}});
 
   /* ---------- Detail window ---------- */
   const dialog=document.querySelector('#item-dialog');
   const parts={cat:document.querySelector('#item-cat'),pos:document.querySelector('#item-pos'),mediaBox:document.querySelector('#item-media'),title:document.querySelector('#item-title'),short:document.querySelector('#item-short'),long:document.querySelector('#item-long'),meta:document.querySelector('#item-meta'),links:document.querySelector('#item-links'),tags:document.querySelector('#item-tags')};
   const prev=document.querySelector('#item-prev'),next=document.querySelector('#item-next');
-  let opened=null,lastFocus=null;
+  const body=dialog.querySelector('.item-dialog-body');
+  let opened=null,lastFocus=null,pushed=false,switchTimer=0;
   function fill(item){
     opened=item;
     const list=visible.includes(item)?visible:ITEMS;
     const index=list.indexOf(item);
+    // Switching between items fades the body briefly so the change reads as one motion.
+    if(dialog.open&&!reduceMotion.matches){
+      body.classList.add('is-switching');
+      clearTimeout(switchTimer);
+      switchTimer=setTimeout(()=>body.classList.remove('is-switching'),160);
+    }
+    dialog.classList.toggle('item-dialog-tile',!hasPicture(item));
     parts.cat.textContent=categoryLabel(item.cat);
     parts.pos.textContent=`${index+1} / ${list.length}`;
     prev.disabled=index<=0;next.disabled=index>=list.length-1;
@@ -125,13 +163,16 @@
       return `<a class="link-arrow" href="${href}"${external?' target="_blank" rel="noopener noreferrer"':''}>${escapeHtml(label)} ${icon('arrow-up-right')}</a>`;
     }).join('');
     parts.tags.innerHTML=(item.tags||[]).map(tag=>`<span>${escapeHtml(tag)}</span>`).join('');
-    dialog.querySelector('.item-dialog-body').scrollTop=0;
-    history.replaceState(null,'',`#item=${item.id}`);
+    body.scrollTop=0;
+    history.replaceState(history.state,'',`#item=${item.id}`);
   }
-  function openItem(id,trigger){
+  // Opening from a card adds one history entry, so the phone's Back button closes
+  // the window instead of leaving the site. Arriving by link or Back adds nothing.
+  function openItem(id,trigger,viaHistory=false){
     const item=byId.get(id);
     if(!item)return;
     lastFocus=trigger||document.activeElement;
+    if(!dialog.open&&!viaHistory){history.pushState({item:id},'',location.pathname+location.search);pushed=true;}
     fill(item);
     if(!dialog.open){document.body.classList.add('item-open');dialog.showModal();}
     parts.title.focus?.({preventScroll:true});
@@ -151,7 +192,9 @@
   });
   dialog.addEventListener('close',()=>{
     document.body.classList.remove('item-open');
-    if(location.hash.startsWith('#item='))history.replaceState(null,'',location.pathname+location.search);
+    body.classList.remove('is-switching');
+    if(pushed){pushed=false;history.back();}
+    else if(location.hash.startsWith('#item='))history.replaceState(null,'',location.pathname+location.search);
     const target=lastFocus&&document.contains(lastFocus)?lastFocus:document.querySelector(`[data-item="${opened?.id}"]`);
     target?.focus({preventScroll:true});
   });
@@ -179,11 +222,12 @@
     const item=byId.get(deep[1]);
     setCategory(item.cat);
     document.querySelector('#inventory')?.scrollIntoView({behavior:'instant',block:'start'});
-    openItem(item.id,null);
+    openItem(item.id,null,true);
   }
-  addEventListener('hashchange',()=>{
+  addEventListener('popstate',()=>{
     const match=location.hash.match(/^#item=([\w-]+)$/);
-    if(match&&byId.has(match[1]))openItem(match[1],null);
+    if(match&&byId.has(match[1])){openItem(match[1],null,true);return;}
+    if(dialog.open){pushed=false;dialog.close();}
   });
   // Smooth scrolling is the shell's job; a paused-motion visitor gets instant jumps.
   if(reduceMotion.matches)document.documentElement.style.scrollBehavior='auto';
