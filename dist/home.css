@@ -54,7 +54,14 @@ body.home .tui-tabs a{min-height:44px;padding:6px 14px}
 .inventory-search:focus-within{border-color:var(--accent)}
 .inventory-search input{flex:1;min-width:0;border:0;background:transparent;color:var(--text);font:400 15px/1.4 var(--sans);outline:none}
 .inventory-search input::placeholder{color:var(--mute)}
-.inventory-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.search-key{display:none;padding:2px 7px;border:1px solid var(--line-2);border-radius:4px;font:600 12px/1.4 var(--mono);color:var(--mute)}
+@media(hover:hover) and (pointer:fine){.search-key{display:inline-block}.inventory-search:focus-within .search-key{opacity:0}}
+.inventory-tabs-sentinel{height:1px;margin-top:-1px}
+.inventory-tabs{position:sticky;top:60px;z-index:30;display:flex;flex-wrap:wrap;gap:8px;margin:0 calc(-1*var(--gutter)) 12px;padding:10px var(--gutter);background:transparent;transition:background-color .3s,box-shadow .3s}
+.inventory-tabs.is-stuck{background:#0a0d12eb;backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line),0 18px 30px -24px #000}
+/* Once stuck, the row never wraps: one scrollable line keeps the shelves in view. */
+.inventory-tabs.is-stuck{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.inventory-tabs.is-stuck button{flex:0 0 auto}
 .inventory-tabs button{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:1px solid var(--line-2);border-radius:999px;background:var(--bg-2);color:var(--dim);font:600 14px/1 var(--sans);cursor:pointer;transition:border-color .25s,color .25s,background-color .25s,transform .25s var(--ease)}
 .inventory-tabs button:hover{color:var(--text);border-color:var(--accent);transform:translateY(-1px)}
 .inventory-tabs button[aria-selected=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
@@ -65,6 +72,8 @@ body.home .tui-tabs a{min-height:44px;padding:6px 14px}
 .item-card{margin:0}
 .item-card button{display:flex;flex-direction:column;width:100%;height:100%;text-align:left;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--bg-2);color:var(--text);cursor:pointer;overflow:hidden;transition:border-color .3s,transform .4s var(--ease),box-shadow .4s var(--ease);animation:item-in .5s var(--ease) both;animation-delay:var(--delay,0ms)}
 .item-card button:hover{border-color:var(--line-2);transform:translateY(-4px);box-shadow:0 30px 60px -40px #000}
+.item-card button.is-tilting{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-4px);transition-duration:.3s,.08s,.4s}
+.item-card button.is-tilting .item-media,.item-card button.is-tilting .item-body{transform:translateZ(0)}
 .item-card button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 @keyframes item-in{from{opacity:0;transform:translateY(14px)}}
 .item-media{position:relative;aspect-ratio:4 / 3;background:var(--bg-3);overflow:hidden;width:100%}
@@ -105,11 +114,14 @@ body.home .tui-tabs a{min-height:44px;padding:6px 14px}
 .item-dialog[open]{animation:dialog-in .35s var(--ease)}
 @keyframes dialog-in{from{opacity:0;transform:translateY(16px) scale(.985)}}
 .item-dialog-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px 12px 22px;border-bottom:1px solid var(--line)}
-.item-dialog-cat{margin:0;font:600 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
-.item-dialog-nav{display:flex;align-items:center;gap:6px}
+.item-dialog-cat{margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.item-dialog-nav{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .item-dialog-nav button{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--line-2);border-radius:8px;background:transparent;color:var(--dim);cursor:pointer;transition:color .25s,border-color .25s}
 .item-dialog-nav button:hover{color:var(--text);border-color:var(--accent)}
 .item-dialog-nav button:disabled{opacity:.35;cursor:default}
+.item-dialog-nav .item-share{width:auto;grid-auto-flow:column;gap:8px;padding:0 14px;margin-left:8px;font:600 13px/1 var(--sans)}
+.item-dialog-nav .item-share.is-done{color:var(--ok);border-color:var(--ok)}
+.item-dialog-nav .item-share .ui-icon{width:16px;height:16px}
 .item-dialog-pos{font:600 13px/1 var(--mono);color:var(--mute);padding:0 6px}
 .item-dialog-body{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);max-height:calc(92svh - 70px);overflow:auto;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
 .item-dialog-media{position:relative;background:var(--bg-3);min-height:320px;border-right:1px solid var(--line)}
@@ -117,7 +129,7 @@ body.home .tui-tabs a{min-height:44px;padding:6px 14px}
 .item-dialog-media .paper-cover{position:absolute;inset:0;width:100%;height:100%;border-radius:0;transform:none!important;box-shadow:none}
 .item-dialog-media .personal-cover-art{position:absolute;inset:0}
 .item-dialog-media .item-tile b{font-size:96px}
-.item-dialog-body.is-switching{opacity:0}
+
 .item-dialog-body{transition:opacity .16s var(--ease)}
 /* An item without a photo gets a short banner on top instead of an empty half-window. */
 .item-dialog-tile{width:min(760px,94vw)}
@@ -136,7 +148,24 @@ body.home .tui-tabs a{min-height:44px;padding:6px 14px}
 .item-dialog-meta dd{margin:0;color:var(--text);line-height:1.5}
 .item-dialog-links{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center}
 .item-dialog-tags{display:flex;flex-wrap:wrap;gap:6px;margin:0}
-.item-dialog-tags span{padding:3px 8px;border:1px solid var(--line);border-radius:4px;font:500 11px/1.4 var(--mono);letter-spacing:.04em;color:var(--dim)}
+.item-dialog-tags button{padding:7px 10px;border:1px solid var(--line);border-radius:4px;background:transparent;font:500 12px/1.2 var(--mono);letter-spacing:.04em;color:var(--dim);cursor:pointer;transition:color .25s,border-color .25s}
+.item-dialog-tags button:hover{color:var(--accent);border-color:var(--accent)}
+.item-dialog-tags button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* Neighbours: up to four related items, each opens in the same window. */
+.item-dialog-related{padding-top:14px;border-top:1px solid var(--line)}
+.item-dialog-related>p{margin:0 0 10px;font:600 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.item-dialog-related>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.item-dialog-related button{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;min-height:64px;padding:6px 10px 6px 6px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);text-align:left;cursor:pointer;transition:border-color .25s,transform .3s var(--ease)}
+.item-dialog-related button:hover{border-color:var(--accent);transform:translateY(-2px)}
+.item-dialog-related button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.item-related-media{position:relative;display:block;width:56px;height:52px;border-radius:5px;overflow:hidden;background:var(--bg-3)}
+.item-related-media img,.item-related-media .paper-cover,.item-related-media .personal-cover-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0;box-shadow:none;transform:none!important}
+.item-related-media .item-tile{padding:6px 7px;justify-content:center}
+.item-related-media .item-tile span,.item-related-media .item-tile em,.item-related-media .item-tile::after{display:none}
+.item-related-media .item-tile b{font-size:18px}
+.item-related-text{display:grid;gap:2px;min-width:0}
+.item-related-text b{font:700 13px/1.3 var(--sans);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.item-related-text small{font:500 11px/1.3 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--mute)}
 body.item-open{overflow:hidden}
 
 /* Contact keeps tui.css components; typography follows the page. */
@@ -176,6 +205,10 @@ body.home .site-footer a:hover{color:var(--accent)}
   .item-dialog-meta{grid-template-columns:1fr;gap:4px}
   .item-dialog-meta dt{margin-top:6px}
   body.home .tui-tabs{grid-template-columns:repeat(3,1fr)}
+  .inventory-tabs{top:56px;padding-bottom:10px}
+  .item-dialog-nav .item-share span{display:none}
+  .item-dialog-nav .item-share{width:44px;padding:0;margin-left:0}
+  .item-dialog-related>div{grid-template-columns:1fr}
 }
 @media(max-width:480px){
   .inventory-grid{grid-template-columns:1fr}
@@ -186,5 +219,50 @@ body.home .site-footer a:hover{color:var(--accent)}
   .item-card button:hover .item-media img{transform:none}
   .item-dialog[open]{animation:none}
   .item-card button::before{display:none}
+  .item-card button.is-tilting{transform:none}
+  .inventory-tabs,.item-dialog-related button,.item-dialog-tags button{transition:none}
   .item-dialog-body{transition:none}
+}
+
+/* ---- Motion pass: every action has a short ease-out transition (150–320 ms), nothing jumps ---- */
+/* Shelves: with the View Transitions API the cards that stay glide to their new place,
+   leaving cards fade out, new cards fade in; the selected tab pill slides between tabs. */
+html.vt-grid::view-transition-old(root),html.vt-grid::view-transition-new(root){animation:none;mix-blend-mode:normal}
+html.vt-grid::view-transition-group(*){animation-duration:.32s;animation-timing-function:var(--ease)}
+html.vt-grid::view-transition-old(*):only-child{animation:vt-leave .18s var(--ease) both}
+html.vt-grid::view-transition-new(*):only-child{animation:vt-enter .26s var(--ease) both}
+html.vt-grid::view-transition-group(tab-active){animation-duration:.26s}
+@keyframes vt-leave{to{opacity:0;transform:scale(.97)}}
+@keyframes vt-enter{from{opacity:0;transform:translateY(10px)}}
+html.vt-grid .item-card button{animation:none}
+/* Fallback without the API: the grid dips for a moment and comes back. */
+.inventory-grid{transition:opacity .14s var(--ease),transform .14s var(--ease)}
+.inventory-grid.is-leaving{opacity:0;transform:translateY(6px)}
+/* Pictures fade in once decoded. */
+.item-media img{opacity:0;transition:opacity .4s var(--ease),transform .9s var(--ease)}
+.item-media img.is-loaded{opacity:1}
+/* Press feedback. */
+.btn:active,.inventory-tabs button:active,.hero-shelves a:active,.item-dialog-nav button:active,.link-arrow:active{transform:scale(.97);transition-duration:.08s}
+.item-card button:active{transform:translateY(-1px) scale(.99)}
+.inventory-tabs button{transition:border-color .2s,color .2s,background-color .2s,transform .2s var(--ease)}
+/* Detail window: open and close are the same motion in opposite directions; the backdrop fades with it. */
+.item-dialog[open]{animation:dialog-in .3s var(--ease)}
+.item-dialog[open]::backdrop{animation:backdrop-in .3s var(--ease)}
+.item-dialog.is-closing{animation:dialog-out .22s var(--ease) forwards}
+.item-dialog.is-closing::backdrop{animation:backdrop-out .22s var(--ease) forwards}
+@keyframes dialog-out{to{opacity:0;transform:translateY(12px) scale(.985)}}
+@keyframes backdrop-in{from{opacity:0}}
+@keyframes backdrop-out{to{opacity:0}}
+/* Previous / next: the content slides out towards the direction of travel and the next slides in. */
+.item-dialog-body{transition:opacity .15s var(--ease),transform .15s var(--ease)}
+.item-dialog-body.is-leaving-left{opacity:0;transform:translateX(-14px)}
+.item-dialog-body.is-leaving-right{opacity:0;transform:translateX(14px)}
+.item-dialog-body.is-entering-left,.item-dialog-body.is-entering-right{transition:none;opacity:0}
+.item-dialog-body.is-entering-left{transform:translateX(-14px)}
+.item-dialog-body.is-entering-right{transform:translateX(14px)}
+.item-dialog-media img{transition:opacity .3s var(--ease)}
+@media(prefers-reduced-motion:reduce){
+  .inventory-grid,.item-media img,.item-dialog-body,.item-dialog[open]::backdrop,.item-dialog.is-closing,.item-dialog.is-closing::backdrop{transition:none;animation:none}
+  .item-media img{opacity:1}
+  .btn:active,.inventory-tabs button:active,.hero-shelves a:active,.item-card button:active{transform:none}
 }

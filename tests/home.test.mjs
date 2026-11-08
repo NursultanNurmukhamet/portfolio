@@ -57,6 +57,24 @@ test('the page renders cards from data, filters by tab and search, and opens a d
   for(const match of html.matchAll(/<a [^>]*target="_blank"[^>]*>/g))assert.match(match[0],/rel="noopener noreferrer"/);
 });
 
+test('neighbours, tag search, share and the slash shortcut connect the shelves',()=>{
+  for(const item of ITEMS){
+    for(const id of item.related||[]){
+      assert.ok(ITEMS.some(other=>other.id===id),`${item.id}: related ${id} exists`);
+      assert.notEqual(id,item.id,`${item.id} is not related to itself`);
+    }
+    assert.ok((item.related||[]).length>=2,`${item.id} has at least two neighbours`);
+  }
+  for(const id of ['item-related','item-share'])assert.ok(html.includes(`id="${id}"`),id);
+  assert.ok(js.includes('function relatedTo(')&&js.includes("parts.related.addEventListener('click'"),'neighbours open in the same window');
+  assert.ok(js.includes('data-tag=')&&js.includes("parts.tags.addEventListener('click'"),'tags turn into a search');
+  assert.ok(js.includes('navigator.clipboard.writeText')&&js.includes('navigator.share'),'share copies the deep link');
+  assert.ok(js.includes("event.key!=='/'")&&html.includes('class="search-key"'),'slash focuses the search');
+  assert.ok(js.includes("'touchstart'")&&js.includes('step(dx<0?1:-1)'),'swipe moves between items');
+  assert.match(css,/.inventory-tabs{position:sticky;top:60px/);
+  assert.match(css,/.item-card button.is-tilting{transform:none}/,'reduced motion removes the tilt');
+});
+
 test('readable minimum sizes, tap targets and reduced motion',()=>{
   assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
   const sizes=[...css.matchAll(/font:[^;}]*?(\d+)px/g)].map(match=>Number(match[1]));

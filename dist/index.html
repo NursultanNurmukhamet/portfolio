@@ -21,8 +21,8 @@
   <link rel="stylesheet" href="tui.css?v=3">
   <link rel="stylesheet" href="shell.css?v=2">
   <link rel="stylesheet" href="personal-covers.css?v=6">
-  <link rel="stylesheet" href="home.css?v=5">
-  <script src="icons.js" defer></script><script src="gallery.js?v=tui-1" defer></script><script src="inventory.js?v=2" defer></script><script src="shell.js?v=2" defer></script><script src="home.js?v=4" defer></script>
+  <link rel="stylesheet" href="home.css?v=8">
+  <script src="icons.js" defer></script><script src="gallery.js?v=tui-1" defer></script><script src="inventory.js?v=3" defer></script><script src="shell.js?v=2" defer></script><script src="home.js?v=6" defer></script>
   <script src="contact-config.js?v=direct-contacts" defer></script><script src="verification.js" defer></script><script src="contact.js?v=validation-split" defer></script>
 </head>
 <body class="home">
@@ -73,8 +73,9 @@
             <p class="eyebrow">Инвентарь</p>
             <h2 id="inventory-heading">Всё по категориям.</h2>
           </div>
-          <label class="inventory-search"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-search"></use></svg><span class="visually-hidden">Поиск по инвентарю</span><input id="inventory-search" type="search" placeholder="Найти: kubernetes, подпись, GPU…" autocomplete="off"></label>
+          <label class="inventory-search"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-search"></use></svg><span class="visually-hidden">Поиск по инвентарю</span><input id="inventory-search" type="search" placeholder="Найти: kubernetes, подпись, GPU…" autocomplete="off"><kbd class="search-key" aria-hidden="true">/</kbd></label>
         </div>
+        <div class="inventory-tabs-sentinel" aria-hidden="true"></div>
         <div class="inventory-tabs" role="tablist" aria-label="Категории" id="inventory-tabs"></div>
         <p class="inventory-hint" id="inventory-hint" aria-live="polite"></p>
         <ul class="inventory-grid" id="inventory-grid"></ul>
@@ -127,6 +128,7 @@
         <button type="button" class="item-prev" id="item-prev" aria-label="Предыдущий предмет"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-left"></use></svg></button>
         <span class="item-dialog-pos" id="item-pos"></span>
         <button type="button" class="item-next" id="item-next" aria-label="Следующий предмет"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-right"></use></svg></button>
+        <button type="button" class="item-share" id="item-share" aria-label="Скопировать ссылку на предмет"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg><span>Ссылка</span></button>
         <button type="button" class="item-close" id="item-close" aria-label="Закрыть"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/icons.svg#icon-close"></use></svg></button>
       </div>
     </div>
@@ -138,7 +140,8 @@
         <div class="item-dialog-long" id="item-long"></div>
         <dl class="item-dialog-meta" id="item-meta"></dl>
         <div class="item-dialog-links" id="item-links"></div>
-        <p class="item-dialog-tags" id="item-tags"></p>
+        <div class="item-dialog-related" id="item-related" hidden><p>Рядом на полках</p><div></div></div>
+        <p class="item-dialog-tags" id="item-tags" aria-label="Теги, нажмите, чтобы найти похожее"></p>
       </div>
     </div>
   </dialog>
