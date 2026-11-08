@@ -11,6 +11,8 @@
 - `dist/projects/university/` — университетские проекты и сертификат.
 - `src/` — редактируемая 3D-сцена, исходная графика и локальная копия Three.js.
 - `scripts/build-assets.mjs` — воспроизводимая оптимизация 3D и изображения без потери качества.
+- `scripts/work-illustrations.mjs` — рисует схемы семи рабочих систем (`dist/assets/inventory/work-*.webp`) в палитре сайта через headless Chrome; `--check` проверяет, что картинки не старше скрипта.
+- `video/teaser/` — исходник тизера на [HyperFrames](https://github.com/heygen-com/hyperframes): `npm run check`, `npm run render`; готовый MP4 лежит в `dist/assets/video/`.
 - `cloudflare/` — исходники обработчика заявок, тесты и миграции D1.
 - `.github/workflows/pages.yml` — проверка кода и публикация только `dist/`.
 

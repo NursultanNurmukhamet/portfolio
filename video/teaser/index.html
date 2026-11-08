@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ru" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      /* The portfolio's own palette and type: tui.css tokens, Manrope for text, mono for labels. */
+      @font-face { font-family: Manrope; src: url("assets/manrope.ttf"); font-weight: 400 600; }
+      @font-face { font-family: Manrope; src: url("assets/manrope-bold.ttf"); font-weight: 700 900; }
+      :root {
+        --bg: #0a0d12; --bg-2: #10151d; --bg-3: #161d27; --line: #263040; --line-2: #3a4657;
+        --text: #e4e9f0; --dim: #a3aebd; --mute: #8692a4;
+        --accent: #d5ff65; --ok: #3ddc84; --info: #7cc4ff; --warn: #ffb2c9; --violet: #b49bf6;
+        --sans: Manrope, sans-serif;
+        --mono: Consolas, monospace;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+      body { color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
+      .clip { position: absolute; inset: 0; }
+
+      /* Backdrop: grid like the OG picture, one soft glow that drifts through the film. */
+      .grid { position: absolute; inset: 0; background-image: linear-gradient(#ffffff07 1px, transparent 1px), linear-gradient(90deg, #ffffff07 1px, transparent 1px); background-size: 80px 80px; }
+      .glow { position: absolute; width: 1400px; height: 1400px; left: 900px; top: -700px; border-radius: 50%; background: radial-gradient(circle, #d5ff6530, transparent 62%); will-change: transform; }
+      .vignette { position: absolute; inset: 0; background: radial-gradient(1400px 900px at 50% 50%, transparent 55%, #0a0d12 100%); }
+
+      .mono { font-family: var(--mono); letter-spacing: 0.1em; text-transform: uppercase; }
+      .eyebrow { display: inline-flex; align-items: center; gap: 16px; font: 600 28px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); }
+      .eyebrow i { width: 16px; height: 16px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 8px #3ddc8422; }
+      .monogram { font: 700 72px var(--sans); letter-spacing: -6px; color: var(--text); }
+      .monogram span { color: var(--accent); letter-spacing: -2px; }
+      .url { font: 600 28px var(--mono); color: var(--accent); letter-spacing: 0.02em; }
+
+      /* Scene 1: name */
+      #s1 .monogram { position: absolute; left: 120px; top: 90px; }
+      #s1 .url { position: absolute; right: 120px; top: 108px; }
+      #s1 .eyebrow { position: absolute; left: 120px; top: 330px; }
+      #s1 h1 { position: absolute; left: 112px; top: 390px; font: 800 190px/0.98 var(--sans); letter-spacing: -0.045em; color: var(--text); }
+      #s1 h1 .mask { display: block; overflow: hidden; padding-bottom: 0.14em; }
+      #s1 h1 .mask span { display: block; }
+      #s1 .lead { position: absolute; left: 120px; top: 830px; width: 1300px; font: 500 40px/1.35 var(--sans); color: var(--dim); }
+      #s1 .lead b { color: var(--text); font-weight: 600; }
+
+      /* Scene 2: shelves */
+      #s2 h2 { position: absolute; left: 120px; top: 150px; font: 800 120px/1 var(--sans); letter-spacing: -0.04em; }
+      #s2 h2 em { font-style: normal; color: var(--accent); }
+      #s2 .sub { position: absolute; left: 124px; top: 300px; font: 500 34px var(--sans); color: var(--dim); }
+      .shelves { position: absolute; left: 120px; right: 120px; top: 440px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; }
+      .shelf { height: 400px; padding: 36px 34px; border: 1px solid var(--line-2); border-radius: 24px; background: #10151dee; display: flex; flex-direction: column; justify-content: flex-end; gap: 14px; position: relative; overflow: hidden; }
+      .shelf::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--c, var(--accent)); }
+      .shelf b { font: 800 150px/1 var(--sans); letter-spacing: -0.06em; color: var(--c, var(--accent)); }
+      .shelf span { font: 700 32px/1.2 var(--sans); color: var(--text); }
+      .shelf small { font: 500 26px/1.35 var(--sans); color: var(--dim); }
+
+      /* Scene 3: inventory cards in perspective */
+      #s3 .stage { position: absolute; left: 0; right: 0; top: 180px; bottom: 130px; perspective: 2200px; overflow: hidden; }
+      .deck { position: absolute; left: 160px; top: 10px; width: 1600px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; transform-style: preserve-3d; }
+      .card { border: 1px solid var(--line-2); border-radius: 22px; background: var(--bg-2); overflow: hidden; box-shadow: 0 60px 120px -50px #000; }
+      .card .pic { position: relative; aspect-ratio: 4 / 3; background: var(--bg-3); overflow: hidden; }
+      .card .pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .card .badge { position: absolute; left: 18px; top: 18px; padding: 8px 12px; border-radius: 6px; background: #0a0d12d9; border: 1px solid var(--line-2); font: 600 18px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
+      .card .body { padding: 22px 26px 26px; display: grid; gap: 10px; }
+      .card h3 { font: 700 32px/1.2 var(--sans); letter-spacing: -0.01em; }
+      .card p { font: 400 24px/1.4 var(--sans); color: var(--dim); }
+      #s3 .caption { position: absolute; left: 120px; top: 80px; display: flex; align-items: center; gap: 28px; }
+      #s3 .caption h2 { font: 800 64px/1 var(--sans); letter-spacing: -0.03em; }
+      #s3 .caption .tag { padding: 12px 20px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--bg-2); font: 700 22px var(--sans); color: var(--dim); }
+      #s3 .caption .tag.on { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+      #s3 .hint { position: absolute; left: 120px; bottom: 60px; font: 600 28px var(--mono); letter-spacing: 0.06em; color: var(--mute); }
+
+      /* Scene 4: three facts */
+      #s4 .facts { position: absolute; left: 120px; top: 260px; display: grid; gap: 54px; }
+      .fact { display: grid; grid-template-columns: 440px 1fr; gap: 50px; align-items: baseline; }
+      .fact b { font: 800 150px/1 var(--sans); letter-spacing: -0.06em; color: var(--accent); white-space: nowrap; text-align: left; }
+      .fact div { font: 600 44px/1.2 var(--sans); color: var(--text); display: grid; gap: 10px; }
+      .fact div small { font: 500 28px var(--sans); color: var(--dim); }
+      .fact .rule { height: 1px; background: var(--line); grid-column: 1 / -1; }
+      #s4 .fact:nth-child(2) b { color: var(--info); }
+      #s4 .fact:nth-child(3) b { color: var(--ok); }
+
+      /* Scene 5: call to action */
+      #s5 .center { position: absolute; left: 0; right: 0; top: 300px; display: grid; justify-items: center; gap: 36px; text-align: center; }
+      #s5 .monogram { font-size: 120px; letter-spacing: -10px; }
+      #s5 .big { font: 800 70px/1.1 var(--sans); letter-spacing: -0.03em; }
+      #s5 .url { font-size: 40px; padding: 22px 40px; border: 1px solid #d5ff6566; border-radius: 14px; background: #d5ff6512; }
+      #s5 .links { display: flex; gap: 60px; font: 600 28px var(--sans); color: var(--dim); }
+      #s5 .links i { font-style: normal; color: var(--mute); }
+      #s5 .foot { position: absolute; left: 0; right: 0; bottom: 70px; text-align: center; font: 500 24px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--mute); }
+
+      .fade { position: absolute; inset: 0; background: var(--bg); pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="24" data-width="1920" data-height="1080" data-fps="30">
+      <div class="grid"></div>
+      <div class="glow" id="glow"></div>
+      <div class="vignette"></div>
+
+      <!-- 1. Who -->
+      <section id="s1" class="clip" data-start="0" data-duration="4.6" data-track-index="0">
+        <p class="monogram">nn<span>.</span></p>
+        <p class="url">nursultannurmukhamet.github.io/portfolio</p>
+        <p class="eyebrow"><i></i>Backend / Infrastructure Engineer</p>
+        <h1><span class="mask"><span>Нурсултан</span></span><span class="mask"><span>Нурмухамет</span></span></h1>
+        <p class="lead">Проектирую backend, разворачиваю инфраструктуру и проверяю, что всё <b>восстанавливается после сбоев</b>.</p>
+      </section>
+
+      <!-- 2. Shelves -->
+      <section id="s2" class="clip" data-start="4.4" data-duration="5" data-track-index="0">
+        <h2>Всё <em>по полкам.</em></h2>
+        <p class="sub">29 предметов в пяти категориях: открой любой, чтобы посмотреть подробнее.</p>
+        <div class="shelves">
+          <div class="shelf" style="--c:#3ddc84"><b data-to="7">0</b><span>рабочих систем</span><small>Sapa Technologies, production</small></div>
+          <div class="shelf" style="--c:#d5ff65"><b data-to="5">0</b><span>личных проектов</span><small>код открыт</small></div>
+          <div class="shelf" style="--c:#7cc4ff"><b data-to="7">0</b><span>единиц железа</span><small>лаборатория MyLab</small></div>
+          <div class="shelf" style="--c:#b49bf6"><b data-to="6">0</b><span>слоёв инфраструктуры</span><small>от Proxmox до бэкапов</small></div>
+          <div class="shelf" style="--c:#ffb2c9"><b data-to="4">0</b><span>сертификата и учёба</span><small>КазНУ, HackAlem</small></div>
+        </div>
+      </section>
+
+      <!-- 3. Cards -->
+      <section id="s3" class="clip" data-start="9.2" data-duration="6.4" data-track-index="0">
+        <div class="caption"><h2>Инвентарь</h2><span class="tag on">Все</span><span class="tag">Рабочие системы</span><span class="tag">Железо</span><span class="tag">Инфраструктура</span></div>
+        <div class="stage">
+          <div class="deck" data-layout-allow-overflow>
+            <div class="card"><div class="pic"><img src="assets/work-edo-sign.webp" alt=""><span class="badge" data-layout-ignore>Рабочие системы</span></div><div class="body"><h3>Документооборот с ЭЦП</h3><p>Кадровые документы подписываются электронной подписью и имеют юридическую силу.</p></div></div>
+            <div class="card"><div class="pic"><img src="assets/work-hr-portal.webp" alt=""><span class="badge" data-layout-ignore>Рабочие системы</span></div><div class="body"><h3>HR-портал</h3><p>Личный кабинет сотрудника: отпуска, заявки, обучение, документы и единый вход.</p></div></div>
+            <div class="card"><div class="pic"><img src="assets/mylab-rig-photo.webp" alt=""><span class="badge" data-layout-ignore>Железо</span></div><div class="body"><h3>Основной сервер</h3><p>Ryzen 9 9950X, две RTX 5060 Ti, 64 ГБ DDR5. Хост Proxmox, собран вручную.</p></div></div>
+            <div class="card"><div class="pic"><img src="assets/mylab-hosts-map.webp" alt=""><span class="badge" data-layout-ignore>Инфраструктура</span></div><div class="body"><h3>Kubernetes и GitOps</h3><p>kubeadm, Calico, MetalLB, NGINX Ingress, Argo CD. Карта хостов и ролей.</p></div></div>
+            <div class="card"><div class="pic"><img src="assets/mylab-grafana-public.webp" alt=""><span class="badge" data-layout-ignore>Инфраструктура</span></div><div class="body"><h3>Prometheus, Grafana, Loki</h3><p>Физика, Linux, Kubernetes и GPU в одной картине.</p></div></div>
+            <div class="card"><div class="pic"><img src="assets/match-total-attack.png" alt=""><span class="badge" data-layout-ignore>Личные проекты</span></div><div class="body"><h3>AgentF</h3><p>Пять AI-агентов играют в футбол на модели Amazon Nova Micro.</p></div></div>
+          </div>
+        </div>
+        <p class="hint">// нажмите на любой предмет: подробности, стек, соседи по полке</p>
+      </section>
+
+      <!-- 4. Facts -->
+      <section id="s4" class="clip" data-start="15.4" data-duration="4.9" data-track-index="0">
+        <div class="facts">
+          <div class="fact"><b>7</b><div>production-систем в Sapa Technologies<small>HR-портал, ЭЦП-документооборот, обучение, поддержка, CRM, бронирование, обратная связь</small></div><i class="rule"></i></div>
+          <div class="fact"><b>4 / 3</b><div>узла и GPU в лаборатории MyLab<small>Proxmox, Kubernetes, GitOps, мониторинг, WireGuard</small></div><i class="rule"></i></div>
+          <div class="fact"><b>1 888</b><div>файлов восстановлено по SHA-256<small>PostgreSQL, etcd, GitLab: учебные восстановления, а не обещания</small></div></div>
+        </div>
+      </section>
+
+      <!-- 5. CTA -->
+      <section id="s5" class="clip" data-start="20.1" data-duration="3.9" data-track-index="0">
+        <div class="center">
+          <p class="monogram">nn<span>.</span></p>
+          <p class="big">Открыть инвентарь</p>
+          <p class="url">nursultannurmukhamet.github.io/portfolio</p>
+          <p class="links"><span>Резюме (PDF)</span><i>·</i><span>GitHub</span><i>·</i><span>Telegram</span></p>
+        </div>
+        <p class="foot" data-layout-ignore>Нурсултан Нурмухамет · Backend / Infrastructure Engineer · 2026</p>
+      </section>
+
+      <div class="fade" id="fade-out"></div>
+    </div>
+
+    <script>
+      // One paused root timeline; every tween has an explicit start so random seeks stay correct.
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+      const E = "power3.out";
+
+      // Backdrop glow drifts slowly for the whole film.
+      tl.fromTo("#glow", { x: 0, y: 0 }, { x: -700, y: 500, duration: 24, ease: "none" }, 0);
+
+      /* ---------- 1. Who (0 - 4.6) ---------- */
+      tl.fromTo("#s1 .monogram", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.7 }, 0.1);
+      tl.fromTo("#s1 .url", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.5);
+      tl.fromTo("#s1 .eyebrow", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.6 }, 0.35);
+      tl.fromTo("#s1 h1 .mask span", { yPercent: 110 }, { yPercent: 0, duration: 0.9, stagger: 0.14, ease: "power4.out" }, 0.55);
+      tl.fromTo("#s1 .lead", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7 }, 1.4);
+      tl.fromTo("#s1", { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.in" }, 4.1);
+
+      /* ---------- 2. Shelves (4.4 - 9.4) ---------- */
+      tl.fromTo("#s2 h2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7 }, 4.5);
+      tl.fromTo("#s2 .sub", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 5.0);
+      tl.fromTo("#s2 .shelf", { opacity: 0, y: 80, rotateX: 18 }, { opacity: 1, y: 0, rotateX: 0, duration: 0.8, stagger: 0.12, ease: "power4.out" }, 5.0);
+      // Numbers count up; the proxy object keeps the tween seek-safe.
+      document.querySelectorAll("#s2 .shelf b").forEach((node, index) => {
+        const proxy = { value: 0 }, target = Number(node.dataset.to);
+        tl.to(proxy, { value: target, duration: 0.9, ease: "power2.out", snap: { value: 1 }, onUpdate: () => { node.textContent = String(Math.round(proxy.value)); } }, 5.3 + index * 0.12);
+      });
+      tl.fromTo("#s2", { opacity: 1 }, { opacity: 0, duration: 0.45, ease: "power2.in" }, 8.95);
+
+      /* ---------- 3. Cards (9.2 - 15.6) ---------- */
+      tl.fromTo("#s3 .caption > *", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.07 }, 9.3);
+      tl.fromTo("#s3 .card", { opacity: 0, y: 160, rotateX: 28, z: -300 }, { opacity: 1, y: 0, rotateX: 0, z: 0, duration: 1.0, stagger: { each: 0.1, from: "start" }, ease: "power4.out" }, 9.5);
+      // The whole deck floats up slowly, as if the visitor scrolled.
+      tl.fromTo("#s3 .deck", { y: 0 }, { y: -420, duration: 4.4, ease: "sine.inOut" }, 10.6);
+      tl.fromTo("#s3 .hint", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 11.2);
+      tl.fromTo("#s3", { opacity: 1 }, { opacity: 0, duration: 0.45, ease: "power2.in" }, 15.15);
+
+      /* ---------- 4. Facts (15.4 - 20.3) ---------- */
+      tl.fromTo("#s4 .fact b", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.7, stagger: 0.55, ease: "power4.out" }, 15.5);
+      tl.fromTo("#s4 .fact div", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.7, stagger: 0.55 }, 15.65);
+      tl.fromTo("#s4 .rule", { scaleX: 0, transformOrigin: "left center" }, { scaleX: 1, duration: 0.8, stagger: 0.55, ease: "power2.inOut" }, 15.9);
+      tl.fromTo("#s4", { opacity: 1 }, { opacity: 0, duration: 0.45, ease: "power2.in" }, 19.85);
+
+      /* ---------- 5. CTA (20.1 - 24) ---------- */
+      tl.fromTo("#s5 .center > *", { opacity: 0, y: 30, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.12, ease: "power4.out" }, 20.2);
+      tl.fromTo("#s5 .foot", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 21.1);
+      tl.fromTo("#fade-out", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.in" }, 23.4);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

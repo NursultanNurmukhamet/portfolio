@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync,existsSync} from 'node:fs';
+import {readFileSync,existsSync,statSync} from 'node:fs';
 import vm from 'node:vm';
 
 const html=readFileSync(new URL('../dist/index.html',import.meta.url),'utf8');
@@ -73,6 +73,21 @@ test('neighbours, tag search, share and the slash shortcut connect the shelves',
   assert.ok(js.includes("'touchstart'")&&js.includes('step(dx<0?1:-1)'),'swipe moves between items');
   assert.match(css,/.inventory-tabs{position:sticky;top:60px/);
   assert.match(css,/.item-card button.is-tilting{transform:none}/,'reduced motion removes the tilt');
+});
+
+test('work systems have drawn pictures and the hero teaser ships with a poster, no autoplay and no preload',()=>{
+  for(const item of ITEMS.filter(item=>item.cat==='work')){
+    assert.ok(item.image?.src.startsWith('assets/inventory/work-'),`${item.id} has a drawn picture`);
+    assert.ok(statSync(new URL('../dist/'+item.image.src,import.meta.url)).size<=150_000,`${item.id} picture under 150 KB`);
+    assert.ok(item.tile,`${item.id} keeps the text tile as a fallback`);
+  }
+  const video=html.match(/<video [^>]*>/)?.[0];
+  assert.ok(video,'hero has a teaser video');
+  for(const attribute of ['muted','playsinline','controls','preload="none"','poster="assets/video/teaser-poster.webp"'])assert.ok(video.includes(attribute),attribute);
+  assert.doesNotMatch(video,/autoplay/);
+  assert.ok(existsSync(new URL('../dist/assets/video/teaser-poster.webp',import.meta.url)));
+  assert.ok(existsSync(new URL('../dist/assets/video/teaser.mp4',import.meta.url)),'teaser.mp4 is rendered from video/teaser');
+  assert.ok(statSync(new URL('../dist/assets/video/teaser.mp4',import.meta.url)).size<=3_500_000,'teaser under 3.5 MB');
 });
 
 test('readable minimum sizes, tap targets and reduced motion',()=>{

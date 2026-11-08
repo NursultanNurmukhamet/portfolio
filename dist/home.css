@@ -40,6 +40,10 @@ body.home .tui-tabs a{min-height:44px;padding:6px 14px}
 .hero-links-plain{display:flex;flex-wrap:wrap;gap:4px 22px;list-style:none;margin:0;padding:0;font:600 14px/1 var(--sans)}
 .hero-links-plain a{color:var(--dim);border-bottom:1px solid transparent;padding:6px 0;transition:color .25s,border-color .25s}
 .hero-links-plain a:hover{color:var(--text);border-color:var(--accent)}
+/* Teaser video: a poster until the visitor presses play; nothing autoplays, nothing is preloaded. */
+.hero-teaser{margin:26px 0 0;max-width:600px;border:1px solid var(--line-2);border-radius:12px;overflow:hidden;background:var(--bg-2)}
+.hero-teaser video{display:block;width:100%;height:auto;aspect-ratio:16 / 9;background:var(--bg)}
+.hero-teaser figcaption{padding:10px 14px;font:500 13px/1.5 var(--mono);letter-spacing:.02em;color:var(--dim);border-top:1px solid var(--line)}
 .hero-shelves{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .hero-shelves li:first-child{grid-column:1 / -1}
 .hero-shelves a{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:14px;align-items:center;padding:14px 16px;min-height:72px;border:1px solid var(--line);border-radius:10px;background:var(--bg-2);transition:border-color .25s,transform .35s var(--ease),box-shadow .35s var(--ease)}

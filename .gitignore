@@ -27,3 +27,8 @@ cloudflare/wrangler.jsonc
 # Compatibility copies for untracked local demos; production uses the bundle.
 dist/vendor/three.core.js
 dist/vendor/three.module.js
+
+# HyperFrames teaser: rendered output and tool caches live outside git; the MP4 ships from dist/assets/video.
+video/teaser/.hyperframes/
+video/teaser/renders/
+video/teaser/node_modules/
