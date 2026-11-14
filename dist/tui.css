@@ -1,7 +1,7 @@
 /* Terminal-first main page: panes, terminal, monitor, file manager, git graph, contact. */
-@font-face{font-family:Anton;src:url('assets/anton.ttf') format('truetype');font-weight:400;font-display:swap}
-@font-face{font-family:Manrope;src:url('assets/manrope.ttf') format('truetype');font-weight:400 600;font-display:swap}
-@font-face{font-family:Manrope;src:url('assets/manrope-bold.ttf') format('truetype');font-weight:700 900;font-display:swap}
+@font-face{font-family:Anton;src:url('assets/anton.woff2') format('woff2'),url('assets/anton.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Manrope;src:url('assets/manrope.woff2') format('woff2'),url('assets/manrope.ttf') format('truetype');font-weight:400 600;font-display:swap}
+@font-face{font-family:Manrope;src:url('assets/manrope-bold.woff2') format('woff2'),url('assets/manrope-bold.ttf') format('truetype');font-weight:700 900;font-display:swap}
 :root{
   --bg:#0a0d12;--bg-2:#10151d;--bg-3:#161d27;--line:#263040;--line-2:#3a4657;
   --text:#e4e9f0;--dim:#a3aebd;--mute:#8692a4;
