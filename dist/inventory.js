@@ -117,6 +117,9 @@
       links:[['Глава «Восстановление» в кейсе MyLab','mylab.html#recovery']]},
 
     /* ---------- Сертификаты и учёба ---------- */
+    {id:'ai-sana',cat:'certs',related:['masterclass','kaznu','hackalem'],title:'AI-SANA, фаза 2 — сертификат о завершении',short:'Программа «Intellectual Technologies and Entrepreneurial Thinking», 135 часов. Seeds of Empowerment, 19.05.2026.',image:{src:'assets/inventory/cert-aisana.webp',alt:'Сертификат о завершении программы AI-SANA, фаза 2',w:1000,h:708},tags:['AI','предпринимательство','135 часов'],
+      meta:[['Кто выдал','Seeds of Empowerment, Paul Kim'],['Дата','19 мая 2026'],['Объём','135 часов обязательных активностей'],['Проверка','код fd644d3e-1672-45c7-852b-e5c3e0b0ed6d'],['Изображение','текстовая реконструкция сертификата; оригинал — PDF']],
+      long:['Вторая фаза программы AI-SANA: интеллектуальные технологии и предпринимательское мышление. Сертификат выдан за выполнение всех обязательных активностей и соответствие стандартам программы.']},
     {id:'decentrathon',cat:'certs',related:['hackalem','agentf','support'],title:'Decentrathon 6.0 — сертификат участника',short:'Трек Support Copilot by Grand Mobile на крупнейшем мультилокационном хакатоне Казахстана, 30–31 октября 2026.',image:{src:'assets/inventory/cert-decentrathon.webp',alt:'Сертификат участника Decentrathon 6.0, трек Support Copilot by Grand Mobile',w:1000,h:707},tags:['AI','хакатон','support'],
       meta:[['Кто выдал','Decentrathon; партнёры — Astana Hub, Blockchain & AI technology center, AI & Digital Qazaqstan 2026, Grand Mobile, soup'],['Даты','30–31 октября 2026, сертификат от 14 ноября 2026'],['Номер','HCK-2026-DVWH48X3']],
       long:['Трек Support Copilot by Grand Mobile — задача про помощника для службы поддержки: та же область, что и моя рабочая система поддержки с Telegram-ботом и командным пунктом операторов.']},
