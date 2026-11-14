@@ -21,7 +21,7 @@ test('three personal projects share the catalog with the two cases, without a du
   }
   const inventory=readFileSync(new URL('../dist/inventory.js',import.meta.url),'utf8');
   for(const cover of ['metacrypt','listen'])assert.ok(inventory.includes(`cover:'${cover}'`),`${cover} cover is reused by the inventory`);
-  assert.ok(inventory.includes("id:'agentf'")&&inventory.includes('match-total-attack.png'),'AgentF shows a real match screenshot');
+  assert.ok(inventory.includes("id:'agentf'")&&inventory.includes('agentf-match.webp'),'AgentF shows a real match screenshot');
   assert.doesNotMatch(html+js+home,/\bDEMO\b|концепц|образец|ОБРАЗЕЦ|демонстрац|orbit-cup/,'no demo or placeholder wording remains');
   assert.ok(js.includes('window.portfolioProjects=Object.freeze('));
   assert.ok(home.includes('gallery.cover(demo)'),'covers come from the shared gallery data');

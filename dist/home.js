@@ -134,7 +134,7 @@
     const plural=(count,one,few,many)=>{const n=count%100,m=count%10;return n>=11&&n<=19?many:m===1?one:m>=2&&m<=4?few:many;};
     hint.textContent=query
       ?(visible.length?`${visible.length} ${plural(visible.length,'предмет','предмета','предметов')} по запросу «${search.value.trim()}»${category!=='all'?` на полке «${current.label}»`:''}.`:'')
-      :(current?.hint||`${ITEMS.length} предметов на пяти полках. Нажмите на любой, чтобы посмотреть подробнее.`);
+      :(current?.hint||`${ITEMS.length} ${plural(ITEMS.length,'предмет','предмета','предметов')} на пяти полках. Нажмите на любой, чтобы посмотреть подробнее.`);
     grid.innerHTML=visible.map((item,index)=>`<li class="item-card" style="view-transition-name:card-${item.id}"><button type="button" data-item="${item.id}" style="--delay:${Math.min(index,12)*40}ms" aria-haspopup="dialog">
       <div class="item-media">${media(item)}<span class="item-badge">${escapeHtml(categoryLabel(item.cat))}</span></div>
       <div class="item-body"><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.short)}</p>
@@ -229,6 +229,9 @@
     parts.pos.textContent=`${index+1} / ${list.length}`;
     prev.disabled=index<=0;next.disabled=index>=list.length-1;
     parts.mediaBox.innerHTML=media(item,true);
+    // A photo or a scan can be enlarged to the whole window and back with one click.
+    dialog.classList.remove('is-zoomed');
+    parts.mediaBox.classList.toggle('is-zoomable',Boolean(item.image));
     parts.title.textContent=item.title;
     parts.short.textContent=item.short;
     parts.long.innerHTML=(item.long||[]).map(text=>`<p>${escapeHtml(text)}</p>`).join('');
@@ -283,6 +286,7 @@
   });
   dialog.addEventListener('close',()=>{
     document.body.classList.remove('item-open');
+    dialog.classList.remove('is-zoomed');
     body.classList.remove('is-leaving-left','is-leaving-right','is-entering-left','is-entering-right');
     if(pushed){pushed=false;history.back();}
     else if(location.hash.startsWith('#item='))history.replaceState(null,'',location.pathname+location.search);
@@ -329,6 +333,7 @@
     swipeX=swipeY=null;
     if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5)step(dx<0?1:-1);
   },{passive:true});
+  parts.mediaBox.addEventListener('click',event=>{if(event.target.closest('img')&&parts.mediaBox.classList.contains('is-zoomable'))dialog.classList.toggle('is-zoomed');});
   parts.title.tabIndex=-1;
 
   /* ---------- In-page anchors scroll smoothly even while cards are still rendering ---------- */

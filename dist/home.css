@@ -270,3 +270,24 @@ html.vt-grid .item-card button{animation:none}
   .item-media img{opacity:1}
   .btn:active,.inventory-tabs button:active,.hero-shelves a:active,.item-card button:active{transform:none}
 }
+
+/* ---- Audit fixes: teaser beside the shelves, enlargeable scans, phone details, tap sizes ---- */
+.hero-side{min-width:0;display:grid;gap:14px;align-content:start}
+.hero-side .hero-teaser{margin:0;max-width:none}
+/* A photo or a certificate scan fills the window on click and returns on the next one. */
+.item-dialog-media.is-zoomable img{cursor:zoom-in}
+.item-dialog.is-zoomed .item-dialog-media{position:absolute;inset:0;z-index:5;height:auto;min-height:0;border:0;background:var(--bg)}
+.item-dialog.is-zoomed .item-dialog-media img{cursor:zoom-out;object-fit:contain}
+.item-dialog.is-zoomed .item-dialog-bar{position:relative;z-index:6;background:#0a0d12e6}
+.item-dialog.is-zoomed .item-dialog-media{top:69px}
+.hero-links-plain a{display:inline-flex;align-items:center;min-height:44px}
+body.home .direct-contact a{min-height:44px;display:inline-flex;align-items:center}
+body.home .site-footer a{display:inline-flex;align-items:center;min-height:44px}
+@media(max-width:980px){
+  .hero-side .hero-teaser{display:none}
+}
+@media(max-width:759px){
+  .item-dialog-cat{white-space:normal;line-height:1.3}
+  .item-dialog-pos{display:none}
+  .item-dialog-nav button{width:40px;height:44px}
+}

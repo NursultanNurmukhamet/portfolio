@@ -99,3 +99,12 @@ test('readable minimum sizes, tap targets and reduced motion',()=>{
   assert.match(css,/\.item-dialog-nav button\{[^}]*width:44px;height:44px/);
   assert.match(shared,/\.tui-tabs\{position:fixed;left:0;right:0;bottom:0/,'phones keep the bottom navigation bar');
 });
+
+test('audit regressions: no dead GitHub link for the closed AgentF repository, crawl files exist, hint is grammatical',()=>{
+  assert.doesNotMatch(inventorySource,/github\.com\/NursultanNurmukhamet\/AgentF/,'the repository is private, so the page must not link to it');
+  const certs=ITEMS.filter(item=>item.cat==='certs').map(item=>item.id);
+  assert.equal(certs[0],'sapa-award','the newest certificate comes first');
+  for(const file of ['robots.txt','sitemap.xml'])assert.ok(existsSync(new URL('../dist/'+file,import.meta.url)),file);
+  assert.ok(js.includes("plural(ITEMS.length,'предмет','предмета','предметов')"),'the shelf hint declines the noun');
+  assert.ok(js.includes("dialog.classList.toggle('is-zoomed')"),'scans can be enlarged');
+});
