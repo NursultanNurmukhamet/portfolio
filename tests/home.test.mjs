@@ -43,7 +43,7 @@ test('inventory data: five shelves, every item complete, every picture present, 
     }
   }
   assert.equal(ITEMS.filter(item=>item.cat==='work').length,7);
-  assert.equal(ITEMS.filter(item=>item.cat==='certs').length,4);
+  assert.equal(ITEMS.filter(item=>item.cat==='certs').length,5);
   assert.doesNotMatch(inventorySource,/10\.128\.|sapatech\.(?:kz|local)|\d{8,12}:[A-Za-z0-9_-]{30,}|85–100 %/,'no internal addresses, tokens or unverified percentages');
 });
 

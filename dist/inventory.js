@@ -117,6 +117,9 @@
       links:[['Глава «Восстановление» в кейсе MyLab','mylab.html#recovery']]},
 
     /* ---------- Сертификаты и учёба ---------- */
+    {id:'sapa-award',cat:'certs',related:['hr-portal','edo-sign','hackalem'],title:'Sapa Technologies — почётная грамота',short:'За профессионализм, эффективную работу и вклад в развитие цифровых решений компании. Алматы, 10.11.2026.',image:{src:'assets/inventory/cert-sapa.webp',alt:'Почётная грамота Sapa Technologies Нурсултану Нурмухамету',w:900,h:1240},tags:['Sapa Technologies','награда'],
+      meta:[['Кто выдал','Sapa Technologies, директор А. А. Ердембеков'],['Дата','10 ноября 2026, Алматы'],['За что','профессионализм, эффективная работа и вклад в развитие цифровых решений']],
+      long:['Грамота от работодателя после года с небольшим в компании: семь внутренних систем, которые я спроектировал и довёл до production, — HR-портал, документооборот с ЭЦП, обучение, каталог с CRM, поддержка, бронирование и сбор обратной связи.']},
     {id:'hackalem',cat:'certs',related:['agentf','kaznu'],title:'HackAlem AI — сертификат участника',short:'Агентный AI-хакатон, вошедший в Книгу рекордов Гиннесса. Астана, 20.10.2026.',image:{src:'assets/inventory/cert-hackalem.png',alt:'Сертификат участника HackAlem AI',w:1200,h:900},tags:['AI','хакатон'],
       meta:[['Кто выдал','hackalem.ai; партнёры — Министерство ИИ и цифрового развития РК, OpenAI, NVIDIA, Astana Hub, ASU'],['Дата','20 октября 2026'],['Изображение','текстовая реконструкция сертификата; оригинал — PDF']],
       long:['Официальный титул GUINNESS WORLD RECORDS «Most Participants in an Agentic AI Hackathon».']},
