@@ -117,6 +117,9 @@
       links:[['Глава «Восстановление» в кейсе MyLab','mylab.html#recovery']]},
 
     /* ---------- Сертификаты и учёба ---------- */
+    {id:'decentrathon',cat:'certs',related:['hackalem','agentf','support'],title:'Decentrathon 6.0 — сертификат участника',short:'Трек Support Copilot by Grand Mobile на крупнейшем мультилокационном хакатоне Казахстана, 30–31 октября 2026.',image:{src:'assets/inventory/cert-decentrathon.webp',alt:'Сертификат участника Decentrathon 6.0, трек Support Copilot by Grand Mobile',w:1000,h:707},tags:['AI','хакатон','support'],
+      meta:[['Кто выдал','Decentrathon; партнёры — Astana Hub, Blockchain & AI technology center, AI & Digital Qazaqstan 2026, Grand Mobile, soup'],['Даты','30–31 октября 2026, сертификат от 14 ноября 2026'],['Номер','HCK-2026-DVWH48X3']],
+      long:['Трек Support Copilot by Grand Mobile — задача про помощника для службы поддержки: та же область, что и моя рабочая система поддержки с Telegram-ботом и командным пунктом операторов.']},
     {id:'sapa-award',cat:'certs',related:['hr-portal','edo-sign','hackalem'],title:'Sapa Technologies — почётная грамота',short:'За профессионализм, эффективную работу и вклад в развитие цифровых решений компании. Алматы, 10.11.2026.',image:{src:'assets/inventory/cert-sapa.webp',alt:'Почётная грамота Sapa Technologies Нурсултану Нурмухамету',w:900,h:1240},tags:['Sapa Technologies','награда'],
       meta:[['Кто выдал','Sapa Technologies, директор А. А. Ердембеков'],['Дата','10 ноября 2026, Алматы'],['За что','профессионализм, эффективная работа и вклад в развитие цифровых решений']],
       long:['Грамота от работодателя после года с небольшим в компании: семь внутренних систем, которые я спроектировал и довёл до production, — HR-портал, документооборот с ЭЦП, обучение, каталог с CRM, поддержка, бронирование и сбор обратной связи.']},
