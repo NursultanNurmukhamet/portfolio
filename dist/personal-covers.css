@@ -1,33 +1,31 @@
-/* Three project-specific posters. The AgentF evidence images stay unaltered. */
-.paper-cover:is(.cover-agentf,.cover-metacrypt,.cover-listen){
+.cover-metacrypt,.cover-listen){
   isolation:isolate;
   box-shadow:0 0 0 1px #07291e66,inset 0 0 0 1px #ffffff0d;
 }
-.paper-cover:is(.cover-agentf,.cover-metacrypt,.cover-listen)::before,
-.paper-cover:is(.cover-agentf,.cover-metacrypt,.cover-listen)::after{
+.cover-metacrypt,.cover-listen)::before,.cover-metacrypt,.cover-listen)::after{
   content:"";
   position:absolute;
   pointer-events:none;
   z-index:-1;
 }
-:is(.cover-agentf,.cover-metacrypt,.cover-listen) .paper-topline{
+.cover-metacrypt,.cover-listen) .paper-topline{
   font-size:2.7cqw;
   letter-spacing:.055em;
   padding-bottom:5.5%;
   border-bottom-width:1px;
 }
-:is(.cover-agentf,.cover-metacrypt,.cover-listen) .paper-title{
+.cover-metacrypt,.cover-listen) .paper-title{
   margin-top:9%;
   letter-spacing:-.015em;
   text-shadow:0 .4cqw 0 #0000000d;
 }
-:is(.cover-agentf,.cover-metacrypt,.cover-listen) .paper-subtitle{
+.cover-metacrypt,.cover-listen) .paper-subtitle{
   font-size:2.6cqw;
   letter-spacing:.035em;
   line-height:1.45;
   margin-top:4%;
 }
-:is(.cover-agentf,.cover-metacrypt,.cover-listen) .paper-foot{
+.cover-metacrypt,.cover-listen) .paper-foot{
   align-items:center;
   font-size:2.5cqw;
   font-weight:700;
@@ -35,58 +33,34 @@
   bottom:5.5%;
   padding-top:4.5%;
 }
-:is(.cover-agentf,.cover-metacrypt,.cover-listen) .paper-number{
+.cover-metacrypt,.cover-listen) .paper-number{
   font-size:11cqw;
   font-weight:400;
   letter-spacing:-.03em;
 }
 
-/* AgentF: a football tactic board built from vector geometry, not screenshots. */
-.paper-cover.cover-agentf{
+/* AgentF: a football tactic board built from vector geometry{
   --cover-fill:#0b3028;
   background:linear-gradient(148deg,#164938 0%,#092c25 52%,#071d1a 100%);
   color:#eff5dc;
 }
-.cover-agentf::before{
-  inset:34% -16% 11% 20%;
-  border:1px solid #d9ff7b21;
-  background:linear-gradient(90deg,transparent 49.75%,#d9ff7b21 49.75% 50.25%,transparent 50.25%);
-  transform:rotate(-17deg);
-}
-.cover-agentf::after{
-  inset:0 0 auto auto;
-  width:4.5%;
-  height:34%;
-  background:repeating-linear-gradient(-42deg,#d9ff7b 0 9%,#113c2f 9% 18%);
-}
-.cover-agentf .paper-topline,.cover-agentf .paper-foot{
-  color:#dcf3c9;
-  border-color:#d9ff7b4d;
-}
-.cover-agentf .paper-title{
-  font-size:18.6cqw;
-  line-height:.94;
-  color:#d9ff7b;
-}
-.cover-agentf .paper-subtitle{color:#e6eedb}
-.cover-agentf .paper-number{color:#d9ff7b}
-.agentf-tactics-cover{position:absolute;inset:42% 7% 15%;z-index:1;transform:rotate(-6deg);filter:drop-shadow(1.2cqw 1.6cqw .8cqw #010e0a4d)}
-.agentf-tactics-cover svg{width:100%;height:100%;overflow:visible;color:#d9ff7b}
-.tactics-field{fill:#06241e;stroke:currentColor;stroke-opacity:.56;stroke-width:1.5}
-.tactics-line{stroke:currentColor;stroke-opacity:.35;stroke-width:1.2}
-.tactics-route{stroke:currentColor;stroke-width:2.5;stroke-dasharray:7 6;stroke-linecap:round;stroke-linejoin:round}
-.tactics-route-alt{stroke-opacity:.45;stroke-width:1.8}
-.tactics-agent circle{fill:#d9ff7b;stroke:#06241e;stroke-width:4}
-.tactics-ball{fill:#ffb2c9;stroke:#f7f4e8;stroke-width:1.5}
-.agentf-tactics-cover text{fill:#dcf3c9;font:700 10px/1 Arial,sans-serif;letter-spacing:1.25px;opacity:.8}
 
-@media(max-width:519px){
-  .cover-agentf .paper-topline{padding-bottom:3.5%}
-  .cover-agentf .paper-title{font-size:17cqw;line-height:.9;margin-top:10%}
-  .cover-agentf .paper-subtitle{font-size:2.6cqw;line-height:1.35;margin-top:4%}
-  .agentf-tactics-cover{inset:42% 7% 14%}
-  .cover-agentf .paper-foot{bottom:3.5%;padding-top:2.5%}
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* MetaCrypt: translucent data layers around a solid, readable lock. */
 .paper-cover.cover-metacrypt{
@@ -227,6 +201,6 @@
 .cover-listen .lab-audio>path:not(:last-child){opacity:.6}
 
 @media(forced-colors:active){
-  .paper-cover:is(.cover-agentf,.cover-metacrypt,.cover-listen){border:1px solid CanvasText}
-  .agentf-tactics-cover{filter:none}
+  .cover-metacrypt,.cover-listen){border:1px solid CanvasText}
+  
 }

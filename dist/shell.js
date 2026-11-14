@@ -4,6 +4,12 @@
   // Pure progressive enhancement: with JS off nothing is hidden.
   const root = document.documentElement;
   root.classList.add('js');
+  // Earlier versions of the site kept a loader flag, terminal finds and a colour theme
+  // in the browser; nothing reads them any more, so returning visitors get them cleared.
+  try {
+    for (const key of ['portfolio:flags-v2', 'portfolio:reward-v1', 'portfolio:theme-v1']) localStorage.removeItem(key);
+    sessionStorage.removeItem('portfolio:loader-seen-v2');
+  } catch { /* Storage may be unavailable in private mode. */ }
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
   function revealAll() {

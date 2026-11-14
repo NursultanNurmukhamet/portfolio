@@ -10,7 +10,7 @@ Compact grouped page: `dist/projects/university/` (RU/EN). Three concise cards a
 - Certificate: original unmodified PNG, with the redacted preview replaced at the user's request. This supports speech research; it is not masterclass completion certification. This change is local, not a new publication.
 - Artwork: reused existing AI Masterclass `brand-hero.png`; UniTrack and speech cover illustrations are original CSS graphics, not screenshots or actual recognition output.
 
-Main gallery third entry opens this grouped case. Other project entries and the eight blueprint slots are preserved. No external deployment performed for this change.
+The main page inventory links here from the UniTrack and KazNU certificate items (`#unitrack`, `#speech`).
 
 ## Verification
 

@@ -6,8 +6,7 @@ import vm from 'node:vm';
 
 const dist=new URL('../dist/',import.meta.url);
 const read=name=>readFileSync(new URL(name,dist),'utf8');
-const names=['arrow-up-right','arrow-down-right','arrow-down-left','arrow-up-left',
-  'arrow-down','arrow-up','arrow-left','arrows-vertical','asterisk','close','plus','pause','play','search','arrow-right'];
+const names=['arrow-up-right','arrow-up','arrow-down','arrow-left','arrow-right','close','search'];
 const sandbox={window:{}};
 vm.runInNewContext(read('icons.js'),sandbox,{filename:'icons.js',timeout:1000});
 const icon=sandbox.window.portfolioIcon;

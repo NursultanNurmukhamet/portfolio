@@ -24,12 +24,11 @@ test('MyLab ships all technology logos and local page resources', () => {
     assert.ok(existsSync(resolve(root, path.split(/[?#]/)[0])), path);
   }
 });
-test('MyLab is the first gallery entry and links to the real case without the old 3D image', () => {
-  assert.ok(cover.includes("cover:'mylab'"));
-  assert.ok(cover.includes("href:'mylab.html'"));
-  assert.ok(cover.includes('MY<span>LAB</span>'));
-  assert.ok(!cover.includes('mylab-core.png'));
-  assert.ok(cover.includes('От кабеля до кластера.'));
-  assert.ok(!index.includes('mylab-cover.js'), 'the runtime cover patch is gone');
-  assert.ok(!existsSync(resolve(root, 'mylab-cover.js')));
+test('MyLab is an inventory item that links to the real case', () => {
+  const inventory = readFileSync(resolve(root, 'inventory.js'), 'utf8');
+  assert.ok(inventory.includes("id:'mylab'"));
+  assert.ok(inventory.includes("['Открыть кейс MyLab','mylab.html']"));
+  assert.ok(!cover.includes('mylab'), 'the old gallery cover is gone');
+  assert.ok(!index.includes('mylab-cover'), 'the old cover stylesheet and script are gone');
+  assert.ok(!existsSync(resolve(root, 'mylab-cover.js')) && !existsSync(resolve(root, 'mylab-cover.css')));
 });

@@ -9,15 +9,14 @@
 - `dist/` — статический сайт, который публикуется на GitHub Pages.
 - `dist/mylab.html` — кейс MyLab: персональная инфраструктура (Proxmox, Kubernetes, Grafana, восстановление).
 - `dist/projects/university/` — университетские проекты и сертификат.
-- `src/` — редактируемая 3D-сцена, исходная графика и локальная копия Three.js.
-- `scripts/build-assets.mjs` — воспроизводимая оптимизация 3D и изображения без потери качества.
+- `scripts/optimize-images.mjs` — лёгкие копии тяжёлых картинок (превью карточек, WebP для матчей AgentF и университетской страницы); `--check` проверяет, что копии на месте.
+- `scripts/serve-dist.mjs` — локальный сервер для `dist/` без зависимостей.
 - `scripts/work-illustrations.mjs` — рисует схемы семи рабочих систем (`dist/assets/inventory/work-*.webp`) в палитре сайта через headless Chrome; `--check` проверяет, что картинки не старше скрипта.
 - `video/teaser/` — исходник тизера на [HyperFrames](https://github.com/heygen-com/hyperframes): `npm run check`, `npm run render`; готовый MP4 лежит в `dist/assets/video/`.
 - `cloudflare/` — исходники обработчика заявок, тесты и миграции D1.
 - `.github/workflows/pages.yml` — проверка кода и публикация только `dist/`.
 
-Семь рабочих систем Sapa Technologies описаны обезличенно: код закрыт, внутренние адреса, имена и данные компании не публикуются. Картинки сертификатов лежат в `dist/assets/inventory/`; изображение сертификата HackAlem — текстовая реконструкция, оригинал в PDF. Демонстрационных заглушек на сайте нет. Резюме лежит в `dist/assets/Nursultan-Nurmukhamet-CV.pdf`. 3D-сцена `dist/scene.js` на главной сейчас не используется, но собирается и проверяется как раньше.
-
+Семь рабочих систем Sapa Technologies описаны обезличенно: код закрыт, внутренние адреса, имена и данные компании не публикуются. Картинки сертификатов лежат в `dist/assets/inventory/`; изображение сертификата HackAlem — текстовая реконструкция, оригинал в PDF. Демонстрационных заглушек на сайте нет. Резюме лежит в `dist/assets/Nursultan-Nurmukhamet-CV.pdf`.
 Тяжёлые картинки показываются лёгкими копиями: карточки инвентаря — превью 640px из `dist/assets/inventory/thumbs/`, окно предмета — оригинал; матчи AgentF и картинки университетской страницы — WebP, ссылки «в полном размере» ведут на исходные PNG. После добавления или замены картинки запустите `node scripts/optimize-images.mjs` (CI проверяет наличие копий через `--check`).
 
 ## Локальный просмотр
@@ -26,20 +25,17 @@
 node scripts/serve-dist.mjs 4173
 ```
 
-Открыть http://127.0.0.1:4173/. Готовые файлы уже находятся в `dist/`, для просмотра сборка не нужна. Изображения, шрифты и 3D-код загружаются с самого сайта.
+Открыть http://127.0.0.1:4173/. Готовые файлы уже лежат в `dist/`, сборка не нужна; изображения и шрифты загружаются с самого сайта.
 
-После изменений `src/scene.js` или исходного изображения пересоберите оптимизированные ресурсы. Используются версии esbuild и sharp из зафиксированного lockfile обработчика:
+Скрипты картинок берут sharp из зафиксированного lockfile обработчика:
 
 ```sh
 cd cloudflare
 pnpm install --frozen-lockfile
 cd ..
-node scripts/build-assets.mjs
-node scripts/build-assets.mjs --check
+node scripts/optimize-images.mjs
 node --test cloudflare/worker.test.mjs tests/*.test.mjs
 ```
-
-Исходный PNG преобразуется в lossless WebP с проверкой всех видимых пикселей и прозрачности; Three.js собирается в один минифицированный модуль с сохранением лицензии. CI проверяет актуальность сгенерированных файлов. Не редактируйте `dist/scene.js` вручную.
 
 ## Форма обращения
 
@@ -61,6 +57,4 @@ node --test cloudflare/worker.test.mjs
 
 ## Сторонние компоненты
 
-Three.js используется по MIT; шрифты Anton и Manrope — по OFL. Тексты лицензий сохранены в `dist/vendor/` и `dist/assets/`.
-
-Пиксельные проценты используют Portfolio Loader Pixel — сокращённую до `0123456789%` производную Press Start 2P (The Press Start 2P Project Authors). Производная переименована в соответствии с Reserved Font Name; лицензия OFL сохранена в `dist/assets/PRESS-START-2P-LICENSE.txt`.
+Шрифты Anton и Manrope используются по OFL; тексты лицензий лежат в `dist/assets/`. Логотипы технологий на странице MyLab взяты из dashboard-icons, источники и лицензия — в `dist/assets/logos/`.
