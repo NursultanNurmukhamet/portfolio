@@ -38,9 +38,11 @@
   let category='all',query='',visible=[];
 
   /* ---------- Pictures: photo, cover from gallery.js or a text tile ---------- */
+  // Cards and neighbour tiles show a 640px copy (scripts/optimize-images.mjs); the window shows the original.
+  const thumbOf=src=>`assets/inventory/thumbs/${src.split('/').pop().replace(/\.\w+$/,'')}.webp`;
   function media(item,large=false){
     if(item.image){
-      const {src,alt,w,h}=item.image;
+      const {alt,w,h}=item.image,src=large?item.image.src:thumbOf(item.image.src);
       return `<img src="${src}" alt="${escapeHtml(alt||'')}" width="${w}" height="${h}" loading="${large?'eager':'lazy'}" decoding="async">`;
     }
     if(item.cover&&gallery){

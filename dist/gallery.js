@@ -88,7 +88,7 @@
     dialog.querySelector('.preview-toolbar p').textContent='SapaTech · AWS Agentic Football Cup · Победы в отдельных матчах / Individual match wins';
     dialog.classList.add('matches-preview');
     dialog.querySelector('.preview-document').innerHTML=agentMatches.map((match,index)=>
-      '<figure class="match-evidence"><a href="'+match.file+'" target="_blank" rel="noopener noreferrer" aria-label="Открыть полный скриншот: SapaTech '+match.score+' '+match.opponent+'"><img src="'+match.file+'" width="'+match.width+'" height="'+match.height+'" alt="Скриншот победы SapaTech над '+match.opponent+', счёт '+match.score+'" loading="lazy"></a><figcaption><span>0'+(index+1)+' / SAPATECH</span><strong>'+match.score+'</strong><span>'+match.opponent+'</span></figcaption></figure>').join('');
+      '<figure class="match-evidence"><a href="'+match.file+'" target="_blank" rel="noopener noreferrer" aria-label="Открыть полный скриншот: SapaTech '+match.score+' '+match.opponent+'"><img src="'+match.file.replace(/\.png$/,'.webp')+'" width="'+match.width+'" height="'+match.height+'" alt="Скриншот победы SapaTech над '+match.opponent+', счёт '+match.score+'" loading="lazy"></a><figcaption><span>0'+(index+1)+' / SAPATECH</span><strong>'+match.score+'</strong><span>'+match.opponent+'</span></figcaption></figure>').join('');
     document.body.classList.add('preview-open');dialog.showModal();
   }
   if(typeof document!=='undefined'){

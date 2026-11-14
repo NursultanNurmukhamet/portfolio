@@ -108,3 +108,15 @@ test('audit regressions: no dead GitHub link for the closed AgentF repository, c
   assert.ok(js.includes("plural(ITEMS.length,'предмет','предмета','предметов')"),'the shelf hint declines the noun');
   assert.ok(js.includes("dialog.classList.toggle('is-zoomed')"),'scans can be enlarged');
 });
+
+test('cards load 640px thumbnails and heavy originals have lightweight copies',()=>{
+  assert.ok(js.includes("assets/inventory/thumbs/"),'cards use the thumbnail folder');
+  for(const item of ITEMS.filter(entry=>entry.image)){
+    const name=item.image.src.split('/').pop().replace(/\.\w+$/,'');
+    const thumb=new URL(`../dist/assets/inventory/thumbs/${name}.webp`,import.meta.url);
+    assert.ok(existsSync(thumb),`${item.id} has a thumbnail (node scripts/optimize-images.mjs)`);
+    assert.ok(readFileSync(thumb).length<=100*1024,`${item.id} thumbnail stays under 100 KB`);
+  }
+  for(const file of ['assets/agentf/match-benchmark.webp','projects/university/assets/certificate-public.webp','projects/university/assets/masterclass-art.webp'])
+    assert.ok(existsSync(new URL('../dist/'+file,import.meta.url)),file);
+});
