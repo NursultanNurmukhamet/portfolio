@@ -103,7 +103,9 @@
     document.documentElement.classList.add('vt-grid');
     const transition=document.startViewTransition(update);
     transitioning=transition;
-    transition.finished.finally(()=>{if(transitioning===transition){transitioning=null;document.documentElement.classList.remove('vt-grid');}});
+    // A newer change skips this one; that is expected, not an error for the console.
+    transition.ready.catch(()=>{});
+    transition.finished.catch(()=>{}).finally(()=>{if(transitioning===transition){transitioning=null;document.documentElement.classList.remove('vt-grid');}});
   }
   tabsRoot.addEventListener('click',event=>{const button=event.target.closest('[data-category]');if(button)setCategory(button.dataset.category);});
   tabsRoot.addEventListener('keydown',event=>{
@@ -146,7 +148,7 @@
     // Photos fade in once decoded instead of popping; cached ones are already complete.
     for(const img of grid.querySelectorAll('.item-media img')){
       if(img.complete&&img.naturalWidth)img.classList.add('is-loaded');
-      else img.addEventListener('load',()=>img.classList.add('is-loaded'),{once:true});
+      else{const show=()=>img.classList.add('is-loaded');img.addEventListener('load',show,{once:true});img.addEventListener('error',show,{once:true});}
     }
     if(window.portfolioShell)requestAnimationFrame(()=>window.portfolioShell.revealAll());
   }
@@ -341,7 +343,14 @@
   /* ---------- In-page anchors scroll smoothly even while cards are still rendering ---------- */
   document.addEventListener('click',event=>{
     const link=event.target.closest('a[href^="#"]');
-    if(!link||link.getAttribute('href').startsWith('#item=')||link.getAttribute('href').length<2)return;
+    if(!link||link.getAttribute('href').length<2)return;
+    // A link to an item opens its window directly: no extra history entry, so closing
+    // the window does not bring the previous item back.
+    if(link.getAttribute('href').startsWith('#item=')){
+      const id=link.getAttribute('href').slice(6);
+      if(byId.has(id)){event.preventDefault();openItem(id,dialog.open?lastFocus:link);}
+      return;
+    }
     const target=document.getElementById(link.getAttribute('href').slice(1));
     if(!target)return;
     event.preventDefault();
@@ -357,7 +366,7 @@
     setCategory(item.cat);
     document.querySelector('#inventory')?.scrollIntoView({behavior:'instant',block:'start'});
     openItem(item.id,null,true);
-  }
+  }else if(deep)history.replaceState(null,'',location.pathname+location.search);
   addEventListener('popstate',()=>{
     const match=location.hash.match(/^#item=([\w-]+)$/);
     if(match&&byId.has(match[1])){openItem(match[1],null,true);return;}
