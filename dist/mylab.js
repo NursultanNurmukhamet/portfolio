@@ -8,7 +8,7 @@
     skip: 'Skip to the case study', navHardware: 'Hardware', navNetwork: 'Network', navRecovery: 'Recovery', back: 'All projects',
     heroKicker: 'PERSONAL INFRASTRUCTURE', heroLead: 'My infrastructure. From cable to cluster.',
     heroNote: 'From two GPUs and Proxmox to a hand-built network, Kubernetes, Grafana and a verifiable archive.', heroCta: 'Open the case map',
-    heroProof: 'Primary compute host · two physical GPUs', metricNodes: 'infrastructure nodes', metricThreads: 'hardware threads', snapshot: 'VERIFIED HISTORICAL SNAPSHOT · 2026',
+    heroProof: 'Primary compute host · two physical GPUs', metricNodes: 'infrastructure nodes', metricThreads: 'hardware threads', snapshot: 'VERIFIED HISTORICAL SNAPSHOT · 2026', updateTag: 'UPDATE · NOVEMBER 2026', updateBody: 'The lab moved from the desktop PC to a dedicated home server: k3s, Argo CD, GitLab CI, disk encryption. This page describes how everything was built before the move.', updateLink: 'What changed',
     mapHardware: 'Hardware', mapNetwork: 'Network', mapPlatform: 'Platform', mapObserve: 'Observability', mapRecovery: 'Recovery',
     briefTitle: 'Turn different machines into one understandable platform.', briefProblemLabel: 'CHALLENGE',
     briefProblem: 'Different devices, nodes that are not always powered on, GPU passthrough, local data and no public IP all had to become a manageable system.',

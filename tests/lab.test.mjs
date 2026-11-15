@@ -75,6 +75,11 @@ test('links from the inner pages back to the main page land on sections that exi
   const ids=new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(match=>match[1]));
   for(const file of ['mylab.html','projects/university/index.html']){
     const page=readFileSync(new URL('../dist/'+file,import.meta.url),'utf8');
-    for(const [,hash] of page.matchAll(/index\.html#([\w-]+)/g))assert.ok(ids.has(hash),`${file} links to #${hash}`);
+    // A link is either a section of the main page or a deep link to an inventory item.
+    const inventory=readFileSync(new URL('../dist/inventory.js',import.meta.url),'utf8');
+    for(const [,hash,item] of page.matchAll(/index\.html#([\w-]+)(?:=([\w-]+))?/g)){
+      if(hash==='item')assert.ok(inventory.includes("{id:'"+item+"',"),file+' links to item '+item);
+      else assert.ok(ids.has(hash),file+' links to #'+hash);
+    }
   }
 });

@@ -52,6 +52,9 @@
 .ml-hero-metrics dt{font-family:var(--display);font-size:clamp(30px,2.6vw,40px);line-height:1;color:var(--accent)}
 .ml-hero-metrics dd{margin:0;font-size:13px;line-height:1.5;color:var(--dim)}
 .ml-snapshot{display:flex;align-items:center;gap:10px;margin:14px 0 0;font-size:13px;letter-spacing:.06em;color:var(--dim)}
+.ml-update{display:grid;gap:6px;margin:16px 0 0;padding:14px 16px;border:1px solid var(--line-2);border-left:3px solid var(--accent);border-radius:10px;background:var(--bg-2);font-size:14px;line-height:1.5;color:var(--text)}
+.ml-update b{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--accent)}
+.ml-update a{justify-self:start;color:var(--accent);text-underline-offset:3px}
 .ml-snapshot i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px #3ddc8422}
 
 /* System atlas in the monitor style of the main page */
