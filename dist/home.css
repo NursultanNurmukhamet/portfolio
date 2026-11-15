@@ -41,16 +41,25 @@ body.home .tui-tabs a{min-height:44px;padding:6px 14px}
 .hero-links-plain a{color:var(--dim);border-bottom:1px solid transparent;padding:6px 0;transition:color .25s,border-color .25s}
 .hero-links-plain a:hover{color:var(--text);border-color:var(--accent)}
 /* Teaser video: a poster until the visitor presses play; nothing autoplays, nothing is preloaded. */
-.hero-teaser{margin:26px 0 0;max-width:600px;border:1px solid var(--line-2);border-radius:12px;overflow:hidden;background:var(--bg-2)}
-.hero-teaser video{display:block;width:100%;height:auto;aspect-ratio:16 / 9;background:var(--bg)}
-.hero-teaser figcaption{padding:10px 14px;font:500 13px/1.5 var(--mono);letter-spacing:.02em;color:var(--dim);border-top:1px solid var(--line)}
-.hero-shelves{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.hero-shelves li:first-child{grid-column:1 / -1}
-.hero-shelves a{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:14px;align-items:center;padding:14px 16px;min-height:72px;border:1px solid var(--line);border-radius:10px;background:var(--bg-2);transition:border-color .25s,transform .35s var(--ease),box-shadow .35s var(--ease)}
-.hero-shelves a:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 24px 40px -30px #000}
-.hero-shelves b{grid-row:1 / span 2;font:800 34px/1 var(--sans);color:var(--accent);min-width:44px}
-.hero-shelves span{font:700 15px/1.3 var(--sans);color:var(--text)}
-.hero-shelves small{font:400 13px/1.4 var(--sans);color:var(--dim)}
+/* Right column: one panel with a row per shelf, then the latest update. */
+.hero-side-title{margin:0;font:600 13px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.hero-shelves{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:14px;background:var(--bg-2);overflow:hidden}
+.hero-shelves li+li{border-top:1px solid var(--line)}
+.hero-shelves a{display:grid;grid-template-columns:52px minmax(0,1fr) auto;grid-template-rows:auto auto;column-gap:16px;align-items:center;padding:14px 18px;min-height:68px;transition:background-color .25s}
+.hero-shelves a:hover,.hero-shelves a:focus-visible{background:var(--bg-3)}
+.hero-shelves b{grid-row:1 / span 2;font:800 32px/1 var(--sans);letter-spacing:-.02em;color:var(--accent);font-variant-numeric:tabular-nums}
+.hero-shelves span{align-self:end;font:700 16px/1.3 var(--sans);color:var(--text)}
+.hero-shelves small{grid-column:2;align-self:start;font:400 13px/1.4 var(--sans);color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero-shelves .ui-icon,.hero-latest .ui-icon{grid-column:3;grid-row:1 / span 2;width:18px;height:18px;color:var(--mute);transition:transform .25s,color .25s}
+.hero-shelves a:hover .ui-icon,.hero-latest:hover .ui-icon{transform:translateX(4px);color:var(--accent)}
+.hero-latest{display:grid;grid-template-columns:112px minmax(0,1fr) auto;gap:16px;align-items:center;padding:10px 18px 10px 10px;border:1px solid var(--line);border-radius:14px;background:var(--bg-2);transition:border-color .25s,background-color .25s}
+.hero-latest:hover,.hero-latest:focus-visible{border-color:var(--accent);background:var(--bg-3)}
+.hero-latest img{width:112px;height:84px;object-fit:cover;border-radius:8px;display:block}
+.hero-latest-text{display:grid;gap:3px;min-width:0}
+.hero-latest em{font:600 12px/1.4 var(--mono);font-style:normal;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.hero-latest strong{font:700 16px/1.3 var(--sans);color:var(--text)}
+.hero-latest small{font:400 13px/1.4 var(--sans);color:var(--dim)}
+.hero-latest .ui-icon{grid-row:auto}
 
 /* Inventory */
 .inventory-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:18px}
@@ -199,7 +208,6 @@ body.home .site-footer a:hover{color:var(--accent)}
   .bar-cv{display:none}
   .hero{padding-top:20px}
   .hero-actions .btn{flex:1 1 auto}
-  .hero-shelves{grid-template-columns:1fr}
   .inventory-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
   .item-body{padding:14px 14px 16px}
   .inventory-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;margin-left:calc(-1*var(--gutter));margin-right:calc(-1*var(--gutter));padding-left:var(--gutter);padding-right:var(--gutter)}
@@ -219,7 +227,7 @@ body.home .site-footer a:hover{color:var(--accent)}
 }
 @media(prefers-reduced-motion:reduce){
   .btn,.item-card button,.hero-shelves a,.inventory-tabs button,.item-media img,.link-arrow .ui-icon,.item-more .ui-icon{transition:none;animation:none}
-  .btn:hover,.item-card button:hover,.hero-shelves a:hover{transform:none}
+  .btn:hover,.item-card button:hover,
   .item-card button:hover .item-media img{transform:none}
   .item-dialog[open]{animation:none}
   .item-card button::before{display:none}
@@ -271,9 +279,8 @@ html.vt-grid .item-card button{animation:none}
   .btn:active,.inventory-tabs button:active,.hero-shelves a:active,.item-card button:active{transform:none}
 }
 
-/* ---- Audit fixes: teaser beside the shelves, enlargeable scans, phone details, tap sizes ---- */
+/* ---- Audit fixes: enlargeable scans, phone details, tap sizes ---- */
 .hero-side{min-width:0;display:grid;gap:14px;align-content:start}
-.hero-side .hero-teaser{margin:0;max-width:none}
 /* A photo or a certificate scan fills the window on click and returns on the next one. */
 .item-dialog-media.is-zoomable img{cursor:zoom-in}
 .item-dialog.is-zoomed .item-dialog-media{position:absolute;inset:0;z-index:5;height:auto;min-height:0;border:0;background:var(--bg)}
@@ -283,9 +290,6 @@ html.vt-grid .item-card button{animation:none}
 .hero-links-plain a{display:inline-flex;align-items:center;min-height:44px}
 body.home .direct-contact a{min-height:44px;display:inline-flex;align-items:center}
 body.home .site-footer a{display:inline-flex;align-items:center;min-height:44px}
-@media(max-width:980px){
-  .hero-side .hero-teaser{display:none}
-}
 @media(max-width:759px){
   .item-dialog-cat{white-space:normal;line-height:1.3}
   .item-dialog-pos{display:none}

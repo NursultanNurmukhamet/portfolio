@@ -12,7 +12,7 @@
 - `scripts/optimize-images.mjs` — лёгкие копии тяжёлых картинок (превью карточек, WebP для матчей AgentF и университетской страницы); `--check` проверяет, что копии на месте.
 - `scripts/serve-dist.mjs` — локальный сервер для `dist/` без зависимостей.
 - `scripts/work-illustrations.mjs` — рисует схемы семи рабочих систем (`dist/assets/inventory/work-*.webp`) в палитре сайта через headless Chrome; `--check` проверяет, что картинки не старше скрипта.
-- `video/teaser/` — исходник тизера на [HyperFrames](https://github.com/heygen-com/hyperframes): `npm run check`, `npm run render`; готовый MP4 лежит в `dist/assets/video/`.
+- `video/teaser/` — исходник тизера на [HyperFrames](https://github.com/heygen-com/hyperframes): `npm run check`, `npm run render`; на сайт сейчас не выложен: после обновления инвентаря цифры в ролике устарели, его нужно перерендерить.
 - `cloudflare/` — исходники обработчика заявок, тесты и миграции D1.
 - `.github/workflows/pages.yml` — проверка кода и публикация только `dist/`.
 

@@ -75,19 +75,16 @@ test('neighbours, tag search, share and the slash shortcut connect the shelves',
   assert.match(css,/.item-card button.is-tilting{transform:none}/,'reduced motion removes the tilt');
 });
 
-test('work systems have drawn pictures and the hero teaser ships with a poster, no autoplay and no preload',()=>{
+test('work systems have drawn pictures and the hero points at the latest update',()=>{
   for(const item of ITEMS.filter(item=>item.cat==='work')){
     assert.ok(item.image?.src.startsWith('assets/inventory/work-'),`${item.id} has a drawn picture`);
     assert.ok(statSync(new URL('../dist/'+item.image.src,import.meta.url)).size<=150_000,`${item.id} picture under 150 KB`);
     assert.ok(item.tile,`${item.id} keeps the text tile as a fallback`);
   }
-  const video=html.match(/<video [^>]*>/)?.[0];
-  assert.ok(video,'hero has a teaser video');
-  for(const attribute of ['muted','playsinline','controls','preload="none"','poster="assets/video/teaser-poster.webp"'])assert.ok(video.includes(attribute),attribute);
-  assert.doesNotMatch(video,/autoplay/);
-  assert.ok(existsSync(new URL('../dist/assets/video/teaser-poster.webp',import.meta.url)));
-  assert.ok(existsSync(new URL('../dist/assets/video/teaser.mp4',import.meta.url)),'teaser.mp4 is rendered from video/teaser');
-  assert.ok(statSync(new URL('../dist/assets/video/teaser.mp4',import.meta.url)).size<=3_500_000,'teaser under 3.5 MB');
+  assert.doesNotMatch(html,/<video/,'the outdated teaser is gone from the hero');
+  const latest=html.match(/class="hero-latest" href="#item=([a-z0-9-]+)"/)?.[1];
+  assert.ok(ITEMS.some(item=>item.id===latest),'the latest-update card opens a real item');
+  assert.equal((html.match(/data-shelf="/g)||[]).length,5,'one hero row per shelf');
 });
 
 test('readable minimum sizes, tap targets and reduced motion',()=>{
